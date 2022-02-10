@@ -1,11 +1,12 @@
 package models
 
-// Experiment Model
 type Experiment struct {
-	Id                string `bson:"_id,omitempty" json:"id,omitempty"`
-	Name              string `json:"name"`
-	C                 int    `json:"c"`
-	ActiveExperiments []int  `json:"activeExperiments"`
+	Id                string       `bson:"_id,omitempty" json:"id,omitempty"`
+	Name              string       `json:"name"`
+	ActiveExperiments []assignment `json:"activeExperiments"`
 }
 
-type AllExperiments []Experiment
+type assignment struct {
+	AssignmentName  string  `json:"assignmentName"`
+	AssignmentValue float64 `json:"assignmentValue"`
+}

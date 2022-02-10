@@ -8,30 +8,28 @@ package database
 import (
 	"context"
 	"fmt"
+	"lABoratory/lABoratoryAPI/config"
+	"log"
 	"time"
-
-	"lABoratory/lABoratoryAPI/secrets"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var (
-	// Connection variables
-	usr      = "sergio"
-	pwd      = secrets.Mongokey
-	host     = "cluster0.qpvi4.mongodb.net"
-	database = "nodeAngular"
-)
-
 func GetCollection(collection string) *mongo.Collection {
 
-	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s", usr, pwd, host)
+	config, err := config.ReadConfig()
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s", config.DbUsr, config.DbPw, config.DbHost)
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err.Error())
 	}
 
 	ctx, ctxcf := context.WithTimeout(context.Background(), 10*time.Second)
@@ -39,8 +37,8 @@ func GetCollection(collection string) *mongo.Collection {
 	err = client.Connect(ctx)
 
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err.Error())
 	}
 
-	return client.Database(database).Collection(collection)
+	return client.Database(config.DbName).Collection(collection)
 }

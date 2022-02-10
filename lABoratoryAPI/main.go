@@ -1,10 +1,10 @@
 package main
 
 import (
-	"net/http"
-
-	"lABoratory/lABoratoryAPI/models"
-	"lABoratory/lABoratoryAPI/services"
+	"lABoratory/lABoratoryAPI/config"
+	"lABoratory/lABoratoryAPI/handlers"
+	"log"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,77 +21,25 @@ var prueba = []models.Experiment{
 }*/
 
 func main() {
+
+	experimentHandler := handlers.NewExperimentHandler()
+
 	// For release uncomment the next line
 	//gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-	router.GET("/experiments", getExperiments)
-	router.GET("/experiments/:id", getExperimentById)
-	router.POST("/experiments", createExperiment)
-	router.PUT("/experiments/:id", updateExperiment)
-	router.DELETE("/experiments/:id", deleteExperiment)
+	router.GET("/experiments", experimentHandler.GetExperiments)
+	router.GET("/experiments/:id", experimentHandler.GetExperimentById)
+	router.POST("/experiments", experimentHandler.CreateExperiment)
+	router.PUT("/experiments/:id", experimentHandler.UpdateExperiment)
+	router.DELETE("/experiments/:id", experimentHandler.DeleteExperiment)
 
-	router.Run("localhost:8080")
-}
-
-func getExperiments(c *gin.Context) {
-
-	experiments, err := services.Read()
-	if err != nil {
-		return
-	}
-
-	c.IndentedJSON(http.StatusOK, experiments)
-}
-
-func getExperimentById(c *gin.Context) {
-	id := c.Param("id")
-	experiment, err := services.ReadOne(id)
+	config, err := config.ReadConfig()
 
 	if err != nil {
-		return
-	}
-	c.IndentedJSON(http.StatusOK, experiment)
-}
-
-func createExperiment(c *gin.Context) {
-	var newExperiment models.Experiment
-
-	err := c.BindJSON(&newExperiment)
-	if err != nil {
-		return
+		log.Fatal(err.Error())
 	}
 
-	services.Create(newExperiment)
+	var url string = "localhost:" + strconv.Itoa(config.Port)
 
-	c.IndentedJSON(http.StatusCreated, newExperiment)
-}
-
-func updateExperiment(c *gin.Context) {
-
-	var newExperiment models.Experiment
-	id := c.Param("id")
-
-	err := c.BindJSON(&newExperiment)
-	if err != nil {
-		return
-	}
-
-	services.Update(newExperiment, id)
-
-	c.IndentedJSON(http.StatusOK, newExperiment)
-
-}
-
-func deleteExperiment(c *gin.Context) {
-
-	id := c.Param("id")
-	services.Delete(id)
-
-	experiments, err := services.Read()
-	if err != nil {
-		return
-	}
-
-	c.IndentedJSON(http.StatusOK, experiments)
-
+	router.Run(url)
 }

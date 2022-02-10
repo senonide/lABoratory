@@ -28,9 +28,9 @@ func Create(experiment models.Experiment) error {
 	return nil
 }
 
-func Read() (models.AllExperiments, error) {
+func Read() ([]models.Experiment, error) {
 
-	var experiments models.AllExperiments
+	var experiments []models.Experiment
 
 	filter := bson.D{}
 
@@ -85,7 +85,6 @@ func Update(experiment models.Experiment, experimentId string) error {
 	update := bson.M{
 		"$set": bson.M{
 			"name":              experiment.Name,
-			"c":                 experiment.C,
 			"activeExperiments": experiment.ActiveExperiments,
 		},
 	}

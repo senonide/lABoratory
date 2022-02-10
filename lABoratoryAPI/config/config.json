@@ -1,0 +1,7 @@
+{
+    "port":8080,
+    "dbName":"lABoratoryDB",
+    "dbUser":"sergio",
+    "dbPw":"FFnaFRWrARmvtcXO",
+    "dbHost":"cluster0.qpvi4.mongodb.net"
+}

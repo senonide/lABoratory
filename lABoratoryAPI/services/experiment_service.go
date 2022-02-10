@@ -19,7 +19,7 @@ func Create(experiment models.Experiment) error {
 	return nil
 }
 
-func Read() (models.AllExperiments, error) {
+func Read() ([]models.Experiment, error) {
 
 	experiments, err := database.Read()
 
