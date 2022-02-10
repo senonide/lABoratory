@@ -8,7 +8,21 @@ import (
 	"lABoratory/lABoratoryAPI/models"
 )
 
-func Create(experiment models.Experiment) error {
+type ExperimentService struct{}
+type ExperimentServiceI interface {
+	Create(experiment models.Experiment)
+	Read()
+	ReadOne(experimentId string)
+	Update(experiment models.Experiment, experimentId string)
+	Delete(experimentId string)
+}
+
+func NewExperimentService() *ExperimentService {
+	var e *ExperimentService
+	return e
+}
+
+func (s *ExperimentService) Create(experiment models.Experiment) error {
 
 	err := database.Create(experiment)
 
@@ -19,7 +33,7 @@ func Create(experiment models.Experiment) error {
 	return nil
 }
 
-func Read() ([]models.Experiment, error) {
+func (s *ExperimentService) Read() ([]models.Experiment, error) {
 
 	experiments, err := database.Read()
 
@@ -30,7 +44,7 @@ func Read() ([]models.Experiment, error) {
 	return experiments, nil
 }
 
-func ReadOne(experimentId string) (models.Experiment, error) {
+func (s *ExperimentService) ReadOne(experimentId string) (models.Experiment, error) {
 
 	experiment, err := database.ReadOne(experimentId)
 
@@ -41,7 +55,7 @@ func ReadOne(experimentId string) (models.Experiment, error) {
 	return experiment, nil
 }
 
-func Update(experiment models.Experiment, experimentId string) error {
+func (s *ExperimentService) Update(experiment models.Experiment, experimentId string) error {
 
 	err := database.Update(experiment, experimentId)
 
@@ -52,7 +66,7 @@ func Update(experiment models.Experiment, experimentId string) error {
 	return nil
 }
 
-func Delete(experimentId string) error {
+func (s *ExperimentService) Delete(experimentId string) error {
 
 	err := database.Delete(experimentId)
 

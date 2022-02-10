@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"lABoratory/lABoratoryAPI/models"
 	"lABoratory/lABoratoryAPI/services"
 	"net/http"
@@ -10,25 +9,26 @@ import (
 )
 
 type ExperimentHandler struct {
+	service *services.ExperimentService
 }
 
 type ExperimentHandlerI interface {
-	GetExperiments(*gin.Context)
-	GetExperimentById(*gin.Context)
-	CreateExperiment(*gin.Context)
-	UpdateExperiment(*gin.Context)
-	DeleteExperiment(*gin.Context)
+	GetExperiments(*gin.Context, *services.ExperimentService)
+	GetExperimentById(*gin.Context, *services.ExperimentService)
+	CreateExperiment(*gin.Context, *services.ExperimentService)
+	UpdateExperiment(*gin.Context, *services.ExperimentService)
+	DeleteExperiment(*gin.Context, *services.ExperimentService)
 }
 
 func NewExperimentHandler() *ExperimentHandler {
-	var eh *ExperimentHandler
-
+	eh := new(ExperimentHandler)
+	eh.service = services.NewExperimentService()
 	return eh
 }
 
 func (eh *ExperimentHandler) GetExperiments(c *gin.Context) {
 
-	experiments, err := services.Read()
+	experiments, err := eh.service.Read()
 	if err != nil {
 		return
 	}
@@ -38,7 +38,7 @@ func (eh *ExperimentHandler) GetExperiments(c *gin.Context) {
 
 func (eh *ExperimentHandler) GetExperimentById(c *gin.Context) {
 	id := c.Param("id")
-	experiment, err := services.ReadOne(id)
+	experiment, err := eh.service.ReadOne(id)
 
 	if err != nil {
 		return
@@ -51,11 +51,10 @@ func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 
 	err := c.BindJSON(&newExperiment)
 	if err != nil {
-		fmt.Printf(err.Error())
 		return
 	}
 
-	services.Create(newExperiment)
+	eh.service.Create(newExperiment)
 
 	c.IndentedJSON(http.StatusCreated, newExperiment)
 }
@@ -70,7 +69,7 @@ func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
 		return
 	}
 
-	services.Update(newExperiment, id)
+	eh.service.Update(newExperiment, id)
 
 	c.IndentedJSON(http.StatusOK, newExperiment)
 
@@ -79,9 +78,9 @@ func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
 func (eh *ExperimentHandler) DeleteExperiment(c *gin.Context) {
 
 	id := c.Param("id")
-	services.Delete(id)
+	eh.service.Delete(id)
 
-	experiments, err := services.Read()
+	experiments, err := eh.service.Read()
 	if err != nil {
 		return
 	}
