@@ -9,7 +9,7 @@ import (
 )
 
 type ExperimentService struct{}
-type ExperimentServiceI interface {
+type IExperimentService interface {
 	Create(experiment models.Experiment)
 	Read()
 	ReadOne(experimentId string)

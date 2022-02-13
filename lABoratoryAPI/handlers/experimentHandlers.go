@@ -12,7 +12,7 @@ type ExperimentHandler struct {
 	service *services.ExperimentService
 }
 
-type ExperimentHandlerI interface {
+type IExperimentHandler interface {
 	GetExperiments(*gin.Context, *services.ExperimentService)
 	GetExperimentById(*gin.Context, *services.ExperimentService)
 	CreateExperiment(*gin.Context, *services.ExperimentService)
