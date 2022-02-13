@@ -16,11 +16,11 @@ Se valorará la utilización de tecnologías Cloud para la creación del servici
  * Desarrollar el análisis, diseño, implementación, pruebas y puesta en funcionamiento de la aplicación.
 
 ## Techonologies to use
- [] .Net
- [x] Go
- [] Java
- [x] Angular
- [] React
+ - [ ] .Net
+ - [x] Go
+ - [ ] Java
+ - [x] Angular
+ - [ ] React
 
 ## Key words
 `Web services, Web development, Cloud, A/B testing`
