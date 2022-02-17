@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"lABoratory/lABoratoryAPI/config"
 	"lABoratory/lABoratoryAPI/handlers"
 	"strconv"
@@ -9,19 +10,19 @@ import (
 )
 
 func main() {
-
 	experimentHandler := handlers.NewExperimentHandler()
 
-	// For release uncomment the next line
-	//gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
+
 	router := gin.Default()
+	router.SetTrustedProxies([]string{"0.0.0.0"})
 	router.GET("/experiments", experimentHandler.GetExperiments)
 	router.GET("/experiments/:id", experimentHandler.GetExperimentById)
 	router.POST("/experiments", experimentHandler.CreateExperiment)
 	router.PUT("/experiments/:id", experimentHandler.UpdateExperiment)
 	router.DELETE("/experiments/:id", experimentHandler.DeleteExperiment)
 
-	var url string = "localhost:" + strconv.Itoa(config.ConfigParams.Port)
-
+	url := "localhost:" + strconv.Itoa(config.ConfigParams.Port)
+	fmt.Println("Listening on port " + strconv.Itoa(config.ConfigParams.Port))
 	router.Run(url)
 }

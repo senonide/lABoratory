@@ -47,6 +47,9 @@ func (r *dbExperimentRepository) GetOne(experimentId string) (*models.Experiment
 	oid, _ := primitive.ObjectIDFromHex(experimentId)
 	filter := bson.M{"_id": oid}
 	cur := collection.FindOne(ctx, filter)
+	if cur.Err() != nil {
+		return nil, nil
+	}
 	err := cur.Decode(&experiment)
 	if err != nil {
 		return nil, err
