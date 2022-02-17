@@ -4,9 +4,11 @@
 package services
 
 import (
+	"errors"
 	"lABoratory/lABoratoryAPI/database"
 	"lABoratory/lABoratoryAPI/models"
 	"lABoratory/lABoratoryAPI/repository"
+	"math"
 )
 
 type ExperimentService struct {
@@ -27,6 +29,9 @@ func NewExperimentService() *ExperimentService {
 }
 
 func (s *ExperimentService) Create(experiment models.Experiment) error {
+	if !validateExperiment(experiment) {
+		return errors.New("bad request")
+	}
 	err := s.repository.Create(experiment)
 	if err != nil {
 		return err
@@ -50,7 +55,10 @@ func (s *ExperimentService) GetOne(experimentId string) (*models.Experiment, err
 	return experiment, nil
 }
 
-func (s *ExperimentService) Update(experiment models.Experiment, experimentId string) error {
+func (s *ExperimentService) Update(experiment models.Experiment) error {
+	if !validateExperiment(experiment) {
+		return errors.New("bad request")
+	}
 	err := s.repository.Update(experiment)
 	if err != nil {
 		return err
@@ -64,4 +72,24 @@ func (s *ExperimentService) Delete(experimentId string) (bool, error) {
 		return wasDeleted, err
 	}
 	return wasDeleted, nil
+}
+
+func validateExperiment(experiment models.Experiment) bool {
+	if experiment.Name != "" {
+		var acc float64 = 0.0
+		for _, assig := range experiment.ActiveExperiments {
+			if assig.AssignmentName == "" {
+				return false
+			}
+			acc += assig.AssignmentValue
+		}
+		totalPercentaje := int(math.Round(acc))
+		if totalPercentaje == 100 {
+			return true
+		} else {
+			return false
+		}
+	} else {
+		return false
+	}
 }

@@ -58,7 +58,7 @@ func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 	}
 	errCreating := eh.service.Create(newExperiment)
 	if errCreating != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
+		c.AbortWithStatusJSON(http.StatusBadRequest, errCreating.Error())
 		return
 	}
 	c.IndentedJSON(http.StatusCreated, newExperiment)
@@ -66,13 +66,12 @@ func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 
 func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
 	var newExperiment models.Experiment
-	id := c.Param("id")
 	err := c.BindJSON(&newExperiment)
 	if err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-	errUpdating := eh.service.Update(newExperiment, id)
+	errUpdating := eh.service.Update(newExperiment)
 	if errUpdating != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
