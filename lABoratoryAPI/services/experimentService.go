@@ -77,7 +77,7 @@ func (s *ExperimentService) Delete(experimentId string) (bool, error) {
 func validateExperiment(experiment models.Experiment) bool {
 	if experiment.Name != "" {
 		var acc float64 = 0.0
-		for _, assig := range experiment.ActiveExperiments {
+		for _, assig := range experiment.Assignments {
 			if assig.AssignmentName == "" {
 				return false
 			}

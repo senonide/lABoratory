@@ -23,7 +23,7 @@ func NewDbExperimentRepository() *dbExperimentRepository {
 func (r *dbExperimentRepository) GetAll() ([]models.Experiment, error) {
 	ctx := context.Background()
 	collection := r.database.Collection(config.ConfigParams.ExperimentCollName)
-	var experiments []models.Experiment
+	experiments := []models.Experiment{}
 	filter := bson.D{}
 	cur, err := collection.Find(ctx, filter)
 	if err != nil {
@@ -74,8 +74,8 @@ func (r *dbExperimentRepository) Update(experiment models.Experiment) error {
 	filter := bson.M{"_id": oid}
 	update := bson.M{
 		"$set": bson.M{
-			"name":              experiment.Name,
-			"activeExperiments": experiment.ActiveExperiments,
+			"name":        experiment.Name,
+			"assignments": experiment.Assignments,
 		},
 	}
 	_, err := collection.UpdateOne(ctx, filter, update)
