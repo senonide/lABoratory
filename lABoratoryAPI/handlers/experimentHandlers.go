@@ -27,20 +27,23 @@ func NewExperimentHandler() *ExperimentHandler {
 }
 
 func (eh *ExperimentHandler) GetExperiments(c *gin.Context) {
-
-	experiments, err := eh.service.Read()
+	experiments, err := eh.service.GetAll()
 	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-
 	c.IndentedJSON(http.StatusOK, experiments)
 }
 
 func (eh *ExperimentHandler) GetExperimentById(c *gin.Context) {
 	id := c.Param("id")
-	experiment, err := eh.service.ReadOne(id)
-
+	experiment, err := eh.service.GetOne(id)
 	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	if experiment == nil {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 	c.IndentedJSON(http.StatusOK, experiment)
@@ -48,43 +51,45 @@ func (eh *ExperimentHandler) GetExperimentById(c *gin.Context) {
 
 func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 	var newExperiment models.Experiment
-
 	err := c.BindJSON(&newExperiment)
 	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-
-	eh.service.Create(newExperiment)
-
+	errCreating := eh.service.Create(newExperiment)
+	if errCreating != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 	c.IndentedJSON(http.StatusCreated, newExperiment)
 }
 
 func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
-
 	var newExperiment models.Experiment
 	id := c.Param("id")
-
 	err := c.BindJSON(&newExperiment)
 	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-
-	eh.service.Update(newExperiment, id)
-
+	errUpdating := eh.service.Update(newExperiment, id)
+	if errUpdating != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 	c.IndentedJSON(http.StatusOK, newExperiment)
-
 }
 
 func (eh *ExperimentHandler) DeleteExperiment(c *gin.Context) {
-
 	id := c.Param("id")
-	eh.service.Delete(id)
-
-	experiments, err := eh.service.Read()
-	if err != nil {
+	wasDeleted, errDeleting := eh.service.Delete(id)
+	if errDeleting != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-
-	c.IndentedJSON(http.StatusOK, experiments)
-
+	if !wasDeleted {
+		c.AbortWithStatus(http.StatusNotModified)
+		return
+	}
+	c.IndentedJSON(http.StatusOK, wasDeleted)
 }

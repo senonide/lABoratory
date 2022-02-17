@@ -16,15 +16,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func GetCollection(collection string) *mongo.Collection {
+func GetDatabase() *mongo.Database {
 
-	config, err := config.ReadConfig()
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s", config.DbUsr, config.DbPw, config.DbHost)
+	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s", config.ConfigParams.DbUsr, config.ConfigParams.DbPw, config.ConfigParams.DbHost)
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 
@@ -40,5 +34,5 @@ func GetCollection(collection string) *mongo.Collection {
 		log.Fatal(err.Error())
 	}
 
-	return client.Database(config.DbName).Collection(collection)
+	return client.Database(config.ConfigParams.DbName)
 }
