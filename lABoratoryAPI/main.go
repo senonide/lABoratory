@@ -16,6 +16,11 @@ func main() {
 
 	router := gin.Default()
 	router.SetTrustedProxies([]string{"0.0.0.0"})
+
+	//Auth
+	router.POST("/auth")
+
+	// Experiments
 	router.GET("/experiments", experimentHandler.GetExperiments)
 	router.GET("/experiments/:id", experimentHandler.GetExperimentById)
 	router.POST("/experiments", experimentHandler.CreateExperiment)
