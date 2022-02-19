@@ -4,21 +4,26 @@ import (
 	"fmt"
 	"lABoratory/lABoratoryAPI/config"
 	"lABoratory/lABoratoryAPI/handlers"
+	"lABoratory/lABoratoryAPI/middleware"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	experimentHandler := handlers.NewExperimentHandler()
 
 	gin.SetMode(gin.ReleaseMode)
-
 	router := gin.Default()
 	router.SetTrustedProxies([]string{"0.0.0.0"})
 
+	authHandler := handlers.NewAuthHandler()
+	experimentHandler := handlers.NewExperimentHandler()
+
 	//Auth
-	router.POST("/auth")
+	router.POST("/auth", authHandler.Authenticate)
+	router.POST("/signup", authHandler.Singup)
+
+	router.Use(middleware.ValidateJWT)
 
 	// Experiments
 	router.GET("/experiments", experimentHandler.GetExperiments)

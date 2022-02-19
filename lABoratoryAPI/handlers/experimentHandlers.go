@@ -12,14 +12,6 @@ type ExperimentHandler struct {
 	service *services.ExperimentService
 }
 
-type IExperimentHandler interface {
-	GetExperiments(*gin.Context, *services.ExperimentService)
-	GetExperimentById(*gin.Context, *services.ExperimentService)
-	CreateExperiment(*gin.Context, *services.ExperimentService)
-	UpdateExperiment(*gin.Context, *services.ExperimentService)
-	DeleteExperiment(*gin.Context, *services.ExperimentService)
-}
-
 func NewExperimentHandler() *ExperimentHandler {
 	eh := new(ExperimentHandler)
 	eh.service = services.NewExperimentService()

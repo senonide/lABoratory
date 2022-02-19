@@ -4,22 +4,15 @@
 package services
 
 import (
-	"errors"
-	"lABoratory/lABoratoryAPI/database"
+	"fmt"
 	"lABoratory/lABoratoryAPI/models"
-	"lABoratory/lABoratoryAPI/repository"
+	"lABoratory/lABoratoryAPI/persistence"
+	"lABoratory/lABoratoryAPI/persistence/database"
 	"math"
 )
 
 type ExperimentService struct {
-	repository repository.ExperimentRepository
-}
-type IExperimentService interface {
-	Create(experiment models.Experiment)
-	GetAll()
-	GetOne(experimentId string)
-	Update(experiment models.Experiment, experimentId string)
-	Delete(experimentId string)
+	repository persistence.ExperimentRepository
 }
 
 func NewExperimentService() *ExperimentService {
@@ -30,7 +23,7 @@ func NewExperimentService() *ExperimentService {
 
 func (s *ExperimentService) Create(experiment models.Experiment) error {
 	if !validateExperiment(experiment) {
-		return errors.New("bad request")
+		return fmt.Errorf("bad request")
 	}
 	err := s.repository.Create(experiment)
 	if err != nil {
@@ -57,7 +50,7 @@ func (s *ExperimentService) GetOne(experimentId string) (*models.Experiment, err
 
 func (s *ExperimentService) Update(experiment models.Experiment) error {
 	if !validateExperiment(experiment) {
-		return errors.New("bad request")
+		return fmt.Errorf("bad request")
 	}
 	err := s.repository.Update(experiment)
 	if err != nil {

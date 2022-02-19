@@ -13,6 +13,7 @@ var ConfigParams *Config = ReadConfig()
 
 type Config struct {
 	Port               int    `json:"port"`
+	JwtSecret          string `json:"jwtSecret"`
 	DbName             string `json:"dbName"`
 	DbUsr              string `json:"dbUser"`
 	DbPw               string `json:"dbPw"`
