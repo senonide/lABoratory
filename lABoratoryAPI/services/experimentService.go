@@ -21,17 +21,6 @@ func NewExperimentService() *ExperimentService {
 	return e
 }
 
-func (s *ExperimentService) Create(experiment models.Experiment) error {
-	if !validateExperiment(experiment) {
-		return fmt.Errorf("bad request")
-	}
-	err := s.repository.Create(experiment)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (s *ExperimentService) GetAll() ([]models.Experiment, error) {
 	experiments, err := s.repository.GetAll()
 	if err != nil {
@@ -46,6 +35,17 @@ func (s *ExperimentService) GetOne(experimentId string) (*models.Experiment, err
 		return nil, err
 	}
 	return experiment, nil
+}
+
+func (s *ExperimentService) Create(experiment models.Experiment) error {
+	if !validateExperiment(experiment) {
+		return fmt.Errorf("bad request")
+	}
+	err := s.repository.Create(experiment)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *ExperimentService) Update(experiment models.Experiment) error {

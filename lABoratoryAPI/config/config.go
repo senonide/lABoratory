@@ -12,13 +12,14 @@ const ConfigFilePath = "config/config.json"
 var ConfigParams *Config = ReadConfig()
 
 type Config struct {
-	Port               int    `json:"port"`
-	JwtSecret          string `json:"jwtSecret"`
-	DbName             string `json:"dbName"`
-	DbUsr              string `json:"dbUser"`
-	DbPw               string `json:"dbPw"`
-	DbHost             string `json:"dbHost"`
-	ExperimentCollName string `json:"experimentCollName"`
+	Port                int    `json:"port"`
+	JwtSecret           string `json:"jwtSecret"`
+	DbName              string `json:"dbName"`
+	DbUsr               string `json:"dbUser"`
+	DbPw                string `json:"dbPw"`
+	DbHost              string `json:"dbHost"`
+	UsersCollName       string `json:"usersCollName"`
+	ExperimentsCollName string `json:"experimentsCollName"`
 }
 
 func ReadConfig() *Config {

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"lABoratory/lABoratoryAPI/config"
 	"lABoratory/lABoratoryAPI/handlers"
-	"lABoratory/lABoratoryAPI/middleware"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -19,13 +18,16 @@ func main() {
 	authHandler := handlers.NewAuthHandler()
 	experimentHandler := handlers.NewExperimentHandler()
 
-	//Auth
+	router.GET("/")
 	router.POST("/auth", authHandler.Authenticate)
-	router.POST("/signup", authHandler.Singup)
+	router.POST("/signup", authHandler.Signup)
+	router.GET("/users", authHandler.GetUsers) // Only for debug
 
-	router.Use(middleware.ValidateJWT)
+	//router.Use(middleware.ValidateJWT)
 
-	// Experiments
+	router.GET("/user", authHandler.GetUser)
+	router.DELETE("/user", authHandler.DeleteUser)
+
 	router.GET("/experiments", experimentHandler.GetExperiments)
 	router.GET("/experiments/:id", experimentHandler.GetExperimentById)
 	router.POST("/experiments", experimentHandler.CreateExperiment)

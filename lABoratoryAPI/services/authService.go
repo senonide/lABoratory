@@ -1,16 +1,11 @@
 package services
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"fmt"
-	"lABoratory/lABoratoryAPI/config"
 	"lABoratory/lABoratoryAPI/models"
 	"lABoratory/lABoratoryAPI/persistence"
 	"lABoratory/lABoratoryAPI/persistence/database"
-	"time"
-
-	"github.com/golang-jwt/jwt/v4"
+	"lABoratory/lABoratoryAPI/utils"
 )
 
 type AuthService struct {
@@ -23,50 +18,68 @@ func NewAuthService() *AuthService {
 	return as
 }
 
-func (as *AuthService) GenJWT(user *models.User) (string, error) {
-	hmacSecret := []byte(config.ConfigParams.JwtSecret)
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.Id,
-		"exp": time.Now().Add(time.Hour * 6).Unix(),
-	})
-	tokenString, err := token.SignedString(hmacSecret)
-	return tokenString, err
-}
-
-func (as *AuthService) ValidateJWT(tokenString string) (bool, jwt.Claims, error) {
-	hmacSecret := []byte(config.ConfigParams.JwtSecret)
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		_, ok := token.Method.(*jwt.SigningMethodHMAC)
-		if !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return hmacSecret, nil
-	})
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if ok && token.Valid {
-		return true, claims, nil
-	} else {
-		return false, nil, err
+func (as *AuthService) GetAll() ([]models.User, error) {
+	users, err := as.repository.GetAll()
+	if err != nil {
+		return nil, err
 	}
+	return users, nil
 }
 
-func (as *AuthService) SingupUser(credentials models.Credentials) (*models.User, error) {
-	hashedPassword := hashPassword(credentials.Password)
-	credentials.Password = hashedPassword
-	// TODO: Create with the persistance repository a new user
-	return nil, nil
+func (as *AuthService) GetOne(token string) (*models.User, error) {
+	jwtoken, err := utils.GetToken(token)
+	if err != nil {
+		return nil, err
+	}
+	claims, err := utils.TokenClaims(jwtoken)
+	if err != nil {
+		return nil, err
+	}
+	usernameFromToken, ok := claims["sub"].(string)
+	if !ok || usernameFromToken == "" {
+		return nil, fmt.Errorf("token subject error")
+	}
+	user, err := as.repository.GetOne(usernameFromToken)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
-func (as *AuthService) ValidateUser(credentials models.Credentials) (*models.User, error) {
-	hashedPassword := hashPassword(credentials.Password)
-	credentials.Password = hashedPassword
-	// TODO: Get with the persistance repository the user that match with the given credentials
-	return nil, nil
+func (as *AuthService) Delete(token string) (bool, error) {
+	user, err := as.GetOne(token)
+	if err != nil {
+		return false, err
+	}
+	wasDeleted, err := as.repository.Delete(user.Id)
+	if err != nil {
+		return false, err
+	}
+	return wasDeleted, nil
 }
 
-func hashPassword(password string) string {
-	hasher := sha256.New()
-	hasher.Write([]byte(password))
-	hash := hex.EncodeToString(hasher.Sum(nil))
-	return hash
+func (as *AuthService) SignupUser(unknownUser models.User) (string, error) {
+	_, err := as.repository.GetOne(unknownUser.Username)
+	if err == nil {
+		return "", fmt.Errorf("user already exists")
+	}
+	errCreating := as.repository.Create(unknownUser)
+	if errCreating != nil {
+		return "", errCreating
+	}
+	return as.ValidateUser(unknownUser)
+}
+
+func (as *AuthService) ValidateUser(unknownUser models.User) (string, error) {
+	user, err := as.repository.GetOne(unknownUser.Username)
+	if err != nil {
+		return "", err
+	}
+	if user == nil {
+		return "", fmt.Errorf("user not found")
+	}
+	if user.HashedPassword != unknownUser.HashedPassword {
+		return "", fmt.Errorf("incorrect password")
+	}
+	return utils.GenJWT(user)
 }
