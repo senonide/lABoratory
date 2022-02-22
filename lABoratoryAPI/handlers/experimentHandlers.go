@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	"encoding/json"
 	"lABoratory/lABoratoryAPI/handlers/apitypes"
 	"lABoratory/lABoratoryAPI/handlers/responses"
+	"lABoratory/lABoratoryAPI/models"
 	"lABoratory/lABoratoryAPI/services"
 	"net/http"
 
@@ -25,7 +27,7 @@ func (eh *ExperimentHandler) GetExperiments(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, experiments)
+	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentsApiType(experiments))
 }
 
 func (eh *ExperimentHandler) GetExperimentById(c *gin.Context) {
@@ -43,30 +45,55 @@ func (eh *ExperimentHandler) GetExperimentById(c *gin.Context) {
 }
 
 func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
-	var newExperiment apitypes.Experiment
-	err := c.BindJSON(&newExperiment)
+	var data map[string]interface{}
+	err := c.BindJSON(&data)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "ll", Error: err.Error()})
+		return
+	}
+	assignmentsBytes, err := json.Marshal(data["assignments"])
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	errCreating := eh.service.Create(newExperiment.GetExperimentModel())
-	if errCreating != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: errCreating.Error()})
+	assignments := []models.Assignment{}
+	err = json.Unmarshal(assignmentsBytes, &assignments)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
+
+	newExperiment := apitypes.Experiment{Name: data["name"].(string), Assignments: data["assignments"].([]models.Assignment)}
+	err = eh.service.Create(newExperiment.GetExperimentModel())
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	c.IndentedJSON(http.StatusCreated, newExperiment)
 }
 
 func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
-	var newExperiment apitypes.Experiment
-	err := c.BindJSON(&newExperiment)
+	var data map[string]string
+	err := c.BindJSON(&data)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	errUpdating := eh.service.Update(newExperiment.GetExperimentModel())
-	if errUpdating != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: errUpdating.Error()})
+	assignmentsBytes, err := json.Marshal(data["assignments"])
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
+	assignments := []models.Assignment{}
+	err = json.Unmarshal(assignmentsBytes, &assignments)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
+	newExperiment := apitypes.Experiment{Name: data["name"], Assignments: assignments}
+	err = eh.service.Update(newExperiment.GetExperimentModel())
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	c.IndentedJSON(http.StatusOK, newExperiment)
@@ -74,9 +101,9 @@ func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
 
 func (eh *ExperimentHandler) DeleteExperiment(c *gin.Context) {
 	id := c.Param("id")
-	wasDeleted, errDeleting := eh.service.Delete(id)
-	if errDeleting != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: errDeleting.Error()})
+	wasDeleted, err := eh.service.Delete(id)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	if !wasDeleted {

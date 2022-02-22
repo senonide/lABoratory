@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"fmt"
-	"lABoratory/lABoratoryAPI/handlers/apitypes"
 	"lABoratory/lABoratoryAPI/handlers/responses"
 	"lABoratory/lABoratoryAPI/utils"
 	"net/http"
@@ -11,19 +10,20 @@ import (
 )
 
 func ValidateJWT(c *gin.Context) {
-	var token apitypes.Jwt
-	err := c.BindJSON(&token)
+	var data map[string]interface{}
+	err := c.BindJSON(&data)
 	if err != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, responses.ResponseWithError{Message: "error", Error: "unauthorized"})
 		return
 	}
-	jwtoken, err := utils.GetToken(token.Token)
+	jwtoken, err := utils.GetToken(data["jwt"].(string))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: "unauthorized"})
 		return
 	}
 	if !utils.Validate(jwtoken) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, responses.ResponseWithError{Message: "error", Error: fmt.Errorf("invalid token").Error()})
 		return
 	}
+	c.Next()
 }
