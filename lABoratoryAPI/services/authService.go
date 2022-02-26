@@ -9,12 +9,14 @@ import (
 )
 
 type AuthService struct {
-	repository persistence.UserRepository
+	repository       persistence.UserRepository
+	securityProvider *utils.SecurityProvider
 }
 
 func NewAuthService() *AuthService {
 	as := new(AuthService)
 	as.repository = database.NewDbUserRepository()
+	as.securityProvider = new(utils.SecurityProvider)
 	return as
 }
 
@@ -27,11 +29,11 @@ func (as *AuthService) GetAll() ([]models.User, error) {
 }
 
 func (as *AuthService) GetOne(token string) (*models.User, error) {
-	jwtoken, err := utils.GetToken(token)
+	jwtoken, err := as.securityProvider.GetToken(token)
 	if err != nil {
 		return nil, err
 	}
-	claims, err := utils.TokenClaims(jwtoken)
+	claims, err := as.securityProvider.GetTokenClaims(jwtoken)
 	if err != nil {
 		return nil, err
 	}
@@ -81,5 +83,5 @@ func (as *AuthService) ValidateUser(unknownUser models.User) (string, error) {
 	if user.HashedPassword != unknownUser.HashedPassword {
 		return "", fmt.Errorf("incorrect password")
 	}
-	return utils.GenJWT(user)
+	return as.securityProvider.GenJWT(user)
 }

@@ -29,13 +29,12 @@ func (ah *AuthHandler) GetUsers(c *gin.Context) {
 }
 
 func (ah *AuthHandler) GetUser(c *gin.Context) {
-	var data map[string]string
-	err := c.BindJSON(&data)
+	tokenFromCookie, err := c.Cookie("jwt")
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	user, err := ah.service.GetOne(data["jwt"])
+	user, err := ah.service.GetOne(tokenFromCookie)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
@@ -48,13 +47,12 @@ func (ah *AuthHandler) GetUser(c *gin.Context) {
 }
 
 func (ah *AuthHandler) DeleteUser(c *gin.Context) {
-	var data map[string]string
-	err := c.BindJSON(&data)
+	tokenFromCookie, err := c.Cookie("jwt")
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	wasDeleted, err := ah.service.Delete(data["jwt"])
+	wasDeleted, err := ah.service.Delete(tokenFromCookie)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
@@ -79,7 +77,8 @@ func (ah *AuthHandler) Authenticate(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusNotFound, responses.ResponseWithError{Message: "error", Error: "incorrect password"})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, responses.ResponseWithToken{Message: "success", Token: token})
+	c.SetCookie("jwt", token, 1, "/", "localhost", true, true)
+	c.IndentedJSON(http.StatusCreated, responses.Response{Message: "success"})
 }
 
 func (ah *AuthHandler) Signup(c *gin.Context) {
@@ -95,5 +94,6 @@ func (ah *AuthHandler) Signup(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusCreated, responses.ResponseWithToken{Message: "user created successfully", Token: token})
+	c.SetCookie("jwt", token, 1, "/", "localhost", true, true)
+	c.IndentedJSON(http.StatusCreated, responses.Response{Message: "user created successfully"})
 }

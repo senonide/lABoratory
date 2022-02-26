@@ -24,7 +24,8 @@ func GetUsersApiType(users []models.User) []User {
 }
 
 func (user User) GetUserModel() models.User {
-	passwordHash := utils.GetPasswordHash(user.Password)
+	sp := new(utils.SecurityProvider)
+	passwordHash := sp.GetPasswordHash(user.Password)
 	userModel := models.User{Username: user.Username, HashedPassword: passwordHash}
 	return userModel
 }

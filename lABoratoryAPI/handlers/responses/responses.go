@@ -1,10 +1,5 @@
 package responses
 
-type ResponseWithToken struct {
-	Message string `json:"response"`
-	Token   string `json:"jwt"`
-}
-
 type Response struct {
 	Message string `json:"response"`
 }

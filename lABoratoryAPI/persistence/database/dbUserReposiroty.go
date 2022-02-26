@@ -2,13 +2,14 @@ package database
 
 import (
 	"context"
-	"lABoratory/lABoratoryAPI/config"
 	"lABoratory/lABoratoryAPI/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+const UsersCollName string = "users"
 
 type dbUserRepository struct {
 	database *mongo.Database
@@ -22,7 +23,7 @@ func NewDbUserRepository() *dbUserRepository {
 
 func (r *dbUserRepository) GetAll() ([]models.User, error) {
 	ctx := context.Background()
-	collection := r.database.Collection(config.ConfigParams.UsersCollName)
+	collection := r.database.Collection(UsersCollName)
 	users := []models.User{}
 	filter := bson.D{}
 	cur, err := collection.Find(ctx, filter)
@@ -42,7 +43,7 @@ func (r *dbUserRepository) GetAll() ([]models.User, error) {
 
 func (r *dbUserRepository) GetOne(username string) (*models.User, error) {
 	ctx := context.Background()
-	collection := r.database.Collection(config.ConfigParams.UsersCollName)
+	collection := r.database.Collection(UsersCollName)
 	var user *models.User
 	filter := bson.M{"username": username}
 	cur := collection.FindOne(ctx, filter)
@@ -58,7 +59,7 @@ func (r *dbUserRepository) GetOne(username string) (*models.User, error) {
 
 func (r *dbUserRepository) Create(user models.User) error {
 	ctx := context.Background()
-	collection := r.database.Collection(config.ConfigParams.UsersCollName)
+	collection := r.database.Collection(UsersCollName)
 	_, err := collection.InsertOne(ctx, user)
 	if err != nil {
 		return err
@@ -68,7 +69,7 @@ func (r *dbUserRepository) Create(user models.User) error {
 
 func (r *dbUserRepository) Update(user models.User) error {
 	ctx := context.Background()
-	collection := r.database.Collection(config.ConfigParams.UsersCollName)
+	collection := r.database.Collection(UsersCollName)
 	oid, _ := primitive.ObjectIDFromHex(user.Id)
 	filter := bson.M{"_id": oid}
 	update := bson.M{
@@ -86,7 +87,7 @@ func (r *dbUserRepository) Update(user models.User) error {
 
 func (r *dbUserRepository) Delete(userId string) (bool, error) {
 	ctx := context.Background()
-	collection := r.database.Collection(config.ConfigParams.UsersCollName)
+	collection := r.database.Collection(UsersCollName)
 	oid, errDecoding := primitive.ObjectIDFromHex(userId)
 	if errDecoding != nil {
 		return false, errDecoding

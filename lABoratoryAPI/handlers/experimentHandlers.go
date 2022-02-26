@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"lABoratory/lABoratoryAPI/handlers/apitypes"
 	"lABoratory/lABoratoryAPI/handlers/responses"
 	"lABoratory/lABoratoryAPI/models"
@@ -12,17 +11,19 @@ import (
 )
 
 type ExperimentHandler struct {
-	service *services.ExperimentService
+	experimentService *services.ExperimentService
+	authService       *services.AuthService
 }
 
 func NewExperimentHandler() *ExperimentHandler {
 	eh := new(ExperimentHandler)
-	eh.service = services.NewExperimentService()
+	eh.experimentService = services.NewExperimentService()
+	eh.authService = services.NewAuthService()
 	return eh
 }
 
 func (eh *ExperimentHandler) GetExperiments(c *gin.Context) {
-	experiments, err := eh.service.GetAll()
+	experiments, err := eh.experimentService.GetAll()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
@@ -32,7 +33,7 @@ func (eh *ExperimentHandler) GetExperiments(c *gin.Context) {
 
 func (eh *ExperimentHandler) GetExperimentById(c *gin.Context) {
 	id := c.Param("id")
-	experiment, err := eh.service.GetOne(id)
+	experiment, err := eh.experimentService.GetOne(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
@@ -48,60 +49,64 @@ func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 	var data map[string]interface{}
 	err := c.BindJSON(&data)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "ll", Error: err.Error()})
-		return
-	}
-	assignmentsBytes, err := json.Marshal(data["assignments"])
-	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
+	assignmentsData := data["assignments"].([]interface{})
 	assignments := []models.Assignment{}
-	err = json.Unmarshal(assignmentsBytes, &assignments)
+	for _, assignment := range assignmentsData {
+		assignments = append(assignments, models.Assignment{
+			AssignmentName:  assignment.(map[string]interface{})["assignmentName"].(string),
+			AssignmentValue: assignment.(map[string]interface{})["assignmentValue"].(float64),
+		})
+	}
+	tokenFromCookie, err := c.Cookie("jwt")
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-
-	newExperiment := apitypes.Experiment{Name: data["name"].(string), Assignments: data["assignments"].([]models.Assignment)}
-	err = eh.service.Create(newExperiment.GetExperimentModel())
+	owner, err := eh.authService.GetOne(tokenFromCookie)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
+	newExperiment := models.Experiment{Name: data["name"].(string), Assignments: assignments, Owner: *owner}
+	err = eh.experimentService.Create(newExperiment)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusCreated, newExperiment)
+	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentApiType(newExperiment))
 }
 
 func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
-	var data map[string]string
+	var data map[string]interface{}
 	err := c.BindJSON(&data)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	assignmentsBytes, err := json.Marshal(data["assignments"])
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
-		return
-	}
+	assignmentsData := data["assignments"].([]interface{})
 	assignments := []models.Assignment{}
-	err = json.Unmarshal(assignmentsBytes, &assignments)
+	for _, assignment := range assignmentsData {
+		assignments = append(assignments, models.Assignment{
+			AssignmentName:  assignment.(map[string]interface{})["assignmentName"].(string),
+			AssignmentValue: assignment.(map[string]interface{})["assignmentValue"].(float64),
+		})
+	}
+	id := c.Param("id")
+	newExperiment := models.Experiment{Id: id, Name: data["name"].(string), Assignments: assignments}
+	err = eh.experimentService.Update(newExperiment)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	newExperiment := apitypes.Experiment{Name: data["name"], Assignments: assignments}
-	err = eh.service.Update(newExperiment.GetExperimentModel())
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
-		return
-	}
-	c.IndentedJSON(http.StatusOK, newExperiment)
+	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentApiType(newExperiment))
 }
 
 func (eh *ExperimentHandler) DeleteExperiment(c *gin.Context) {
 	id := c.Param("id")
-	wasDeleted, err := eh.service.Delete(id)
+	wasDeleted, err := eh.experimentService.Delete(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return

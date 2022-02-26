@@ -10,18 +10,18 @@ import (
 )
 
 func ValidateJWT(c *gin.Context) {
-	var data map[string]interface{}
-	err := c.BindJSON(&data)
+	sp := new(utils.SecurityProvider)
+	tokenFromCookie, err := c.Cookie("jwt")
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, responses.ResponseWithError{Message: "error", Error: "unauthorized"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: "jwt not founded"})
 		return
 	}
-	jwtoken, err := utils.GetToken(data["jwt"].(string))
+	jwtoken, err := sp.GetToken(tokenFromCookie)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: "unauthorized"})
 		return
 	}
-	if !utils.Validate(jwtoken) {
+	if !sp.ValidateToken(jwtoken) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, responses.ResponseWithError{Message: "error", Error: fmt.Errorf("invalid token").Error()})
 		return
 	}

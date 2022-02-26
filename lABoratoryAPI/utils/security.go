@@ -10,14 +10,16 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func GetPasswordHash(password string) string {
+type SecurityProvider struct{}
+
+func (sp SecurityProvider) GetPasswordHash(password string) string {
 	hasher := sha256.New()
 	hasher.Write([]byte(password))
 	hash := hex.EncodeToString(hasher.Sum(nil))
 	return hash
 }
 
-func GenJWT(user *models.User) (string, error) {
+func (sp SecurityProvider) GenJWT(user *models.User) (string, error) {
 	hmacSecret := []byte(config.ConfigParams.JwtSecret)
 	claims := &jwt.RegisteredClaims{
 		Subject: user.Username,
@@ -28,7 +30,7 @@ func GenJWT(user *models.User) (string, error) {
 	return tokenString, err
 }
 
-func GetToken(tokenString string) (*jwt.Token, error) {
+func (sp SecurityProvider) GetToken(tokenString string) (*jwt.Token, error) {
 	hmacSecret := []byte(config.ConfigParams.JwtSecret)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
@@ -40,12 +42,12 @@ func GetToken(tokenString string) (*jwt.Token, error) {
 	return token, err
 }
 
-func Validate(token *jwt.Token) bool {
+func (sp SecurityProvider) ValidateToken(token *jwt.Token) bool {
 	// TODO: check if the token expired
 	return token.Valid
 }
 
-func TokenClaims(token *jwt.Token) (jwt.MapClaims, error) {
+func (sp SecurityProvider) GetTokenClaims(token *jwt.Token) (jwt.MapClaims, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok {
 		return claims, nil
