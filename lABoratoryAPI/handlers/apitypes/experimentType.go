@@ -4,8 +4,8 @@ import "lABoratory/lABoratoryAPI/models"
 
 type Experiment struct {
 	Id          string              `json:"id"`
-	Name        string              `json:"name"`
-	Assignments []models.Assignment `json:"assignments"`
+	Name        string              `json:"name" binding:"required"`
+	Assignments []models.Assignment `json:"assignments" binding:"required"`
 }
 
 func GetExperimentApiType(exp models.Experiment) Experiment {
