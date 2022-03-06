@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"lABoratory/lABoratoryAPI/models"
 	"lABoratory/lABoratoryAPI/persistence"
-	"lABoratory/lABoratoryAPI/persistence/database"
 	"math"
 )
 
@@ -15,9 +14,17 @@ type ExperimentService struct {
 	repository persistence.ExperimentRepository
 }
 
-func NewExperimentService() *ExperimentService {
+type ExperimentServiceI interface {
+	GetAll() ([]models.Experiment, error)
+	GetOne(experimentId string) (*models.Experiment, error)
+	Create(experiment models.Experiment) error
+	Update(experiment models.Experiment) error
+	Delete(experimentId string) (bool, error)
+}
+
+func NewExperimentService(r persistence.ExperimentRepository) *ExperimentService {
 	e := new(ExperimentService)
-	e.repository = database.NewDbExperimentRepository()
+	e.repository = r
 	return e
 }
 

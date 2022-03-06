@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"lABoratory/lABoratoryAPI/models"
 	"lABoratory/lABoratoryAPI/persistence"
-	"lABoratory/lABoratoryAPI/persistence/database"
 	"lABoratory/lABoratoryAPI/utils"
 )
 
@@ -13,10 +12,18 @@ type AuthService struct {
 	securityProvider *utils.SecurityProvider
 }
 
-func NewAuthService() *AuthService {
+type AuthServiceI interface {
+	GetAll() ([]models.User, error)
+	GetOne(token string) (*models.User, error)
+	Delete(token string) (bool, error)
+	SignupUser(unknownUser models.User) (string, error)
+	ValidateUser(unknownUser models.User) (string, error)
+}
+
+func NewAuthService(r persistence.UserRepository, sp *utils.SecurityProvider) *AuthService {
 	as := new(AuthService)
-	as.repository = database.NewDbUserRepository()
-	as.securityProvider = new(utils.SecurityProvider)
+	as.repository = r
+	as.securityProvider = sp
 	return as
 }
 

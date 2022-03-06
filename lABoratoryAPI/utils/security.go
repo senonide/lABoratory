@@ -12,6 +12,11 @@ import (
 
 type SecurityProvider struct{}
 
+func NewSecurityProvider() *SecurityProvider {
+	sp := new(SecurityProvider)
+	return sp
+}
+
 func (sp SecurityProvider) GetPasswordHash(password string) string {
 	hasher := sha256.New()
 	hasher.Write([]byte(password))

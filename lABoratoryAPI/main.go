@@ -5,6 +5,9 @@ import (
 	"lABoratory/lABoratoryAPI/config"
 	"lABoratory/lABoratoryAPI/handlers"
 	"lABoratory/lABoratoryAPI/middleware"
+	"lABoratory/lABoratoryAPI/persistence/database"
+	"lABoratory/lABoratoryAPI/services"
+	"lABoratory/lABoratoryAPI/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -16,10 +19,16 @@ func main() {
 	router := gin.Default()
 	router.SetTrustedProxies([]string{"0.0.0.0"})
 
-	authHandler := handlers.NewAuthHandler()
-	experimentHandler := handlers.NewExperimentHandler()
+	userRepository := database.NewDbUserRepository()
+	experimetnRepository := database.NewDbExperimentRepository()
+	securityProvider := utils.NewSecurityProvider()
 
-	router.GET("/")
+	authService := services.NewAuthService(userRepository, securityProvider)
+	experimentService := services.NewExperimentService(experimetnRepository)
+
+	authHandler := handlers.NewAuthHandler(authService)
+	experimentHandler := handlers.NewExperimentHandler(experimentService, authService)
+
 	router.POST("/auth", authHandler.Authenticate)
 	router.POST("/signup", authHandler.Signup)
 	router.GET("/users", authHandler.GetUsers) // Only for debug
