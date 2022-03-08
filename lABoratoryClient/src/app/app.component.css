@@ -1,0 +1,25 @@
+mat-toolbar {
+    position:fixed;
+    left:0;
+    top:0;
+    z-index: 3;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.titlebar {
+    padding-left: 10px;
+}
+
+.barbutton {
+    margin-right: 15px;
+}
+
+.rendererDiv {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
