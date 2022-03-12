@@ -1,11 +1,16 @@
-
-<app-renderer></app-renderer>
-<div class="rendererDiv"></div>
-<landing-view></landing-view>
-
-<mat-toolbar>
+<mat-toolbar [class.mat-elevation-z5]="false">
   <span class="titlebar">lABoratory</span>
+  <button mat-button class="barbutton option">Get Started</button>
+  <button mat-button class="barbutton option">Documentation</button>
+  <button mat-button class="barbutton option">About us</button>
   <span class="example-spacer"></span>
   <button mat-flat-button class="barbutton" color="primary">Log in</button>
-  <button mat-flat-button class="barbutton" color="accent">Register</button>
+  <button mat-flat-button class="barbutton" color="accent">Sign up</button>
 </mat-toolbar>
+
+<app-renderer></app-renderer>
+<landing-view></landing-view>
+
+
+
+

@@ -1,0 +1,77 @@
+main {
+    width: 100vw;
+    color: white;
+    z-index: 2;
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+  
+h1, h2, h3, blockquote {
+    font-family: elevon, sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.about {
+    text-align: center;
+    font-size: 30px;
+    line-height: 37px;
+}
+
+header {
+    font-size: 2.5rem;
+    padding: 2rem;
+}
+
+.content {
+    background-color: rgb(37, 37, 37);
+    grid-column: 1 / 13;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 50px;
+    padding-bottom: 10px;
+    height: 30vh;
+}
+
+
+p {
+    color: white;
+    font-family: elevon, sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    z-index: 4;
+    padding: 10 10 10 10;
+    grid-column: 3 / 7;
+    
+}
+
+.pos {
+    height: 70vh;
+    padding-top: 10vh;
+    padding-left: 5%;
+}
+
+.subcontent {
+    height: 100vh;
+    background-color: white;
+    grid-column: 1 / 13;
+}
+
+.footer {
+    height: 30vh;
+    width: 100vw;
+    background-color: lightgrey;
+    z-index: 40;
+    
+}
+
+.title{
+    line-height: 45px;
+}
+
+.logo {
+    font-size: 4rem;
+    margin-top: 25vh;
+    text-align: center;
+}

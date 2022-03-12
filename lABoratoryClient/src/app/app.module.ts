@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { RendererComponent } from './renderer/renderer.component';
-import { LandingView } from './ui/landing-view.component';
+import { LandingView } from './components/landing-view.component';
 
 
 import { MatInputModule } from '@angular/material/input';
