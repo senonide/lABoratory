@@ -1,8 +1,3 @@
-html, body {
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
 mat-toolbar {
     position:fixed;
     left:0;
@@ -27,4 +22,8 @@ mat-toolbar {
 
 .option {
     color: white;
+}
+
+.logoIcon {
+    padding-top: 7px;
 }

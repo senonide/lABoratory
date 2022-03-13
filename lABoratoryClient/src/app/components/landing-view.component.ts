@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {Component, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
     selector: 'landing-view',
@@ -6,9 +6,6 @@ import {Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/cor
     styleUrls: ['./landing-view.component.css']
 })
 export class LandingView implements OnInit, OnDestroy {
-
-    @ViewChild('rendererCanvas', { static: true })
-    public rendererCanvas!: ElementRef<HTMLCanvasElement>;
 
     public constructor(){}
 
