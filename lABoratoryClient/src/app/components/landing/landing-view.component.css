@@ -7,10 +7,11 @@ main {
     left: 0;
 }
 
-
 header {
+    margin: auto;
     font-size: 2.5rem;
     padding: 2rem;
+    padding-top: 5vh;
 }
 
 p {
@@ -23,7 +24,7 @@ p {
 }
 
 .pos {
-    height: 70vh;
+    height: 75vh;
     padding-top: 10vh;
 }
 
@@ -43,7 +44,7 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 12vh;
+    margin-top: 25vh;
 }
 
 h1 {
@@ -52,7 +53,7 @@ h1 {
 
 
 .content {
-    width: 100%;
-    height: 195px;
+    position: relative;
+    height: 1000px;
     background-color: rgb(37, 37, 37);
 }

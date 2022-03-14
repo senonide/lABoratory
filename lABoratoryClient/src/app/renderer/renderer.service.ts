@@ -14,6 +14,8 @@ export class RendererService implements OnDestroy{
 
     private frameId: number = 0;
 
+    private isRendering: boolean = false;
+
 
     public constructor(private ngZone: NgZone){}
 
@@ -55,7 +57,7 @@ export class RendererService implements OnDestroy{
         this.scene.add(this.cubeMesh);
         this.scene.add(this.particles);
 
-        var particleShape = new THREE.BoxGeometry(4, 4, 4);
+        var particleShape = new THREE.BoxGeometry(6, 6, 6);
         var mainCubeGeometry = new THREE.IcosahedronGeometry(7);
         var meshCubeGeometry = new THREE.IcosahedronGeometry(14);
 
@@ -63,7 +65,7 @@ export class RendererService implements OnDestroy{
             color: 0xffffff,
         });
 
-        for (var i = 0; i < 1000; i++) {
+        for (var i = 0; i < 1200; i++) {
             var mesh = new THREE.Mesh(particleShape, material);
             mesh.position.set((Math.random() - 0.5), (Math.random() - 0.5) * 0.5, (Math.random() - 0.5)).normalize();
             mesh.position.multiplyScalar(200 + (Math.random() * 700));
@@ -111,10 +113,16 @@ export class RendererService implements OnDestroy{
         this.ngZone.runOutsideAngular(() => {
 
             if(document.readyState !== 'loading') {
-                this.render();
+                if(!this.isRendering){
+                    this.render();
+                    this.isRendering = true;
+                }
             } else {
                 window.addEventListener('DOMContentLoaded', () => {
-                    this.render();
+                    if(!this.isRendering){
+                        this.render();
+                        this.isRendering = true;
+                    }
                 });
                
             }
