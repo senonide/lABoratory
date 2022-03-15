@@ -1,1 +1,64 @@
-{{type}}
+<div class="frame"> 
+    <mat-card>
+        <form (submit)="authenticate(postForm)" #postForm="ngForm">
+            <ng-template [ngIf]="type==='login'"> 
+                <h1>Log In</h1>
+            </ng-template>
+            <ng-template [ngIf]="type==='signup'"> 
+                <h1>Sign Up</h1>
+            </ng-template>
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input 
+                matInput 
+                type="email" 
+                name="username" 
+                ngModel 
+                required
+                #username="ngModel">
+                <mat-error *ngIf="username.invalid">Please enter a valid email</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input 
+                matInput 
+                type="password" 
+                name="password" 
+                ngModel 
+                required
+                minlength="7"
+                #password="ngModel">
+                <mat-error *ngIf="password.invalid">Please enter a valid password</mat-error>
+            </mat-form-field>
+            <ng-template [ngIf]="type==='signup'"> 
+                <mat-form-field appearance="outline">
+                    <mat-label>Repeat the password</mat-label>
+                    <input 
+                    matInput 
+                    name="repeatedPassword" 
+                    ngModel 
+                    required
+                    #repeatedPassword="ngModel">
+                    <mat-error *ngIf="password!=repeatedPassword">The passwords doesn't match</mat-error>
+                </mat-form-field>
+                <button 
+                    mat-raised-button 
+                    color="primary"
+                    type="submit">
+                    Sign Up
+                </button>
+            </ng-template>
+            <ng-template [ngIf]="type==='login'"> 
+                <button 
+                    mat-raised-button 
+                    color="primary"
+                    type="submit">
+                    Log In
+                </button>
+            </ng-template>
+            
+            
+           
+        </form>
+    </mat-card>
+</div>

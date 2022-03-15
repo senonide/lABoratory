@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { RendererComponent } from './renderer/renderer.component';
@@ -27,6 +29,7 @@ import { AuthComponent } from './components/auth/auth.component';
     LandingView
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
