@@ -124,8 +124,17 @@ export class RendererService implements OnDestroy{
                         this.isRendering = true;
                     }
                 });
+                
                
             }
+
+            window.addEventListener('resize', () => {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+
+                this.renderer.setSize( window.innerWidth, window.innerHeight );
+                console.log("resize");
+            })
         });
     }
 
