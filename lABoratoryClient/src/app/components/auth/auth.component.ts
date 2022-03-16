@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { NgForm } from "@angular/forms";
 import {FormControl, Validators} from '@angular/forms';
 
+import { AuthService } from 'src/app/services/auth.service';
+
 
 @Component({
     selector: 'auth-component',
@@ -15,14 +17,13 @@ export class AuthComponent implements OnInit, OnDestroy {
     public type: any;
 
     username = new FormControl('', [Validators.required, Validators.email]);
-    password = new FormControl('', [Validators.required, Validators.minLength(7)]);
-    repeatedPassword =  new FormControl('', [Validators.required, Validators.minLength(7)]);
-    public constructor(private route:ActivatedRoute){}
+    password = new FormControl('', [Validators.required, Validators.minLength(1)]);
+    repeatedPassword =  new FormControl('', [Validators.required, Validators.minLength(1)]);
+    public constructor(private route:ActivatedRoute, private authService: AuthService){}
 
     authenticate(form: NgForm){
         if(form.invalid) return;
-        // Stuff
-        // To clear the entered values
+        this.authService.authUser(form.value.username, form.value.password, this.type);
         form.resetForm();
     }
 

@@ -7,6 +7,8 @@ import { RendererComponent } from './renderer/renderer.component';
 import { LandingView } from './components/landing/landing-view.component';
 
 
+import { HttpClientModule } from "@angular/common/http";
+
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,7 +40,8 @@ import { AuthComponent } from './components/auth/auth.component';
     MatButtonModule,
     MatToolbarModule,
     MatExpansionModule,
-    MatIconModule
+    MatIconModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

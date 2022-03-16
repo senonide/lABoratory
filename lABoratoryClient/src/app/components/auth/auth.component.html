@@ -26,7 +26,6 @@
                 name="password" 
                 ngModel 
                 required
-                minlength="7"
                 #password="ngModel">
                 <mat-error *ngIf="password.invalid">Please enter a valid password</mat-error>
             </mat-form-field>
@@ -35,6 +34,7 @@
                     <mat-label>Repeat the password</mat-label>
                     <input 
                     matInput 
+                    type="password" 
                     name="repeatedPassword" 
                     ngModel 
                     required

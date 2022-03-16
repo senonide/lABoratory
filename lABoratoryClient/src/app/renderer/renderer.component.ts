@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {RendererService} from './renderer.service';
+import {RendererService} from '../services/renderer.service';
 
 @Component({
     selector: 'app-renderer',

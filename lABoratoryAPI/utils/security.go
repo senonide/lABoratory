@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"lABoratory/lABoratoryAPI/config"
 	"lABoratory/lABoratoryAPI/models"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -26,9 +27,11 @@ func (sp SecurityProvider) GetPasswordHash(password string) string {
 
 func (sp SecurityProvider) GenJWT(user *models.User) (string, error) {
 	hmacSecret := []byte(config.ConfigParams.JwtSecret)
+	var exp *jwt.NumericDate = new(jwt.NumericDate)
+	exp.Time = time.Now().Add(time.Hour * 6)
 	claims := &jwt.RegisteredClaims{
-		Subject: user.Username,
-		//ExpiresAt: 15000,
+		Subject:   user.Username,
+		ExpiresAt: exp,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(hmacSecret)
@@ -48,7 +51,6 @@ func (sp SecurityProvider) GetToken(tokenString string) (*jwt.Token, error) {
 }
 
 func (sp SecurityProvider) ValidateToken(token *jwt.Token) bool {
-	// TODO: check if the token expired
 	return token.Valid
 }
 

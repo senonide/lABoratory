@@ -29,6 +29,8 @@ func main() {
 	authHandler := handlers.NewAuthHandler(authService)
 	experimentHandler := handlers.NewExperimentHandler(experimentService, authService)
 
+	router.Use(middleware.CORSMiddleware())
+
 	router.POST("/auth", authHandler.Authenticate)
 	router.POST("/signup", authHandler.Signup)
 	router.GET("/users", authHandler.GetUsers) // Only for debug
