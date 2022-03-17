@@ -28,7 +28,7 @@ func (sp SecurityProvider) GetPasswordHash(password string) string {
 func (sp SecurityProvider) GenJWT(user *models.User) (string, error) {
 	hmacSecret := []byte(config.ConfigParams.JwtSecret)
 	var exp *jwt.NumericDate = new(jwt.NumericDate)
-	exp.Time = time.Now().Add(time.Hour * 6)
+	exp.Time = time.Now().Add(time.Hour * 24)
 	claims := &jwt.RegisteredClaims{
 		Subject:   user.Username,
 		ExpiresAt: exp,
