@@ -1,14 +1,8 @@
 import {Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import { NgForm } from "@angular/forms";
-import {FormControl, Validators} from '@angular/forms';
-
-import { AuthService } from 'src/app/services/auth.service';
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpClientModule, HttpHeaders, HttpResponse } from "@angular/common/http";
-import { observable } from 'rxjs';
-
+import { ExperimentService } from 'src/app/services/experiment.service';
+import { Experiment } from 'src/app/models/experiment.model';
 
 @Component({
     selector: 'profile-component',
@@ -17,29 +11,21 @@ import { observable } from 'rxjs';
 })
 export class ProfileComponent implements OnInit, OnDestroy {
 
-    public jwt: string = '';
+    experiments: Experiment[] = [];
+    private experimentsSub: Subscription = new Subscription;
 
-    constructor(private http: HttpClient) {}
+    constructor(private experimentService: ExperimentService) {}
     
     ngOnInit(): void {
-        var auxJwt: string | null = localStorage.getItem('jwt');
-        if(auxJwt!==null){
-            this.jwt = auxJwt;
-        }
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Authorization':  this.jwt,
-            })
-        };
-        this.http.get('http://localhost:8080/experiments', httpOptions)
-        .subscribe((responseData) => {
-                console.log(responseData);
-            }
+        this.experimentService.getExperiments();
+        this.experimentsSub = this.experimentService.getExperimentUpdateListener().subscribe(
+            (experiments: Experiment[])=>{this.experiments = experiments;}
         );
+        this.experimentService.getExperiments();
     }
 
     ngOnDestroy(): void {
-        
+        this.experimentsSub.unsubscribe();
     }
-    
+
 }

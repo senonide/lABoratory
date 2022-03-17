@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HttpClient, HttpClientModule, HttpHeaders } from "@angular/common/http";
 import { Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
@@ -12,26 +12,26 @@ export class ExperimentService {
 
     private experimentsUpdated = new Subject<Experiment[]>();
 
+    private jwt: string = '';
+
     constructor(private http: HttpClient) {}
 
     getExperiments(){
-        this.http
-        .get<{message: string, posts: any}>(
-            'http://localhost:8080/experiments'
-        )
-        .pipe(map((postData) => {
-            return postData.posts.map((experiment: any) => {
-                return {
-                    id: experiment._id,
-                    name: experiment.name,
-                    assignments: experiment.assignments
-                }
-            });
-        }))
-        .subscribe(transformedExperiments => {
-            this.experiments = transformedExperiments;
+        var auxJwt: string | null = localStorage.getItem('jwt');
+        if (auxJwt!= null){
+            this.jwt = auxJwt;
+        }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Authorization':  this.jwt,
+            })
+        };
+        this.http.get<[{id: string, name: string, assignments: Assignment[]}]>('http://localhost:8080/experiments', httpOptions)
+        .subscribe(experimentsData => {
+            this.experiments = experimentsData;
             //                     Unrefered copy
             this.experimentsUpdated.next([...this.experiments]);
+            console.log(this.experiments);
         });
     }
 

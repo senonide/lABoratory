@@ -1,1 +1,21 @@
-{{jwt}}
+<mat-accordion multi="true" *ngIf="experiments.length>0">
+    <mat-expansion-panel *ngFor="let experiment of experiments">
+        <mat-expansion-panel-header>
+            {{ experiment.name }}
+        </mat-expansion-panel-header>
+        <p>
+            ID: {{ experiment.id }}
+        </p>
+        <p>
+            NAME: {{ experiment.name }}
+        </p>
+        <p>
+            ASSIGNMENTS
+        </p>
+        <p *ngFor="let assignment of experiment.assignments">
+            {{ assignment.assignmentName }} -> {{ assignment.assignmentValue }}
+        </p>
+        
+    </mat-expansion-panel>
+</mat-accordion>
+<p class="info-text mat-body-1" *ngIf="experiments.length<=0">No experiments added yet!</p>
