@@ -21,7 +21,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.experimentsSub = this.experimentService.getExperimentUpdateListener().subscribe(
             (experiments: Experiment[])=>{this.experiments = experiments;}
         );
-        this.experimentService.getExperiments();
     }
 
     ngOnDestroy(): void {

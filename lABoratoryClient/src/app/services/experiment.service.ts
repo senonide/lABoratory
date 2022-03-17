@@ -31,7 +31,6 @@ export class ExperimentService {
             this.experiments = experimentsData;
             //                     Unrefered copy
             this.experimentsUpdated.next([...this.experiments]);
-            console.log(this.experiments);
         });
     }
 
