@@ -1,3 +1,3 @@
 export class Config {
-    public apiUrl: string = 'http://localhost:8080';
+    public static apiUrl: string = 'http://localhost:8080';
 }

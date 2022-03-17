@@ -1,22 +1,21 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpClientModule, HttpHeaders } from "@angular/common/http";
-import { observable, Subject } from "rxjs";
+import { Observable, observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
 import { Assignment, Experiment } from "../models/experiment.model";
+import { Config } from "../config";
 
 @Injectable({providedIn: 'root'})
 export class ExperimentService {
 
     private experiments: Experiment[] = [];
 
-    private experimentsUpdated = new Subject<Experiment[]>();
-
     private jwt: string = '';
 
     constructor(private http: HttpClient) {}
 
-    getExperiments(){
+    getExperiments() : Observable<Experiment[]>{
         var auxJwt: string | null = localStorage.getItem('jwt');
         if (auxJwt!= null){
             this.jwt = auxJwt;
@@ -26,24 +25,13 @@ export class ExperimentService {
                 'Authorization':  this.jwt,
             })
         };
-        this.http.get<[{id: string, name: string, assignments: Assignment[]}]>('http://localhost:8080/experiments', httpOptions)
-        .subscribe(experimentsData => {
-            this.experiments = experimentsData;
-            //                     Unrefered copy
-            this.experimentsUpdated.next([...this.experiments]);
-        });
+        return this.http.get<Experiment[]>(Config.apiUrl + '/experiments', httpOptions);
     }
 
-
-    getExperimentUpdateListener(){
-        return this.experimentsUpdated.asObservable();
-    }
-
-
-
+/*
     addExperiment(name: string, assignments: Assignment[]){
         const experiment: Experiment = {id: '', name: name, assignments: assignments};
-        this.http.post<{message: string, experimentId: string}>('http://localhost:8080/experiments', experiment)
+        this.http.post<{message: string, experimentId: string}>(Config.apiUrl + '/experiments', experiment)
         .subscribe(responseData => {
                 console.log(responseData.message);
                 const id = responseData.experimentId;
@@ -56,7 +44,7 @@ export class ExperimentService {
     }
 
     deleteExperiment(experimentId: string) {
-        this.http.delete("http://localhost:8080/experiments" + experimentId)
+        this.http.delete(Config.apiUrl + '/experiments' + experimentId)
         .subscribe(() => {
             const updatedExperiments = this.experiments.filter(experiment => experiment.id !== experimentId);
             this.experiments = updatedExperiments;
@@ -64,5 +52,5 @@ export class ExperimentService {
             this.experimentsUpdated.next([...this.experiments]);
         });
     }
-
+*/
 }
