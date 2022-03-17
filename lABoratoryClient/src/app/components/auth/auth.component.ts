@@ -15,7 +15,6 @@ import { AuthService } from 'src/app/services/auth.service';
 export class AuthComponent implements OnInit, OnDestroy {
 
     public type: any;
-
     public hasError: boolean = false;
     public errorMessage: string = '';
 
