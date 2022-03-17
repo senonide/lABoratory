@@ -52,5 +52,4 @@ export class AuthComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void {
         
     }
-
 }
