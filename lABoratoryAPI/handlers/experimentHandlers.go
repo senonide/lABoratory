@@ -61,19 +61,19 @@ func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 	var data models.Experiment
 	err := c.BindJSON(&data)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error1", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	tokenFromHeader := c.Request.Header.Get("Authorization")
 	owner, err := eh.authService.GetOne(tokenFromHeader)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error2", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	data.Owner = *owner
 	err = eh.experimentService.Create(data)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error3", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentApiType(data))
