@@ -21,11 +21,11 @@ func NewDbExperimentRepository() *dbExperimentRepository {
 	return repository
 }
 
-func (r *dbExperimentRepository) GetAll() ([]models.Experiment, error) {
+func (r *dbExperimentRepository) GetAll(owner models.User) ([]models.Experiment, error) {
 	ctx := context.Background()
 	collection := r.database.Collection(ExperimentsCollName)
 	experiments := []models.Experiment{}
-	filter := bson.D{}
+	filter := bson.M{"owner": owner}
 	cur, err := collection.Find(ctx, filter)
 	if err != nil {
 		return nil, err

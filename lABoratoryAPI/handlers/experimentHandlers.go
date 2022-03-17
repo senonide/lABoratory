@@ -23,7 +23,13 @@ func NewExperimentHandler(es *services.ExperimentService, as *services.AuthServi
 }
 
 func (eh *ExperimentHandler) GetExperiments(c *gin.Context) {
-	experiments, err := eh.experimentService.GetAll()
+	tokenFromHeader := c.Request.Header.Get("Authorization")
+	owner, err := eh.authService.GetOne(tokenFromHeader)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
+	experiments, err := eh.experimentService.GetAll(owner)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
@@ -32,8 +38,14 @@ func (eh *ExperimentHandler) GetExperiments(c *gin.Context) {
 }
 
 func (eh *ExperimentHandler) GetExperimentById(c *gin.Context) {
+	tokenFromHeader := c.Request.Header.Get("Authorization")
+	owner, err := eh.authService.GetOne(tokenFromHeader)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
 	id := c.Param("id")
-	experiment, err := eh.experimentService.GetOne(id)
+	experiment, err := eh.experimentService.GetOne(id, owner)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
@@ -49,38 +61,40 @@ func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 	var data models.Experiment
 	err := c.BindJSON(&data)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error1", Error: err.Error()})
 		return
 	}
-	tokenFromCookie, err := c.Cookie("jwt")
+	tokenFromHeader := c.Request.Header.Get("Authorization")
+	owner, err := eh.authService.GetOne(tokenFromHeader)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
-		return
-	}
-	owner, err := eh.authService.GetOne(tokenFromCookie)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error2", Error: err.Error()})
 		return
 	}
 	data.Owner = *owner
 	err = eh.experimentService.Create(data)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error3", Error: err.Error()})
 		return
 	}
 	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentApiType(data))
 }
 
 func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
+	tokenFromHeader := c.Request.Header.Get("Authorization")
+	owner, err := eh.authService.GetOne(tokenFromHeader)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
 	var data models.Experiment
-	err := c.BindJSON(&data)
+	err = c.BindJSON(&data)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	id := c.Param("id")
 	data.Id = id
-	err = eh.experimentService.Update(data)
+	err = eh.experimentService.Update(data, owner)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
@@ -89,8 +103,14 @@ func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
 }
 
 func (eh *ExperimentHandler) DeleteExperiment(c *gin.Context) {
+	tokenFromHeader := c.Request.Header.Get("Authorization")
+	owner, err := eh.authService.GetOne(tokenFromHeader)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
 	id := c.Param("id")
-	wasDeleted, err := eh.experimentService.Delete(id)
+	wasDeleted, err := eh.experimentService.Delete(id, owner)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return

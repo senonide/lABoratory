@@ -28,20 +28,25 @@ func NewExperimentService(r persistence.ExperimentRepository) *ExperimentService
 	return e
 }
 
-func (s *ExperimentService) GetAll() ([]models.Experiment, error) {
-	experiments, err := s.repository.GetAll()
+func (s *ExperimentService) GetAll(owner *models.User) ([]models.Experiment, error) {
+	experiments, err := s.repository.GetAll(*owner)
 	if err != nil {
 		return nil, err
 	}
 	return experiments, nil
 }
 
-func (s *ExperimentService) GetOne(experimentId string) (*models.Experiment, error) {
+func (s *ExperimentService) GetOne(experimentId string, owner *models.User) (*models.Experiment, error) {
 	experiment, err := s.repository.GetOne(experimentId)
 	if err != nil {
 		return nil, err
 	}
-	return experiment, nil
+	if validateOwnership(experiment, owner) {
+		return experiment, nil
+	} else {
+		return nil, fmt.Errorf("ownership error")
+	}
+
 }
 
 func (s *ExperimentService) Create(experiment models.Experiment) error {
@@ -55,9 +60,12 @@ func (s *ExperimentService) Create(experiment models.Experiment) error {
 	return nil
 }
 
-func (s *ExperimentService) Update(experiment models.Experiment) error {
+func (s *ExperimentService) Update(experiment models.Experiment, owner *models.User) error {
 	if !validateExperiment(experiment) {
 		return fmt.Errorf("bad request")
+	}
+	if !validateOwnership(&experiment, owner) {
+		return fmt.Errorf("ownership error")
 	}
 	err := s.repository.Update(experiment)
 	if err != nil {
@@ -66,7 +74,14 @@ func (s *ExperimentService) Update(experiment models.Experiment) error {
 	return nil
 }
 
-func (s *ExperimentService) Delete(experimentId string) (bool, error) {
+func (s *ExperimentService) Delete(experimentId string, owner *models.User) (bool, error) {
+	experiment, err := s.repository.GetOne(experimentId)
+	if err != nil {
+		return false, err
+	}
+	if !validateOwnership(experiment, owner) {
+		return false, fmt.Errorf("ownership error")
+	}
 	wasDeleted, err := s.repository.Delete(experimentId)
 	if err != nil {
 		return wasDeleted, err
@@ -89,6 +104,14 @@ func validateExperiment(experiment models.Experiment) bool {
 		} else {
 			return false
 		}
+	} else {
+		return false
+	}
+}
+
+func validateOwnership(experiment *models.Experiment, owner *models.User) bool {
+	if experiment.Owner == *owner {
+		return true
 	} else {
 		return false
 	}

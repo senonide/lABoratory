@@ -68,7 +68,6 @@ func (ah *AuthHandler) Authenticate(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusNotFound, responses.ResponseWithError{Message: "error", Error: "incorrect password"})
 		return
 	}
-	//c.SetCookie("jwt", token, 1, "/", "localhost", true, true)
 	c.IndentedJSON(http.StatusCreated, responses.ResponseWithToken{Message: "success", Token: token})
 }
 
@@ -84,6 +83,5 @@ func (ah *AuthHandler) Signup(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	//c.SetCookie("jwt", token, 1, "/", "localhost", true, true)
 	c.IndentedJSON(http.StatusCreated, responses.ResponseWithToken{Message: "success", Token: token})
 }
