@@ -37,8 +37,8 @@ button {
     display: block;  
     margin: auto;
     margin-top: 5px;
-    padding-left: 5vmin;
-    padding-right: 5vmin;
+    padding-left: 1vw;
+    padding-right: 1vw;
 }
 
 mat-card {
@@ -47,7 +47,7 @@ mat-card {
     align-items: center;
     margin: auto;
     width: max(30vw, 400px);
-    padding: 8vmin;
+    padding: 3vw;
     border-radius: 15px;
     top: 25%;
 }

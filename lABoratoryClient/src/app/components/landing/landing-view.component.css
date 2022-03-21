@@ -11,7 +11,7 @@ header {
     margin: auto;
     font-size: 2.5rem;
     padding: 2rem;
-    padding-top: 5vh;
+    padding-top: 40px;
 }
 
 p {
@@ -25,7 +25,7 @@ p {
 
 .pos {
     height: 75vh;
-    padding-top: 10vh;
+    padding-top: 70px;
 }
 
 .title{

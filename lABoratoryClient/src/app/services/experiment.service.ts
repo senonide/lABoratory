@@ -15,10 +15,12 @@ export class ExperimentService {
 
     constructor(private http: HttpClient) {}
 
-    getExperiments() : Observable<Experiment[]>{
+    getExperiments() : Observable<Experiment[]> | null{
         var auxJwt: string | null = localStorage.getItem('jwt');
         if (auxJwt!= null){
             this.jwt = auxJwt;
+        } else {
+            return null;
         }
         const httpOptions = {
             headers: new HttpHeaders({
