@@ -21,6 +21,7 @@
                 required
                 #username="ngModel">
                 <mat-error *ngIf="username.invalid">Please enter a valid email</mat-error>
+                <mat-error *ngIf="hasError">Please enter a valid email</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
                 <mat-label>Password</mat-label>
@@ -32,6 +33,7 @@
                 required
                 #password="ngModel">
                 <mat-error *ngIf="password.invalid">Please enter a valid password</mat-error>
+                <mat-error *ngIf="hasError">Please enter a valid password</mat-error>
             </mat-form-field>
             <ng-template [ngIf]="type==='signup'"> 
                 <mat-form-field appearance="outline">

@@ -1,11 +1,11 @@
 <mat-toolbar [class.mat-elevation-z5]="true">
     <span class="logoIcon"><img src="assets/logo.png" height="40"></span>
     <span class="titlebar">lABoratory</span>
+    <button mat-button class="barbutton option">New experiment</button>
     <span class="example-spacer"></span>
     <button mat-flat-button (click)="logout()" [routerLink]="['']" color="warn">Log out</button>
 </mat-toolbar>
-<div class="experimentsList">
-    <button mat-flat-button class="newExp" color="primary">New experiment</button>
+<div class="sideMenu">
     <mat-accordion multi="true" *ngIf="experiments.length>0">
         <mat-expansion-panel *ngFor="let experiment of experiments">
             <mat-expansion-panel-header>
@@ -27,6 +27,7 @@
         </mat-expansion-panel>
     </mat-accordion>
     <p class="info-text mat-body-1" *ngIf="experiments.length<=0">No experiments added yet!</p>
+    
 </div>
 <div class="experimentsDetails">
     Detalles del experimento seleccionado o formulario para crearlo
