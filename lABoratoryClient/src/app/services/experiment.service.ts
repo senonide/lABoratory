@@ -30,6 +30,21 @@ export class ExperimentService {
         return this.http.get<Experiment[]>(Config.apiUrl + '/experiments', httpOptions);
     }
 
+    deleteExperiment(experiment: Experiment) {
+        var auxJwt: string | null = localStorage.getItem('jwt');
+        if (auxJwt!= null){
+            this.jwt = auxJwt;
+        } else {
+            return null;
+        }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Authorization':  this.jwt,
+            })
+        };
+        return this.http.delete(Config.apiUrl + '/experiments/' + experiment.id, httpOptions);
+    }
+
 /*
     addExperiment(name: string, assignments: Assignment[]){
         const experiment: Experiment = {id: '', name: name, assignments: assignments};

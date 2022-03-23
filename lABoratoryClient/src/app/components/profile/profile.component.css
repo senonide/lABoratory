@@ -61,3 +61,32 @@ mat-toolbar {
     padding-left: 30px;
     padding-top: 70px;
 }
+
+.experimentListElement {
+    padding: 2px;
+    border: 0px;
+    margin-bottom: 10px;
+    border-radius: 15px;
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    color: grey;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+mat-divider {
+    margin-bottom: 20px;
+}
+
+.formButton {
+    margin: 10px;
+}

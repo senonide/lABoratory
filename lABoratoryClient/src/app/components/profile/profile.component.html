@@ -1,34 +1,68 @@
 <mat-toolbar [class.mat-elevation-z5]="true">
     <span class="logoIcon"><img src="assets/logo.png" height="40"></span>
     <span class="titlebar">lABoratory</span>
-    <button mat-button class="barbutton option">New experiment</button>
+    <button mat-button (click)="newExperimentOption()" class="barbutton option">New Experiment</button>
     <span class="example-spacer"></span>
     <button mat-flat-button (click)="logout()" [routerLink]="['']" color="warn">Log out</button>
 </mat-toolbar>
 <div class="sideMenu">
-    <mat-accordion multi="true" *ngIf="experiments.length>0">
-        <mat-expansion-panel *ngFor="let experiment of experiments">
-            <mat-expansion-panel-header>
-                {{ experiment.name }}
-            </mat-expansion-panel-header>
-            <p>
-                ID: {{ experiment.id }}
-            </p>
-            <p>
-                NAME: {{ experiment.name }}
-            </p>
-            <p>
-                ASSIGNMENTS
-            </p>
-            <p *ngFor="let assignment of experiment.assignments">
-                {{ assignment.assignmentName }} -> {{ assignment.assignmentValue }}
-            </p>
-            
-        </mat-expansion-panel>
-    </mat-accordion>
+    <mat-card  [class.mat-elevation-z0]="true" class="experimentListElement" *ngFor="let experiment of experiments">
+        <button mat-button (click)="selectExperiment(experiment)" color="primary"> {{ experiment.name }} </button>
+    </mat-card>
     <p class="info-text mat-body-1" *ngIf="experiments.length<=0">No experiments added yet!</p>
     
 </div>
-<div class="experimentsDetails">
-    Detalles del experimento seleccionado o formulario para crearlo
+<div class="experimentsDetails" [ngSwitch]="this.formType">
+    <div *ngSwitchCase="0">
+        <h1>Select an experiment to see its details or click on New Experiment to create a new one</h1>
+    </div>
+    <div *ngSwitchCase="1">
+        <h2>
+            Create a new experiment
+        </h2>
+        <button mat-flat-button (click)="addAssignment()" color="primary">Add new assignment</button>
+        <form (submit)="newExperiment(postForm)" #postForm="ngForm">
+            <mat-form-field appearance="outline">
+                <mat-label>New experiment name</mat-label>
+                <input 
+                matInput 
+                type="text" 
+                name="experimentName" 
+                ngModel 
+                required
+                #experimentName="ngModel">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Control group assignment name</mat-label>
+                <input 
+                matInput 
+                type="text" 
+                name="controlAssignmentName" 
+                ngModel 
+                required
+                #controlAssignmentName="ngModel">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Control group assignment percentage</mat-label>
+                <input 
+                matInput 
+                type="number" 
+                name="controlAssignmentValue" 
+                ngModel 
+                required
+                #controlAssignmentValue="ngModel">
+            </mat-form-field>
+        </form>
+    </div>
+    <div *ngSwitchCase="2">
+        <h2>
+            {{this.selectedExperiment.name}}
+        </h2>
+        <mat-divider></mat-divider>
+        <p *ngFor="let assignment of this.selectedExperiment.assignments">
+            {{assignment.assignmentName}} -  {{assignment.assignmentValue}}%
+        </p>
+        <button mat-flat-button (click)="editExpreiment()" color="primary" class="formButton">Edit</button>
+        <button mat-flat-button (click)="deleteExperiment(this.selectedExperiment)" color="warn"  class="formButton">Delete</button>
+    </div>
 </div>
