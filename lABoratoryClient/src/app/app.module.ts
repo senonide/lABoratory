@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';  
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { RendererComponent } from './renderer/renderer.component';
@@ -11,13 +11,16 @@ import { LandingView } from './components/landing/landing-view.component';
 
 import { HttpClientModule } from "@angular/common/http";
 
+
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -38,6 +41,9 @@ import { ProfileComponent } from './components/profile/profile.component';
   ],
   imports: [
     FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSidenavModule,
     CommonModule,
     BrowserModule,
     AppRoutingModule,

@@ -15,7 +15,7 @@ export class ExperimentService {
 
     constructor(private http: HttpClient) {}
 
-    getExperiments() : Observable<Experiment[]> | null{
+    getExperiments(){
         var auxJwt: string | null = localStorage.getItem('jwt');
         if (auxJwt!= null){
             this.jwt = auxJwt;
@@ -43,6 +43,21 @@ export class ExperimentService {
             })
         };
         return this.http.delete(Config.apiUrl + '/experiments/' + experiment.id, httpOptions);
+    }
+
+    createExperiment(experiment: Experiment) {
+        var auxJwt: string | null = localStorage.getItem('jwt');
+        if (auxJwt!= null){
+            this.jwt = auxJwt;
+        } else {
+            return null;
+        }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Authorization':  this.jwt,
+            })
+        };
+        return this.http.post(Config.apiUrl + '/experiments', experiment, httpOptions);
     }
 
 /*

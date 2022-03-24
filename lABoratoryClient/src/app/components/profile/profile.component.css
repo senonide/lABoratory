@@ -1,11 +1,19 @@
-:host {
-    display: block;
-    margin-top: 20px;
+mat-sidenav-container {
+    height: 100%;
 }
 
-.info-text {
-    text-align:center;
+mat-sidenav, mat-sidenav-content {
+    padding: 15px;
+    padding-top: 70px;
+}
 
+mat-sidenav-content {
+    height: max-content;
+}
+
+mat-sidenav {
+    background-color: #f2f2f2;
+    width: 20%;
 }
 
 mat-toolbar {
@@ -38,17 +46,15 @@ mat-toolbar {
     flex: 1 1 auto;
 }
 
-.sideMenu {
-    background-color: #f5f5f5;
-    position: absolute;
-    width: 20%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    padding-top: 70px;
-    padding-left: 10px;
-    padding-right: 10px;
-    z-index: 5;
+.experimentListElement {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.info-text {
+    text-align:center;
+
 }
 
 .experimentsDetails {
@@ -60,13 +66,6 @@ mat-toolbar {
     width: 80%;
     padding-left: 30px;
     padding-top: 70px;
-}
-
-.experimentListElement {
-    padding: 2px;
-    border: 0px;
-    margin-bottom: 10px;
-    border-radius: 15px;
 }
 
 h1 {
@@ -88,5 +87,35 @@ mat-divider {
 }
 
 .formButton {
-    margin: 10px;
+    margin-left: 0px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+.deleteButton {
+    position: absolute;
+    top: 80px;
+    
+}
+
+.formElement {
+    display: block;
+    margin-right: 40px;
+    margin-bottom: 15px;
+    width: 45%;
+}
+
+.column1 {
+    position: absolute;
+    width: 100%;
+}
+
+.column2 {
+    position: absolute;
+    margin-left: 47%;
+    width: 95%;
+}
+
+.buttonsContainer {
+    width: 40%
 }

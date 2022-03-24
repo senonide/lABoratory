@@ -91,6 +91,9 @@ func (s *ExperimentService) Delete(experimentId string, owner *models.User) (boo
 
 func validateExperiment(experiment models.Experiment) bool {
 	if experiment.Name != "" {
+		if isDuplicated(experiment.Assignments) {
+			return false
+		}
 		var acc float64 = 0.0
 		for _, assig := range experiment.Assignments {
 			if assig.AssignmentName == "" {
@@ -107,6 +110,18 @@ func validateExperiment(experiment models.Experiment) bool {
 	} else {
 		return false
 	}
+}
+
+func isDuplicated(arr []models.Assignment) bool {
+	visited := make(map[models.Assignment]bool, 0)
+	for i := 0; i < len(arr); i++ {
+		if visited[arr[i]] {
+			return true
+		} else {
+			visited[arr[i]] = true
+		}
+	}
+	return false
 }
 
 func validateOwnership(experiment *models.Experiment, owner *models.User) bool {

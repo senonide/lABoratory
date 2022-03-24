@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { FormArray } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { ExperimentService } from 'src/app/services/experiment.service';
-import { Experiment } from 'src/app/models/experiment.model';
+import { Assignment, Experiment } from 'src/app/models/experiment.model';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
@@ -23,10 +23,14 @@ export enum FormType {
 export class ProfileComponent implements OnInit, OnDestroy {
 
     experiments: Experiment[] = [];
+
+    newExperimentForm!: FormGroup;
+    newExperiment!: Experiment;
+
     selectedExperiment!: Experiment;
     formType: FormType = FormType.DEFAULT;
 
-    constructor(private experimentService: ExperimentService, private router: Router) {}
+    constructor(private experimentService: ExperimentService, private router: Router, private formBuilder: FormBuilder) {}
 
     logout(): void {
         localStorage.removeItem('jwt');
@@ -41,16 +45,57 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.selectedExperiment = experiment;
     }
 
-    newExperiment(form: NgForm) {
-
+    get assignments() {
+        return this.newExperimentForm.get("assignments") as FormArray;
     }
 
-    addAssignment() {
+    addAssignments() {
+        this.assignments.push(
+            this.formBuilder.control('')
+        );
+    }
+
+    createExperiment() {
+        var newExperimentAssignments: Assignment[] = [];
+        newExperimentAssignments.push({
+            assignmentName: "c",
+            assignmentValue: Number(this.newExperimentForm.value.controlAssignmentValue)
+        });
+        var index: number = 1;
+        for(let assignment of this.newExperimentForm.value.assignments) {
+            if (assignment!=""){
+                newExperimentAssignments.push({
+                    assignmentName: "a" + index,
+                    assignmentValue: Number(assignment)
+                });
+                index++;
+            }
+        }
+        var newExperiment: Experiment = {
+            id: "",
+            name: this.newExperimentForm.value.name,
+            assignments: newExperimentAssignments  
+        };
         
-    }
-
-    editExpreiment() {
-
+        this.experimentService.createExperiment(newExperiment)?.subscribe({
+            next: () => {
+                this.newExperimentForm.reset();
+                this.formType = FormType.DEFAULT
+                console.log(newExperiment);
+                this.experimentService.getExperiments()?.subscribe({
+                    next: (experiments) => {
+                        this.experiments = experiments;
+                    },
+                    error: () => {
+                        this.router.navigate(['/auth/login']);
+                    }
+                });
+            },
+            error: () => {
+                
+            }
+        });
+        
     }
 
     deleteExperiment(experiment: Experiment) {
@@ -86,6 +131,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 }
             });
         }
+
+        this.newExperimentForm = this.formBuilder.group({
+            name: new FormControl('', [Validators.required]),
+            controlAssignmentValue: new FormControl('', [Validators.required]),
+            assignments: this.formBuilder.array([])
+        });
     }
 
     ngOnDestroy(): void {
