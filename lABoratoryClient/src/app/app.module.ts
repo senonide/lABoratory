@@ -8,9 +8,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RendererComponent } from './renderer/renderer.component';
 import { LandingView } from './components/landing/landing-view.component';
 
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { HttpClientModule } from "@angular/common/http";
-
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,7 +20,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -43,7 +43,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatSidenavModule,
+    MatListModule,
     CommonModule,
     BrowserModule,
     AppRoutingModule,
@@ -55,6 +55,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     MatToolbarModule,
     MatExpansionModule,
     MatIconModule,
+    NgxChartsModule,
     HttpClientModule
   ],
   providers: [],

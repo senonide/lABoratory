@@ -128,3 +128,17 @@ mat-divider {
 .buttonsContainer {
     width: 95%
 }
+
+.chart {
+    display: inline-block;
+    width: 50%;
+    margin-left: 40%;
+    height: 300px;
+}
+
+.experimentAssigmentsContent {
+    position: absolute;
+    display: block;
+    width: 30%;
+    padding-left: 20px;
+}

@@ -7,6 +7,8 @@ import { ExperimentService } from 'src/app/services/experiment.service';
 import { Assignment, Experiment } from 'src/app/models/experiment.model';
 import { Router } from '@angular/router';
 
+import { Color, ScaleType } from '@swimlane/ngx-charts';
+import { ChartElement } from 'src/app/models/chart-element.model';
 
 export enum FormType {
     DEFAULT,
@@ -27,9 +29,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
     newExperiment!: Experiment;
 
     selectedExperiment!: Experiment;
+    currentAssignments: any[] = [];
     formType: FormType = FormType.DEFAULT;
 
-    constructor(private experimentService: ExperimentService, private router: Router, private formBuilder: FormBuilder) {}
+    colorScheme: Color = { 
+        domain: ['#FF3C38', '#54C6EB',  '#FFBC42', '#69DC9E', '#6F58C9'], 
+        group: ScaleType.Ordinal, 
+        selectable: false, 
+        name: 'Customer Usage', 
+    };
+
+    constructor(private experimentService: ExperimentService, private router: Router, private formBuilder: FormBuilder) {
+    }
 
     logout(): void {
         localStorage.removeItem('jwt');
@@ -42,6 +53,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     selectExperiment(experiment: Experiment): void {
         this.formType = FormType.EXPDET;
         this.selectedExperiment = experiment;
+        var aux: any[] = [];
+        for (let assignment of experiment.assignments){
+            aux.push(ChartElement.getChartElementFromAssignment(assignment));
+        }
+        this.currentAssignments = aux;
+       
     }
 
     get assignments() {

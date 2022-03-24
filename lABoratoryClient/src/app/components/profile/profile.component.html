@@ -32,7 +32,7 @@
                         required>
                     </mat-form-field>
                     <mat-form-field appearance="outline" class="formElement">
-                        <mat-label>Control group activation assignment percentage</mat-label>
+                        <mat-label>Control group activation percentage</mat-label>
                         <input 
                         matInput 
                         type="text" 
@@ -65,11 +65,25 @@
                 <mat-icon>delete</mat-icon>
             </button>
             <mat-divider></mat-divider>
-            <p *ngFor="let assignment of this.selectedExperiment.assignments">
-                {{assignment.assignmentName}} -  {{assignment.assignmentValue}}%
-            </p>
-            
-            
+            <div class="experimentAssigmentsContent">
+                <mat-list>
+                    <mat-list-item *ngFor="let assignment of this.selectedExperiment.assignments">
+                        {{assignment.assignmentName.toUpperCase()}} -  {{assignment.assignmentValue}}%
+                    </mat-list-item>
+                </mat-list>
+            </div>
+            <div class="chart">
+                <ngx-charts-pie-chart
+                    [scheme]="colorScheme"
+                    [results]="currentAssignments"
+                    [gradient]="false"
+                    [legend]="true"
+                    [doughnut]="true"
+                    [arcWidth]="0.40"
+                    [animations]="true"
+                    [tooltipDisabled]="true">
+                </ngx-charts-pie-chart>
+            </div>
         </div>
     </div>
 </div>
