@@ -4,7 +4,7 @@ import { Observable, observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 
 import { Assignment, Experiment } from "../models/experiment.model";
-import { Config } from "../config";
+import { Config } from "../config/config";
 
 @Injectable({providedIn: 'root'})
 export class ExperimentService {

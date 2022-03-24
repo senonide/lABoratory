@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -6,7 +6,6 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { ExperimentService } from 'src/app/services/experiment.service';
 import { Assignment, Experiment } from 'src/app/models/experiment.model';
 import { Router } from '@angular/router';
-import { NgForm } from '@angular/forms';
 
 
 export enum FormType {
@@ -22,7 +21,7 @@ export enum FormType {
 })
 export class ProfileComponent implements OnInit, OnDestroy {
 
-    experiments: Experiment[] = [];
+    public experiments: Experiment[] = [];
 
     newExperimentForm!: FormGroup;
     newExperiment!: Experiment;
@@ -85,6 +84,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 this.experimentService.getExperiments()?.subscribe({
                     next: (experiments) => {
                         this.experiments = experiments;
+                        this.newExperimentForm = this.formBuilder.group({
+                            name: new FormControl('', [Validators.required]),
+                            controlAssignmentValue: new FormControl('', [Validators.required]),
+                            assignments: this.formBuilder.array([])
+                        });
                     },
                     error: () => {
                         this.router.navigate(['/auth/login']);

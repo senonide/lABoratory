@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { map, Observable } from "rxjs";
-import { Config } from "../config";
+import { Config } from "../config/config";
 
 export interface AuthResponse{
     response: string,
