@@ -30,6 +30,8 @@ import { AuthComponent } from './components/auth/auth.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ExperimentList } from './components/profile/profile-components/experiment-list/experiment-list.component';
 import { ExperimentContent } from './components/profile/profile-components/experiment-content/experiment-content.component';
+import { CreateExperiment } from './components/profile/profile-components/create-experiment/create-experiment.component';
+import { ExperimentDetails } from './components/profile/profile-components/experiment-details/experiment-details.component';
 
 
 @NgModule({
@@ -41,6 +43,8 @@ import { ExperimentContent } from './components/profile/profile-components/exper
     ProfileComponent,
     ExperimentList,
     ExperimentContent,
+    CreateExperiment,
+    ExperimentDetails,
     LandingView
   ],
   imports: [

@@ -1,0 +1,49 @@
+h2 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+mat-divider {
+    margin-bottom: 20px;
+}
+
+.formButton {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+.formElement {
+    display: block;
+    margin-left: 10px;
+    margin-right: 40px;
+    margin-bottom: 0px;
+    width: 95%;
+}
+
+.newAssignments {
+    display: inline-block;
+    width: 50%;
+}
+
+.assignmentFormElement {
+    margin-left: 10px;
+    margin-bottom: 0px;
+    width: 90%;
+}
+
+.column1 {
+    position: absolute;
+    width: 40%;
+}
+
+.column2 {
+    position: absolute;
+    margin-left: 40%;
+    width: 40%;
+}
+
+.buttonsContainer {
+    width: 95%
+}

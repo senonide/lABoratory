@@ -1,0 +1,26 @@
+<h2>
+    {{this.profileService.selectedExperiment.name}}
+</h2>
+<button mat-icon-button (click)="deleteExperiment(this.profileService.selectedExperiment)" color="warn" aria-label="Delete" class="formButton deleteButton">
+    <mat-icon>delete</mat-icon>
+</button>
+<mat-divider></mat-divider>
+<div class="experimentAssigmentsContent">
+    <mat-list>
+        <mat-list-item *ngFor="let assignment of this.profileService.selectedExperiment.assignments">
+            {{assignment.assignmentName.toUpperCase()}} -  {{assignment.assignmentValue}}%
+        </mat-list-item>
+    </mat-list>
+</div>
+<div class="chart">
+    <ngx-charts-pie-chart
+        [scheme]="colorScheme"
+        [results]="this.profileService.currentAssignments"
+        [gradient]="false"
+        [legend]="true"
+        [doughnut]="true"
+        [arcWidth]="0.40"
+        [animations]="true"
+        [tooltipDisabled]="true">
+    </ngx-charts-pie-chart>
+</div>
