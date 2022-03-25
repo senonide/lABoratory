@@ -46,11 +46,11 @@ export class CreateExperiment implements OnInit {
             name: this.newExperimentForm.value.name,
             assignments: newExperimentAssignments  
         };
+        if(!this.validateExperiment(newExperiment)) return;
         this.experimentService.createExperiment(newExperiment)?.subscribe({
             next: () => {
                 this.newExperimentForm.reset();
                 this.profileService.formType = FormType.DEFAULT
-                console.log(newExperiment);
                 this.experimentService.getExperiments()?.subscribe({
                     next: (experiments) => {
                         this.experimentService.experiments = experiments;
@@ -67,6 +67,18 @@ export class CreateExperiment implements OnInit {
             },
             error: () => {}
         });
+    }
+
+    private validateExperiment(experiment: Experiment): boolean {
+        var acc: number = 0;
+        for(let assignment of experiment.assignments) {
+            acc += assignment.assignmentValue;
+        }
+        if(Math.round(acc) == 100) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     get assignments() {
