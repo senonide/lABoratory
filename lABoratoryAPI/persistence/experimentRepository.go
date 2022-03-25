@@ -8,4 +8,5 @@ type ExperimentRepository interface {
 	Create(experiment models.Experiment) error
 	Update(experiment models.Experiment) error
 	Delete(experimentId string) (bool, error)
+	DeleteAll(owner models.User) (bool, error)
 }

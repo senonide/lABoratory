@@ -100,3 +100,14 @@ func (r *dbExperimentRepository) Delete(experimentId string) (bool, error) {
 	}
 	return true, nil
 }
+
+func (r *dbExperimentRepository) DeleteAll(owner models.User) (bool, error) {
+	ctx := context.Background()
+	collection := r.database.Collection(ExperimentsCollName)
+	filter := bson.M{"owner": owner}
+	_, err := collection.DeleteMany(ctx, filter)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}

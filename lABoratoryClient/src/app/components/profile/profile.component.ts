@@ -13,6 +13,9 @@ export class ProfileComponent {
 
     logout(): void {
         localStorage.removeItem('jwt');
+        this.profileService.currentAssignments = [];
+        this.profileService.formType = FormType.DEFAULT;
+        this.profileService.selectedExperiment = null;
     }
 
     newExperimentOption() {

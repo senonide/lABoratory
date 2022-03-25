@@ -89,6 +89,14 @@ func (s *ExperimentService) Delete(experimentId string, owner *models.User) (boo
 	return wasDeleted, nil
 }
 
+func (s *ExperimentService) DeleteAll(owner *models.User) (bool, error) {
+	wasDeleted, err := s.repository.DeleteAll(*owner)
+	if err != nil {
+		return wasDeleted, err
+	}
+	return wasDeleted, nil
+}
+
 func validateExperiment(experiment models.Experiment) bool {
 	if experiment.Name != "" {
 		if isDuplicated(experiment.Assignments) {

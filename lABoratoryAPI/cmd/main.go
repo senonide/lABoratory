@@ -23,8 +23,8 @@ func main() {
 	experimetnRepository := database.NewDbExperimentRepository()
 	securityProvider := utils.NewSecurityProvider()
 
-	authService := services.NewAuthService(userRepository, securityProvider)
 	experimentService := services.NewExperimentService(experimetnRepository)
+	authService := services.NewAuthService(userRepository, securityProvider, experimentService)
 
 	authHandler := handlers.NewAuthHandler(authService)
 	experimentHandler := handlers.NewExperimentHandler(experimentService, authService)

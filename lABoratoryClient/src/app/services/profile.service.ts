@@ -5,7 +5,7 @@ import { Experiment } from "../models/experiment.model";
 @Injectable({providedIn: 'root'})
 export class ProfileService {
 
-    selectedExperiment!: Experiment;
+    selectedExperiment: Experiment | null = null;
     currentAssignments: any[] = [];
     formType: FormType = FormType.DEFAULT;
 

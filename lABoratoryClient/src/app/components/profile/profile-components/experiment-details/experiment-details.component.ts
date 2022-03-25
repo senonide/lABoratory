@@ -21,7 +21,10 @@ export class ExperimentDetails {
 
     constructor(public profileService: ProfileService, private experimentService: ExperimentService, private router: Router) {}
 
-    deleteExperiment(experiment: Experiment) {
+    deleteExperiment(experiment: Experiment | null) {
+        if (experiment == null){
+            return
+        }
         this.experimentService.deleteExperiment(experiment)?.subscribe({
             next: () => {
                 this.experimentService.getExperiments()?.subscribe({

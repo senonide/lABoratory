@@ -8,8 +8,9 @@ import (
 )
 
 type AuthService struct {
-	repository       persistence.UserRepository
-	securityProvider *utils.SecurityProvider
+	repository        persistence.UserRepository
+	securityProvider  *utils.SecurityProvider
+	experimentService *ExperimentService
 }
 
 type AuthServiceI interface {
@@ -20,10 +21,11 @@ type AuthServiceI interface {
 	ValidateUser(unknownUser models.User) (string, error)
 }
 
-func NewAuthService(r persistence.UserRepository, sp *utils.SecurityProvider) *AuthService {
+func NewAuthService(r persistence.UserRepository, sp *utils.SecurityProvider, es *ExperimentService) *AuthService {
 	as := new(AuthService)
 	as.repository = r
 	as.securityProvider = sp
+	as.experimentService = es
 	return as
 }
 
@@ -64,7 +66,11 @@ func (as *AuthService) Delete(token string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return wasDeleted, nil
+	wereDeleted, err := as.experimentService.DeleteAll(user)
+	if err != nil {
+		return wasDeleted, fmt.Errorf("error deleting user experiments")
+	}
+	return wasDeleted && wereDeleted, nil
 }
 
 func (as *AuthService) SignupUser(unknownUser models.User) (string, error) {
