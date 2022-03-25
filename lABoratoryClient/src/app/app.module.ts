@@ -28,6 +28,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './components/home/home.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ExperimentList } from './components/profile/profile-components/experiment-list/experiment-list.component';
+import { ExperimentContent } from './components/profile/profile-components/experiment-content/experiment-content.component';
 
 
 @NgModule({
@@ -37,6 +39,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     AuthComponent,
     RendererComponent,
     ProfileComponent,
+    ExperimentList,
+    ExperimentContent,
     LandingView
   ],
   imports: [

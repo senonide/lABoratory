@@ -9,7 +9,7 @@ import { Config } from "../config/config";
 @Injectable({providedIn: 'root'})
 export class ExperimentService {
 
-    private experiments: Experiment[] = [];
+    public experiments: Experiment[] = [];
 
     private jwt: string = '';
 

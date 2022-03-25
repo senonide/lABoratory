@@ -1,0 +1,74 @@
+<div [ngSwitch]="this.profileService.formType">
+    <div *ngSwitchCase="0">
+        <h1>Select an experiment to see its details or click on New Experiment to create a new one</h1>
+    </div>
+    <div *ngSwitchCase="1">
+        <h2>
+            Create a new experiment
+        </h2>
+        <mat-divider></mat-divider>
+        <form [formGroup]="newExperimentForm" (submit)="createExperiment()" class="experimentForm">
+            <div class="column1">
+                <mat-form-field appearance="outline" class="formElement">
+                    <mat-label>New experiment name</mat-label>
+                    <input 
+                    matInput 
+                    type="text" 
+                    formControlName="name"
+                    required>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="formElement">
+                    <mat-label>Control group activation percentage</mat-label>
+                    <input 
+                    matInput 
+                    type="text" 
+                    formControlName="controlAssignmentValue" 
+                    required>
+                </mat-form-field>
+                <div class="buttonsContainer">
+                    <button mat-flat-button type="submit" color="primary" class="formButton">Create new experiment</button>
+                    <button mat-stroked-button type="button" (click)="addAssignments()" color="primary" class="formButton">Add new assignment</button>
+                </div>
+            </div>
+            <div class="column2">
+                <div class="newAssignments" formArrayName="assignments" *ngFor="let assignment of assignments.controls; let i = index">
+                    <mat-form-field appearance="outline" class="assignmentFormElement right">
+                        <mat-label>A{{i + 1}}, activation percentage</mat-label>
+                        <input 
+                        matInput 
+                        type="text" 
+                        [formControlName]="i">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div *ngSwitchCase="2">
+        <h2>
+            {{this.profileService.selectedExperiment.name}}
+        </h2>
+        <button mat-icon-button (click)="deleteExperiment(this.profileService.selectedExperiment)" color="warn" aria-label="Delete" class="formButton deleteButton">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <mat-divider></mat-divider>
+        <div class="experimentAssigmentsContent">
+            <mat-list>
+                <mat-list-item *ngFor="let assignment of this.profileService.selectedExperiment.assignments">
+                    {{assignment.assignmentName.toUpperCase()}} -  {{assignment.assignmentValue}}%
+                </mat-list-item>
+            </mat-list>
+        </div>
+        <div class="chart">
+            <ngx-charts-pie-chart
+                [scheme]="colorScheme"
+                [results]="this.profileService.currentAssignments"
+                [gradient]="false"
+                [legend]="true"
+                [doughnut]="true"
+                [arcWidth]="0.40"
+                [animations]="true"
+                [tooltipDisabled]="true">
+            </ngx-charts-pie-chart>
+        </div>
+    </div>
+</div>

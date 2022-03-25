@@ -1,0 +1,4 @@
+<button mat-button *ngFor="let experiment of this.experimentService.experiments" (click)="selectExperiment(experiment)" color="primary" class="experimentListElement"> 
+    {{ experiment.name }} 
+</button>
+<p class="info-text mat-body-1" *ngIf="this.experimentService.experiments.length<=0">No experiments added yet!</p>
