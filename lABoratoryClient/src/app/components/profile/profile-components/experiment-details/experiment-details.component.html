@@ -1,9 +1,21 @@
-<h2>
-    {{this.profileService.selectedExperiment?.name}}
-</h2>
-<button mat-icon-button (click)="deleteExperiment(this.profileService.selectedExperiment)" color="warn" aria-label="Delete" class="formButton deleteButton">
-    <mat-icon>delete</mat-icon>
-</button>
+<div class="header">
+    <h2>
+        {{this.profileService.selectedExperiment?.name}}
+    </h2>
+    <div class="options">
+        <button mat-icon-button color="primary" aria-label="Edit" class="formButton deleteButton">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="this.profileService.isTryingToDelete = !this.profileService.isTryingToDelete" color="warn" aria-label="Delete" class="formButton deleteButton">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <p *ngIf="this.profileService.isTryingToDelete" class="warning">
+            Are you sure you want to delete {{this.profileService.selectedExperiment?.name}}?
+        </p>
+        <button *ngIf="this.profileService.isTryingToDelete" mat-button (click)="deleteExperiment(this.profileService.selectedExperiment)" class="optionButton" color="warn">Yes</button>
+        <button *ngIf="this.profileService.isTryingToDelete" mat-button (click)="this.profileService.isTryingToDelete = false" class="optionButton" color="primary">No</button>
+    </div>
+</div>
 <mat-divider></mat-divider>
 <div class="experimentAssigmentsContent">
     <mat-list>
@@ -21,6 +33,6 @@
         [doughnut]="true"
         [arcWidth]="0.40"
         [animations]="true"
-        [tooltipDisabled]="true">
+        [tooltipDisabled]="false">
     </ngx-charts-pie-chart>
 </div>

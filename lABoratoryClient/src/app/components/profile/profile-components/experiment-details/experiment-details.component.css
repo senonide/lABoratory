@@ -1,19 +1,12 @@
 h2 {
-    display: flex;
-    justify-content: center;
+    display: inline-block;
     margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 mat-divider {
     margin-bottom: 20px;
-}
-
-.deleteButton {
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 15px;
-    position: absolute;
-    top: 80px; 
 }
 
 .chart {
@@ -28,4 +21,30 @@ mat-divider {
     display: block;
     width: 30%;
     padding-left: 20px;
+}
+
+.warning {
+    display: inline-block;
+}
+
+
+.deleteButton {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.header{
+    white-space: nowrap;
+    width: 100%;
+}
+
+.options {
+    display: inline-block;
+    align-items: right;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    top: 80px; 
+    white-space: nowrap;
 }

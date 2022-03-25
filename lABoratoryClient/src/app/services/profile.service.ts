@@ -8,6 +8,7 @@ export class ProfileService {
     selectedExperiment: Experiment | null = null;
     currentAssignments: any[] = [];
     formType: FormType = FormType.DEFAULT;
+    isTryingToDelete: boolean = false;
 
 }
 
