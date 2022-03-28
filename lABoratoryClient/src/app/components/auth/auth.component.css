@@ -19,11 +19,12 @@ mat-toolbar {
 
 .frame {
     position: absolute;
+    z-index: 20;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom right,  #3d6fda 30%,#ff4081 100%);
+    /*background: linear-gradient(to bottom right,  #3d6fda 30%,#ff4081 100%);*/
 }
 
 mat-form-field {
