@@ -18,11 +18,15 @@
 </div>
 <mat-divider></mat-divider>
 <div class="experimentAssigmentsContent">
-    <mat-list>
-        <mat-list-item *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
-            {{assignment.assignmentName.toUpperCase()}} -  {{assignment.assignmentValue}}%
-        </mat-list-item>
-    </mat-list>
+    <mat-card [class.mat-elevation-z0]="true">
+        <h2>Experiment assignments</h2>
+        <mat-divider class="expDivider"></mat-divider>
+        <mat-list>
+            <mat-list-item *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
+                {{assignment.assignmentName.toUpperCase()}} -  {{assignment.assignmentValue}}%
+            </mat-list-item>
+        </mat-list>
+    </mat-card>
 </div>
 <div class="chart">
     <ngx-charts-pie-chart

@@ -9,6 +9,15 @@ mat-divider {
     margin-bottom: 20px;
 }
 
+mat-list {
+    margin-left: 20px;
+}
+
+mat-card {
+    background-color: #f5f5f5;
+    border-radius: 20px;
+}
+
 .chart {
     display: inline-block;
     width: 50%;
@@ -47,4 +56,9 @@ mat-divider {
     margin-bottom: 15px;
     top: 80px; 
     white-space: nowrap;
+}
+
+.expDivider {
+    border-top-width: 6px;
+    border-color: white;
 }
