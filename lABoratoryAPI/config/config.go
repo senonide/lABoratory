@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-const ConfigFilePath = "config/config.json"
+const ConfigFilePath = "../config/config.json"
 
 var ConfigParams *Config = ReadConfig()
 

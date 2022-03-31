@@ -47,7 +47,7 @@ func (eh *ExperimentHandler) GetExperimentById(c *gin.Context) {
 	id := c.Param("id")
 	experiment, err := eh.experimentService.GetOne(id, owner)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	if experiment == nil {

@@ -1,8 +1,3 @@
-/*
-	This class is in charge of connecting the application to the database in mongodb
-	The password is loaded from a file that is not in the repository for security reasons.
-	You can modify the connection variables to connect to another database
-*/
 package database
 
 import (

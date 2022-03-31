@@ -1,6 +1,3 @@
-/*
-	This class is in charge of implementing the CRUD methods
-*/
 package services
 
 import (
@@ -20,6 +17,7 @@ type ExperimentServiceI interface {
 	Create(experiment models.Experiment) error
 	Update(experiment models.Experiment) error
 	Delete(experimentId string) (bool, error)
+	DeleteAll(owner *models.User) (bool, error)
 }
 
 func NewExperimentService(r persistence.ExperimentRepository) *ExperimentService {
