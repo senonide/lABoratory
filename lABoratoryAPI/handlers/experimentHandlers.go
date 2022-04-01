@@ -11,11 +11,11 @@ import (
 )
 
 type ExperimentHandler struct {
-	experimentService *services.ExperimentService
-	authService       *services.AuthService
+	experimentService services.ExperimentServiceI
+	authService       services.AuthServiceI
 }
 
-func NewExperimentHandler(es *services.ExperimentService, as *services.AuthService) *ExperimentHandler {
+func NewExperimentHandler(es services.ExperimentServiceI, as services.AuthServiceI) *ExperimentHandler {
 	eh := new(ExperimentHandler)
 	eh.experimentService = es
 	eh.authService = as

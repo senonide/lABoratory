@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.SetTrustedProxies([]string{"0.0.0.0"})
@@ -25,15 +24,18 @@ func main() {
 
 	experimentService := services.NewExperimentService(experimetnRepository)
 	authService := services.NewAuthService(userRepository, securityProvider, experimentService)
+	assignmentService := services.NewAssignmentService()
 
 	authHandler := handlers.NewAuthHandler(authService)
 	experimentHandler := handlers.NewExperimentHandler(experimentService, authService)
+	assignmentHandler := handlers.NewAssignmentHandler(assignmentService)
 
-	router.Use(middleware.CORSMiddleware())
+	router.Use(middleware.CORSMiddleware)
 
 	router.POST("/auth", authHandler.Authenticate)
 	router.POST("/signup", authHandler.Signup)
-	router.GET("/users", authHandler.GetUsers) // Only for debug
+
+	router.GET("/assignment/:token", assignmentHandler.GetAssignment)
 
 	router.Use(middleware.ValidateJWT)
 

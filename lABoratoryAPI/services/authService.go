@@ -9,8 +9,8 @@ import (
 
 type AuthService struct {
 	repository        persistence.UserRepository
-	securityProvider  *utils.SecurityProvider
-	experimentService *ExperimentService
+	securityProvider  utils.SecurityProviderI
+	experimentService ExperimentServiceI
 }
 
 type AuthServiceI interface {
@@ -21,7 +21,7 @@ type AuthServiceI interface {
 	ValidateUser(unknownUser models.User) (string, error)
 }
 
-func NewAuthService(r persistence.UserRepository, sp *utils.SecurityProvider, es *ExperimentService) *AuthService {
+func NewAuthService(r persistence.UserRepository, sp utils.SecurityProviderI, es ExperimentServiceI) AuthServiceI {
 	as := new(AuthService)
 	as.repository = r
 	as.securityProvider = sp

@@ -12,15 +12,15 @@ type ExperimentService struct {
 }
 
 type ExperimentServiceI interface {
-	GetAll() ([]models.Experiment, error)
-	GetOne(experimentId string) (*models.Experiment, error)
+	GetAll(owner *models.User) ([]models.Experiment, error)
+	GetOne(experimentId string, owner *models.User) (*models.Experiment, error)
 	Create(experiment models.Experiment) error
-	Update(experiment models.Experiment) error
-	Delete(experimentId string) (bool, error)
+	Update(experiment models.Experiment, owner *models.User) error
+	Delete(experimentId string, owner *models.User) (bool, error)
 	DeleteAll(owner *models.User) (bool, error)
 }
 
-func NewExperimentService(r persistence.ExperimentRepository) *ExperimentService {
+func NewExperimentService(r persistence.ExperimentRepository) ExperimentServiceI {
 	e := new(ExperimentService)
 	e.repository = r
 	return e
@@ -51,6 +51,7 @@ func (s *ExperimentService) Create(experiment models.Experiment) error {
 	if !validateExperiment(experiment) {
 		return fmt.Errorf("bad request")
 	}
+	//TODO: Generate token key for the experiment
 	err := s.repository.Create(experiment)
 	if err != nil {
 		return err
@@ -69,6 +70,7 @@ func (s *ExperimentService) Update(experiment models.Experiment, owner *models.U
 	if err != nil {
 		return err
 	}
+	//TODO: Balance the assignments for the customers
 	return nil
 }
 
@@ -84,6 +86,7 @@ func (s *ExperimentService) Delete(experimentId string, owner *models.User) (boo
 	if err != nil {
 		return wasDeleted, err
 	}
+	//TODO: Delete the assignments of the costumers
 	return wasDeleted, nil
 }
 
@@ -92,6 +95,7 @@ func (s *ExperimentService) DeleteAll(owner *models.User) (bool, error) {
 	if err != nil {
 		return wasDeleted, err
 	}
+	//TODO: Delete the assignments of the costumers
 	return wasDeleted, nil
 }
 

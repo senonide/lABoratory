@@ -13,6 +13,13 @@ import (
 
 type SecurityProvider struct{}
 
+type SecurityProviderI interface {
+	GetPasswordHash(password string) string
+	GenJWT(user *models.User) (string, error)
+	GetToken(tokenString string) (*jwt.Token, error)
+	GetTokenClaims(token *jwt.Token) (jwt.MapClaims, error)
+}
+
 func NewSecurityProvider() *SecurityProvider {
 	sp := new(SecurityProvider)
 	return sp
