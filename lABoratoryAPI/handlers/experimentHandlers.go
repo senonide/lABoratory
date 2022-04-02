@@ -73,7 +73,7 @@ func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 	data.Owner = *owner
 	err = eh.experimentService.Create(data)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentApiType(data))
