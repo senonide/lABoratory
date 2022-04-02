@@ -1,6 +1,9 @@
 package apitypes
 
-import "lABoratory/lABoratoryAPI/models"
+import (
+	"lABoratory/lABoratoryAPI/models"
+	"lABoratory/lABoratoryAPI/utils"
+)
 
 type Experiment struct {
 	Id            string              `json:"id"`
@@ -11,7 +14,7 @@ type Experiment struct {
 }
 
 func GetExperimentApiType(exp models.Experiment) Experiment {
-	return Experiment{Id: exp.Id, Name: exp.Name, Assignments: exp.Assignments}
+	return Experiment{Id: exp.Id, Name: exp.Name, Description: exp.Description, ExperimentKey: getExperimentKey(exp), Assignments: exp.Assignments}
 }
 
 func GetExperimentsApiType(experiments []models.Experiment) []Experiment {
@@ -23,6 +26,15 @@ func GetExperimentsApiType(experiments []models.Experiment) []Experiment {
 }
 
 func (experiment Experiment) GetExperimentModel() models.Experiment {
-	experimentModel := models.Experiment{Name: experiment.Name, Assignments: experiment.Assignments}
+	experimentModel := models.Experiment{Name: experiment.Name, Description: experiment.Description, Assignments: experiment.Assignments}
 	return experimentModel
+}
+
+func getExperimentKey(experiment models.Experiment) string {
+	sp := new(utils.SecurityProvider)
+	key, err := sp.GenJWT(experiment.Id, false)
+	if err != nil {
+		return ""
+	}
+	return "experimentKey_" + key
 }

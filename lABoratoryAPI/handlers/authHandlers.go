@@ -22,7 +22,7 @@ func NewAuthHandler(as services.AuthServiceI) *AuthHandler {
 func (ah *AuthHandler) GetUsers(c *gin.Context) {
 	users, err := ah.service.GetAll()
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	c.IndentedJSON(http.StatusOK, apitypes.GetUsersApiType(users))
@@ -32,7 +32,7 @@ func (ah *AuthHandler) GetUser(c *gin.Context) {
 	tokenFromHeader := c.Request.Header.Get("Authorization")
 	user, err := ah.service.GetOne(tokenFromHeader)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	if user == nil {
@@ -46,7 +46,7 @@ func (ah *AuthHandler) DeleteUser(c *gin.Context) {
 	tokenFromHeader := c.Request.Header.Get("Authorization")
 	wasDeleted, err := ah.service.Delete(tokenFromHeader)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	if !wasDeleted {

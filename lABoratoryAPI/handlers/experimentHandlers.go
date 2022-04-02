@@ -31,7 +31,7 @@ func (eh *ExperimentHandler) GetExperiments(c *gin.Context) {
 	}
 	experiments, err := eh.experimentService.GetAll(owner)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentsApiType(experiments))
@@ -73,7 +73,7 @@ func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 	data.Owner = *owner
 	err = eh.experimentService.Create(data)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentApiType(data))
@@ -96,7 +96,7 @@ func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
 	data.Id = id
 	err = eh.experimentService.Update(data, owner)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentApiType(data))
@@ -112,7 +112,7 @@ func (eh *ExperimentHandler) DeleteExperiment(c *gin.Context) {
 	id := c.Param("id")
 	wasDeleted, err := eh.experimentService.Delete(id, owner)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
 	if !wasDeleted {

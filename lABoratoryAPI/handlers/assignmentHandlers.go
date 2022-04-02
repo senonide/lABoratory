@@ -19,7 +19,7 @@ func NewAssignmentHandler(as services.AssignmentServiceI) *AssignmentHandler {
 }
 
 func (ah *AssignmentHandler) GetAssignment(c *gin.Context) {
-	assignment, err := ah.service.GetAssignment(c.Param("token"))
+	assignment, err := ah.service.GetAssignment(c.Param("key"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return

@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"lABoratory/lABoratoryAPI/config"
-	"lABoratory/lABoratoryAPI/models"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -15,9 +14,10 @@ type SecurityProvider struct{}
 
 type SecurityProviderI interface {
 	GetPasswordHash(password string) string
-	GenJWT(user *models.User) (string, error)
+	GenJWT(subject string, expires bool) (string, error)
 	GetToken(tokenString string) (*jwt.Token, error)
 	GetTokenClaims(token *jwt.Token) (jwt.MapClaims, error)
+	ValidateToken(token *jwt.Token) bool
 }
 
 func NewSecurityProvider() *SecurityProvider {
@@ -32,13 +32,20 @@ func (sp SecurityProvider) GetPasswordHash(password string) string {
 	return hash
 }
 
-func (sp SecurityProvider) GenJWT(user *models.User) (string, error) {
+func (sp SecurityProvider) GenJWT(subject string, expires bool) (string, error) {
 	hmacSecret := []byte(config.ConfigParams.JwtSecret)
-	var exp *jwt.NumericDate = new(jwt.NumericDate)
-	exp.Time = time.Now().Add(time.Hour * 24)
-	claims := &jwt.RegisteredClaims{
-		Subject:   user.Username,
-		ExpiresAt: exp,
+	var claims *jwt.RegisteredClaims
+	if expires {
+		var exp *jwt.NumericDate = new(jwt.NumericDate)
+		exp.Time = time.Now().Add(time.Hour * 24)
+		claims = &jwt.RegisteredClaims{
+			Subject:   subject,
+			ExpiresAt: exp,
+		}
+	} else {
+		claims = &jwt.RegisteredClaims{
+			Subject: subject,
+		}
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(hmacSecret)

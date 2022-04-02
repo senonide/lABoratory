@@ -19,12 +19,13 @@ func main() {
 	router.SetTrustedProxies([]string{"0.0.0.0"})
 
 	userRepository := database.NewDbUserRepository()
-	experimetnRepository := database.NewDbExperimentRepository()
+	experimentRepository := database.NewDbExperimentRepository()
+	customerRepository := database.NewDbCustomerRepository()
 	securityProvider := utils.NewSecurityProvider()
 
-	experimentService := services.NewExperimentService(experimetnRepository)
+	assignmentService := services.NewAssignmentService(experimentRepository, customerRepository, securityProvider)
+	experimentService := services.NewExperimentService(experimentRepository, securityProvider, assignmentService)
 	authService := services.NewAuthService(userRepository, securityProvider, experimentService)
-	assignmentService := services.NewAssignmentService()
 
 	authHandler := handlers.NewAuthHandler(authService)
 	experimentHandler := handlers.NewExperimentHandler(experimentService, authService)
@@ -35,7 +36,7 @@ func main() {
 	router.POST("/auth", authHandler.Authenticate)
 	router.POST("/signup", authHandler.Signup)
 
-	router.GET("/assignment/:token", assignmentHandler.GetAssignment)
+	router.GET("/assignment/:key", assignmentHandler.GetAssignment)
 
 	router.Use(middleware.ValidateJWT)
 

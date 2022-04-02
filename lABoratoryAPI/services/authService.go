@@ -30,11 +30,7 @@ func NewAuthService(r persistence.UserRepository, sp utils.SecurityProviderI, es
 }
 
 func (as *AuthService) GetAll() ([]models.User, error) {
-	users, err := as.repository.GetAll()
-	if err != nil {
-		return nil, err
-	}
-	return users, nil
+	return as.repository.GetAll()
 }
 
 func (as *AuthService) GetOne(token string) (*models.User, error) {
@@ -66,11 +62,8 @@ func (as *AuthService) Delete(token string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	wereDeleted, err := as.experimentService.DeleteAll(user)
-	if err != nil {
-		return wasDeleted, fmt.Errorf("error deleting user experiments")
-	}
-	return wasDeleted && wereDeleted, nil
+	go as.experimentService.DeleteAll(user)
+	return wasDeleted, nil
 }
 
 func (as *AuthService) SignupUser(unknownUser models.User) (string, error) {
@@ -96,5 +89,5 @@ func (as *AuthService) ValidateUser(unknownUser models.User) (string, error) {
 	if user.HashedPassword != unknownUser.HashedPassword {
 		return "", fmt.Errorf("incorrect password")
 	}
-	return as.securityProvider.GenJWT(user)
+	return as.securityProvider.GenJWT(user.Username, true)
 }

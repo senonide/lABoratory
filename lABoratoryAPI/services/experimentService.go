@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"lABoratory/lABoratoryAPI/models"
 	"lABoratory/lABoratoryAPI/persistence"
+	"lABoratory/lABoratoryAPI/utils"
 	"math"
 )
 
 type ExperimentService struct {
-	repository persistence.ExperimentRepository
+	repository        persistence.ExperimentRepository
+	securityProvider  utils.SecurityProviderI
+	assignmentService AssignmentServiceI
 }
 
 type ExperimentServiceI interface {
@@ -20,18 +23,16 @@ type ExperimentServiceI interface {
 	DeleteAll(owner *models.User) (bool, error)
 }
 
-func NewExperimentService(r persistence.ExperimentRepository) ExperimentServiceI {
+func NewExperimentService(r persistence.ExperimentRepository, sp utils.SecurityProviderI, as AssignmentServiceI) ExperimentServiceI {
 	e := new(ExperimentService)
 	e.repository = r
+	e.securityProvider = sp
+	e.assignmentService = as
 	return e
 }
 
 func (s *ExperimentService) GetAll(owner *models.User) ([]models.Experiment, error) {
-	experiments, err := s.repository.GetAll(*owner)
-	if err != nil {
-		return nil, err
-	}
-	return experiments, nil
+	return s.repository.GetAll(*owner)
 }
 
 func (s *ExperimentService) GetOne(experimentId string, owner *models.User) (*models.Experiment, error) {
@@ -51,7 +52,6 @@ func (s *ExperimentService) Create(experiment models.Experiment) error {
 	if !validateExperiment(experiment) {
 		return fmt.Errorf("bad request")
 	}
-	//TODO: Generate token key for the experiment
 	err := s.repository.Create(experiment)
 	if err != nil {
 		return err
@@ -70,7 +70,10 @@ func (s *ExperimentService) Update(experiment models.Experiment, owner *models.U
 	if err != nil {
 		return err
 	}
-	//TODO: Balance the assignments for the customers
+	err = s.assignmentService.Update(experiment)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -86,7 +89,7 @@ func (s *ExperimentService) Delete(experimentId string, owner *models.User) (boo
 	if err != nil {
 		return wasDeleted, err
 	}
-	//TODO: Delete the assignments of the costumers
+	go s.assignmentService.DeleteAll(experimentId)
 	return wasDeleted, nil
 }
 
@@ -95,7 +98,7 @@ func (s *ExperimentService) DeleteAll(owner *models.User) (bool, error) {
 	if err != nil {
 		return wasDeleted, err
 	}
-	//TODO: Delete the assignments of the costumers
+	go s.assignmentService.DeleteAllOfOwner(owner)
 	return wasDeleted, nil
 }
 
