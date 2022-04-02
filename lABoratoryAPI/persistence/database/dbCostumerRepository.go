@@ -2,7 +2,9 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"lABoratory/lABoratoryAPI/models"
+	"strings"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -38,14 +40,17 @@ func (r *dbCustomerRepository) GetOne(customerId string) (*models.Customer, erro
 	return customer, nil
 }
 
-func (r *dbCustomerRepository) Create(customer models.Customer) error {
+func (r *dbCustomerRepository) Create(customer models.Customer) (string, error) {
 	ctx := context.Background()
 	collection := r.database.Collection(CostumersCollName)
-	_, err := collection.InsertOne(ctx, customer)
+	result, err := collection.InsertOne(ctx, customer)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	id := fmt.Sprintf("%v", result)
+	id = strings.Replace(id, "&{ObjectID(\"", "", 1)
+	id = strings.Replace(id, "\")}", "", 1)
+	return id, nil
 }
 
 func (r *dbCustomerRepository) SetAssignment(idCostumer string, newAssigment models.Assignment) error {

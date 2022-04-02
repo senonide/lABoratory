@@ -49,7 +49,7 @@ func (s *ExperimentService) GetOne(experimentId string, owner *models.User) (*mo
 }
 
 func (s *ExperimentService) Create(experiment models.Experiment) error {
-	if !validateExperiment(experiment) {
+	if !s.validateExperiment(experiment) {
 		return fmt.Errorf("bad request")
 	}
 	err := s.repository.Create(experiment)
@@ -60,7 +60,7 @@ func (s *ExperimentService) Create(experiment models.Experiment) error {
 }
 
 func (s *ExperimentService) Update(experiment models.Experiment, owner *models.User) error {
-	if !validateExperiment(experiment) {
+	if !s.validateExperiment(experiment) {
 		return fmt.Errorf("bad request")
 	}
 	if !validateOwnership(&experiment, owner) {
@@ -102,8 +102,12 @@ func (s *ExperimentService) DeleteAll(owner *models.User) (bool, error) {
 	return wasDeleted, nil
 }
 
-func validateExperiment(experiment models.Experiment) bool {
-	if experiment.Name != "" {
+func (s *ExperimentService) validateExperiment(experiment models.Experiment) bool {
+	experiments, err := s.GetAll(&experiment.Owner)
+	if err != nil {
+		return false
+	}
+	if experiment.Name != "" && !containsExperimentName(experiments, experiment.Name) {
 		if isDuplicated(experiment.Assignments) {
 			return false
 		}
@@ -123,6 +127,15 @@ func validateExperiment(experiment models.Experiment) bool {
 	} else {
 		return false
 	}
+}
+
+func containsExperimentName(experiments []models.Experiment, experimentName string) bool {
+	for _, exp := range experiments {
+		if exp.Name == experimentName {
+			return true
+		}
+	}
+	return false
 }
 
 func isDuplicated(arr []models.Assignment) bool {

@@ -92,10 +92,11 @@ func (as AssignmentService) createNewAssignment(experiment *models.Experiment) (
 		AssignmentName:        targetAssignment.AssignmentName,
 		AssignmentDescription: targetAssignment.AssignmentDescription,
 	}
-	err := as.customerRepository.Create(newAssigment)
+	id, err := as.customerRepository.Create(newAssigment)
 	if err != nil {
 		return nil, err
 	}
+	newAssigment.Id = id
 	return &newAssigment, nil
 }
 
