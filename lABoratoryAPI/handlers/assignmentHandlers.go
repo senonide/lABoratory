@@ -26,3 +26,18 @@ func (ah *AssignmentHandler) GetAssignment(c *gin.Context) {
 	}
 	c.IndentedJSON(http.StatusOK, assignment)
 }
+
+func (ah *AssignmentHandler) SetAssignment(c *gin.Context) {
+	var assignmentName string
+	err := c.BindJSON(&assignmentName)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
+	err = ah.service.SetAssignment(c.Param("key"), assignmentName)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, assignmentName)
+}

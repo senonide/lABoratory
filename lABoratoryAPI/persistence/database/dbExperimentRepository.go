@@ -76,6 +76,7 @@ func (r *dbExperimentRepository) Update(experiment models.Experiment) error {
 	update := bson.M{
 		"$set": bson.M{
 			"name":        experiment.Name,
+			"description": experiment.Description,
 			"assignments": experiment.Assignments,
 		},
 	}

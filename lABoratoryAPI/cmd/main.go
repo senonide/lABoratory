@@ -40,6 +40,8 @@ func main() {
 
 	router.Use(middleware.ValidateJWT)
 
+	router.PUT("assignment/:key", assignmentHandler.SetAssignment)
+
 	router.GET("/user", authHandler.GetUser)
 	router.DELETE("/user", authHandler.DeleteUser)
 

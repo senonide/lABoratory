@@ -5,7 +5,6 @@ import (
 	"lABoratory/lABoratoryAPI/models"
 	"lABoratory/lABoratoryAPI/persistence"
 	"lABoratory/lABoratoryAPI/utils"
-	"math/rand"
 	"strings"
 )
 
@@ -16,11 +15,9 @@ type AssignmentService struct {
 }
 
 type AssignmentServiceI interface {
-	SetAssignment(key string, newAssigment *models.Assignment) error
+	SetAssignment(key string, newAssigment string) error
 	GetAssignment(key string) (*models.Customer, error)
-	Update(updatedExperiment models.Experiment) error
 	DeleteAll(experimentId string) (bool, error)
-	DeleteAllOfOwner(owner *models.User) (bool, error)
 }
 
 func NewAssignmentService(er persistence.ExperimentRepository, cr persistence.CustomerRepository, sp utils.SecurityProviderI) AssignmentServiceI {
@@ -29,10 +26,6 @@ func NewAssignmentService(er persistence.ExperimentRepository, cr persistence.Cu
 	as.customerRepository = cr
 	as.securityProvider = sp
 	return as
-}
-
-func (as AssignmentService) SetAssignment(key string, newAssigment *models.Assignment) error {
-	return as.customerRepository.SetAssignment(key, *newAssigment)
 }
 
 func (as AssignmentService) GetAssignment(key string) (*models.Customer, error) {
@@ -58,48 +51,116 @@ func (as AssignmentService) GetAssignment(key string) (*models.Customer, error) 
 		}
 		return as.createNewAssignment(experiment)
 	} else {
-		return as.getExistingAssignment(key)
+		return as.customerRepository.GetOne(key)
 	}
 }
 
-func (as AssignmentService) Update(updatedExperiment models.Experiment) error {
-	//TODO: Force the update for all assignments
-	return nil
+func (as AssignmentService) createNewAssignment(experiment *models.Experiment) (*models.Customer, error) {
+	newAssignment, err := as.getNewBalancedAssignment(experiment)
+	if err != nil {
+		return nil, err
+	}
+	id, err := as.customerRepository.Create(*newAssignment)
+	if err != nil {
+		return nil, err
+	}
+	newAssignment.Id = id
+	return newAssignment, nil
+}
+
+// Function that returns the assignment whose absolute error is the largest depending on
+// the current percentages and the theoretical ones of the experiment
+func (as AssignmentService) getNewBalancedAssignment(experiment *models.Experiment) (*models.Customer, error) {
+
+	// Get from the database the existing assignments for the given experiment
+	existingAssignments, err := as.customerRepository.GetAll(experiment.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Map that will store the number of customers for each assignment
+	count := map[string]int{}
+	// Map that will store the current percentages of existing assignments
+	currentPercentages := map[string]float64{}
+
+	// Initialize the maps with the assignments that the experiment has
+	for _, assignment := range experiment.Assignments {
+		count[assignment.AssignmentName] = 0
+		currentPercentages[assignment.AssignmentName] = 0.0
+	}
+
+	// Count the number of existing customers for each assignment
+	for _, customer := range existingAssignments {
+		count[customer.AssignmentName]++
+	}
+
+	// Calculate the current percantage of the existing customers
+	for assignmentName, value := range count {
+		if len(existingAssignments) == 0 {
+			currentPercentages[assignmentName] = 100.0 / float64(len(experiment.Assignments))
+		} else {
+			currentPercentages[assignmentName] = (float64(value) / float64(len(existingAssignments))) * 100
+		}
+	}
+
+	// Get the assignment with the largest positive absolute error based on the current percentages
+	// and the theoretical ones of the experiment
+	var resultAssignmentName string = ""
+	for assignmentName, percentage := range currentPercentages {
+		if resultAssignmentName == "" {
+			resultAssignmentName = assignmentName
+		} else {
+			current, err := experiment.GetAssignmentByName(assignmentName)
+			if err != nil {
+				return nil, err
+			}
+			other, err := experiment.GetAssignmentByName(resultAssignmentName)
+			if err != nil {
+				return nil, err
+			}
+			if (current.AssignmentValue - percentage) > (other.AssignmentValue - currentPercentages[resultAssignmentName]) {
+				resultAssignmentName = current.AssignmentName
+			}
+		}
+	}
+
+	// Return the assignment with the largest absolute error
+	for _, assignment := range experiment.Assignments {
+		if assignment.AssignmentName == resultAssignmentName {
+			return &models.Customer{
+				ExperimentId:          experiment.Id,
+				AssignmentName:        assignment.AssignmentName,
+				AssignmentDescription: assignment.AssignmentDescription,
+			}, nil
+		}
+	}
+	return nil, fmt.Errorf("error creating new assignment")
+}
+
+func (as AssignmentService) SetAssignment(key string, newAssigment string) error {
+	assignment, err := as.validateAssignment(key, newAssigment)
+	if err != nil {
+		return err
+	}
+	return as.customerRepository.SetAssignment(key, *assignment)
 }
 
 func (as AssignmentService) DeleteAll(experimentId string) (bool, error) {
 	return as.customerRepository.DeleteAll(experimentId)
 }
 
-func (as AssignmentService) DeleteAllOfOwner(owner *models.User) (bool, error) {
-	//TODO: Get all the experiments of the owner and delete its assignmnets
-	return false, nil
-}
-
-func (as AssignmentService) createNewAssignment(experiment *models.Experiment) (*models.Customer, error) {
-	var targetAssignment models.Assignment
-	target := rand.Float64() * 100
-	acc := 0.0
-	for _, assignment := range experiment.Assignments {
-		if target <= (assignment.AssignmentValue + acc) {
-			targetAssignment = assignment
-			break
-		}
-		acc += assignment.AssignmentValue
-	}
-	newAssigment := models.Customer{
-		ExperimentId:          experiment.Id,
-		AssignmentName:        targetAssignment.AssignmentName,
-		AssignmentDescription: targetAssignment.AssignmentDescription,
-	}
-	id, err := as.customerRepository.Create(newAssigment)
+func (as AssignmentService) validateAssignment(key string, assignmentName string) (*models.Assignment, error) {
+	customer, err := as.GetAssignment(key)
 	if err != nil {
 		return nil, err
 	}
-	newAssigment.Id = id
-	return &newAssigment, nil
-}
-
-func (as AssignmentService) getExistingAssignment(key string) (*models.Customer, error) {
-	return as.customerRepository.GetOne(key)
+	experiment, err := as.experimentRepository.GetOne(customer.ExperimentId)
+	if err != nil {
+		return nil, err
+	}
+	assignment, err := experiment.GetAssignmentByName(assignmentName)
+	if err != nil {
+		return nil, err
+	}
+	return assignment, nil
 }

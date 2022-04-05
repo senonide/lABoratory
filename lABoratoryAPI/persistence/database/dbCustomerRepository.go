@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-const CostumersCollName string = "costumers"
+const CustomersCollName string = "customers"
 
 type dbCustomerRepository struct {
 	database *mongo.Database
@@ -23,9 +23,29 @@ func NewDbCustomerRepository() *dbCustomerRepository {
 	return repository
 }
 
+func (r *dbCustomerRepository) GetAll(experimentId string) ([]models.Customer, error) {
+	ctx := context.Background()
+	collection := r.database.Collection(CustomersCollName)
+	customers := []models.Customer{}
+	filter := bson.M{"experimentid": experimentId}
+	cur, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	for cur.Next(ctx) {
+		var customer models.Customer
+		err = cur.Decode(&customer)
+		if err != nil {
+			return nil, err
+		}
+		customers = append(customers, customer)
+	}
+	return customers, nil
+}
+
 func (r *dbCustomerRepository) GetOne(customerId string) (*models.Customer, error) {
 	ctx := context.Background()
-	collection := r.database.Collection(CostumersCollName)
+	collection := r.database.Collection(CustomersCollName)
 	var customer *models.Customer
 	oid, _ := primitive.ObjectIDFromHex(customerId)
 	filter := bson.M{"_id": oid}
@@ -42,7 +62,7 @@ func (r *dbCustomerRepository) GetOne(customerId string) (*models.Customer, erro
 
 func (r *dbCustomerRepository) Create(customer models.Customer) (string, error) {
 	ctx := context.Background()
-	collection := r.database.Collection(CostumersCollName)
+	collection := r.database.Collection(CustomersCollName)
 	result, err := collection.InsertOne(ctx, customer)
 	if err != nil {
 		return "", err
@@ -53,10 +73,10 @@ func (r *dbCustomerRepository) Create(customer models.Customer) (string, error) 
 	return id, nil
 }
 
-func (r *dbCustomerRepository) SetAssignment(idCostumer string, newAssigment models.Assignment) error {
+func (r *dbCustomerRepository) SetAssignment(idCustomer string, newAssigment models.Assignment) error {
 	ctx := context.Background()
-	collection := r.database.Collection(CostumersCollName)
-	oid, _ := primitive.ObjectIDFromHex(idCostumer)
+	collection := r.database.Collection(CustomersCollName)
+	oid, _ := primitive.ObjectIDFromHex(idCustomer)
 	filter := bson.M{"_id": oid}
 	update := bson.M{
 		"$set": bson.M{
@@ -73,15 +93,11 @@ func (r *dbCustomerRepository) SetAssignment(idCostumer string, newAssigment mod
 
 func (r *dbCustomerRepository) DeleteAll(experimentId string) (bool, error) {
 	ctx := context.Background()
-	collection := r.database.Collection(CostumersCollName)
+	collection := r.database.Collection(CustomersCollName)
 	filter := bson.M{"experiment": experimentId}
 	_, err := collection.DeleteMany(ctx, filter)
 	if err != nil {
 		return false, err
 	}
-	return true, nil
-}
-
-func (r *dbCustomerRepository) DeleteAllOfOwner(owner models.User) (bool, error) {
 	return true, nil
 }

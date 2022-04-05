@@ -66,11 +66,8 @@ func (s *ExperimentService) Update(experiment models.Experiment, owner *models.U
 	if !validateOwnership(&experiment, owner) {
 		return fmt.Errorf("ownership error")
 	}
+	//TODO: If one assignment has 100% value, modify exisiting customers
 	err := s.repository.Update(experiment)
-	if err != nil {
-		return err
-	}
-	err = s.assignmentService.Update(experiment)
 	if err != nil {
 		return err
 	}
@@ -98,7 +95,7 @@ func (s *ExperimentService) DeleteAll(owner *models.User) (bool, error) {
 	if err != nil {
 		return wasDeleted, err
 	}
-	go s.assignmentService.DeleteAllOfOwner(owner)
+	go s.deleteAllAssignmentsOfOwner(owner)
 	return wasDeleted, nil
 }
 
@@ -127,6 +124,20 @@ func (s *ExperimentService) validateExperiment(experiment models.Experiment) boo
 	} else {
 		return false
 	}
+}
+
+func (s *ExperimentService) deleteAllAssignmentsOfOwner(owner *models.User) error {
+	experiments, err := s.GetAll(owner)
+	if err != nil {
+		return err
+	}
+	for _, experiment := range experiments {
+		_, err := s.assignmentService.DeleteAll(experiment.Id)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func containsExperimentName(experiments []models.Experiment, experimentName string) bool {
