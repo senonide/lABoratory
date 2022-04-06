@@ -1,5 +1,5 @@
 # lABoratory
-Platform for creating and using A/B testing experiments.
+Platform for create and use A/B testing experiments.
 
 ## Description of the project and objective to be achieved
 Las pruebas A/B son un tipo de experimentos que se utilizan en el contexto del marketing digital y la analítica web para identificar cambios que maximizan un resultado determinado. Por ejemplo, clientes diferentes de una página de compras online pueden ver productos diferentes, anuncios en diferentes lugares, o precios diferentes para el mismo producto, basados en dicho experimento. Mediante la obtención de métricas vinculadas al experimento se puede determinar la optimalidad de cada opción y finalmente tomar una decisión en base a los resultados.

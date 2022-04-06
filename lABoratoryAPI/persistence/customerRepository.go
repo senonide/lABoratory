@@ -7,5 +7,6 @@ type CustomerRepository interface {
 	GetOne(customerId string) (*models.Customer, error)
 	Create(customer models.Customer) (string, error)
 	SetAssignment(idCustomer string, newAssigment models.Assignment) error
+	SetAllAssignments(experimentId string, newAssigment models.Assignment) error
 	DeleteAll(experimentId string) (bool, error)
 }

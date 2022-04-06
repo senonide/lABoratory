@@ -80,8 +80,25 @@ func (r *dbCustomerRepository) SetAssignment(idCustomer string, newAssigment mod
 	filter := bson.M{"_id": oid}
 	update := bson.M{
 		"$set": bson.M{
-			"assignment":  newAssigment.AssignmentName,
-			"description": newAssigment.AssignmentDescription,
+			"assignmentname":        newAssigment.AssignmentName,
+			"assignmentdescription": newAssigment.AssignmentDescription,
+		},
+	}
+	_, err := collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *dbCustomerRepository) SetAllAssignments(experimentId string, newAssigment models.Assignment) error {
+	ctx := context.Background()
+	collection := r.database.Collection(CustomersCollName)
+	filter := bson.M{"experimentid": experimentId}
+	update := bson.M{
+		"$set": bson.M{
+			"assignmentname":        newAssigment.AssignmentName,
+			"assignmentdescription": newAssigment.AssignmentDescription,
 		},
 	}
 	_, err := collection.UpdateOne(ctx, filter, update)
@@ -94,7 +111,7 @@ func (r *dbCustomerRepository) SetAssignment(idCustomer string, newAssigment mod
 func (r *dbCustomerRepository) DeleteAll(experimentId string) (bool, error) {
 	ctx := context.Background()
 	collection := r.database.Collection(CustomersCollName)
-	filter := bson.M{"experiment": experimentId}
+	filter := bson.M{"experimentid": experimentId}
 	_, err := collection.DeleteMany(ctx, filter)
 	if err != nil {
 		return false, err

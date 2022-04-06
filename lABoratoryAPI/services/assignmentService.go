@@ -16,6 +16,7 @@ type AssignmentService struct {
 
 type AssignmentServiceI interface {
 	SetAssignment(key string, newAssigment string) error
+	SetAllAssignments(experiment models.Experiment, newAssigment models.Assignment) error
 	GetAssignment(key string) (*models.Customer, error)
 	DeleteAll(experimentId string) (bool, error)
 }
@@ -105,22 +106,18 @@ func (as AssignmentService) getNewBalancedAssignment(experiment *models.Experime
 
 	// Get the assignment with the largest positive absolute error based on the current percentages
 	// and the theoretical ones of the experiment
-	var resultAssignmentName string = ""
+	var resultAssignmentName string = experiment.GetRandomAssignment().AssignmentName
 	for assignmentName, percentage := range currentPercentages {
-		if resultAssignmentName == "" {
-			resultAssignmentName = assignmentName
-		} else {
-			current, err := experiment.GetAssignmentByName(assignmentName)
-			if err != nil {
-				return nil, err
-			}
-			other, err := experiment.GetAssignmentByName(resultAssignmentName)
-			if err != nil {
-				return nil, err
-			}
-			if (current.AssignmentValue - percentage) > (other.AssignmentValue - currentPercentages[resultAssignmentName]) {
-				resultAssignmentName = current.AssignmentName
-			}
+		current, err := experiment.GetAssignmentByName(assignmentName)
+		if err != nil {
+			return nil, err
+		}
+		other, err := experiment.GetAssignmentByName(resultAssignmentName)
+		if err != nil {
+			return nil, err
+		}
+		if (current.AssignmentValue - percentage) > (other.AssignmentValue - currentPercentages[resultAssignmentName]) {
+			resultAssignmentName = current.AssignmentName
 		}
 	}
 
@@ -143,6 +140,14 @@ func (as AssignmentService) SetAssignment(key string, newAssigment string) error
 		return err
 	}
 	return as.customerRepository.SetAssignment(key, *assignment)
+}
+
+func (as AssignmentService) SetAllAssignments(experiment models.Experiment, newAssigment models.Assignment) error {
+	_, err := experiment.GetAssignmentByName(newAssigment.AssignmentName)
+	if err != nil {
+		return err
+	}
+	return as.customerRepository.SetAllAssignments(experiment.Id, newAssigment)
 }
 
 func (as AssignmentService) DeleteAll(experimentId string) (bool, error) {

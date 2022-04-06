@@ -1,6 +1,9 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 type Experiment struct {
 	Id          string       `bson:"_id,omitempty" json:"id,omitempty"`
@@ -17,4 +20,9 @@ func (exp Experiment) GetAssignmentByName(assignmentName string) (*Assignment, e
 		}
 	}
 	return nil, fmt.Errorf("the assignment does not exists")
+}
+
+func (exp Experiment) GetRandomAssignment() Assignment {
+	index := rand.Intn(len(exp.Assignments) - 1)
+	return exp.Assignments[index]
 }

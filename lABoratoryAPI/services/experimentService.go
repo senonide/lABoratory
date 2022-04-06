@@ -66,10 +66,15 @@ func (s *ExperimentService) Update(experiment models.Experiment, owner *models.U
 	if !validateOwnership(&experiment, owner) {
 		return fmt.Errorf("ownership error")
 	}
-	//TODO: If one assignment has 100% value, modify exisiting customers
 	err := s.repository.Update(experiment)
 	if err != nil {
 		return err
+	}
+	for _, assignment := range experiment.Assignments {
+		if int(math.Round(assignment.AssignmentValue)) == 100 {
+			s.assignmentService.SetAllAssignments(experiment, assignment)
+			break
+		}
 	}
 	return nil
 }
