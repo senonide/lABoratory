@@ -32,7 +32,6 @@ export class ExperimentList implements OnInit {
     }
 
     selectExperiment(experiment: Experiment): void {
-        this.profileService.isTryingToDelete = false;
         this.profileService.formType = FormType.EXPDET;
         this.profileService.selectedExperiment = experiment;
         var aux: any[] = [];

@@ -21,6 +21,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatDialogModule} from '@angular/material/dialog';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,6 +34,8 @@ import { ExperimentList } from './components/profile/profile-components/experime
 import { ExperimentContent } from './components/profile/profile-components/experiment-content/experiment-content.component';
 import { CreateExperiment } from './components/profile/profile-components/create-experiment/create-experiment.component';
 import { ExperimentDetails } from './components/profile/profile-components/experiment-details/experiment-details.component';
+import { KeyDialog } from './components/profile/profile-components/key-dialog/key-dialog.component';
+import { DeleteDialog } from './components/profile/profile-components/delete-dialog/delete-dialog.component';
 
 
 @NgModule({
@@ -45,7 +49,9 @@ import { ExperimentDetails } from './components/profile/profile-components/exper
     ExperimentContent,
     CreateExperiment,
     ExperimentDetails,
-    LandingView
+    LandingView,
+    KeyDialog,
+    DeleteDialog
   ],
   imports: [
     FormsModule,
@@ -59,6 +65,8 @@ import { ExperimentDetails } from './components/profile/profile-components/exper
     MatInputModule,
     MatDividerModule,
     MatCardModule,
+    MatGridListModule,
+    MatDialogModule,
     MatButtonModule,
     MatToolbarModule,
     MatExpansionModule,

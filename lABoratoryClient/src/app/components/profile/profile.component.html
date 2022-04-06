@@ -8,9 +8,14 @@
 </mat-toolbar>
 <div class="gird">
     <div class="side">
-        <experiment-list></experiment-list>
+        <mat-card [class.mat-elevation-z0]="true" class="expCard">
+            <h2>My experiments:</h2>
+            <experiment-list></experiment-list>
+        </mat-card>
     </div>
     <div class="content">
-        <experiment-content></experiment-content>
+        <mat-card [class.mat-elevation-z0]="true" class="expCard contentCard">
+            <experiment-content></experiment-content>
+        </mat-card>
     </div>
 </div>

@@ -19,7 +19,6 @@ export class ProfileComponent {
     }
 
     newExperimentOption() {
-        this.profileService.isTryingToDelete = false;
         this.profileService.formType = FormType.NEWEXP;
     }
 }

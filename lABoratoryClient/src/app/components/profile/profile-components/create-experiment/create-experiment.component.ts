@@ -20,6 +20,7 @@ export class CreateExperiment implements OnInit {
     ngOnInit(): void {
         this.newExperimentForm = this.formBuilder.group({
             name: new FormControl('', [Validators.required]),
+            description: new FormControl(''),
             controlAssignmentValue: new FormControl('', [Validators.required]),
             assignments: this.formBuilder.array([])
         });
@@ -44,6 +45,8 @@ export class CreateExperiment implements OnInit {
         var newExperiment: Experiment = {
             id: "",
             name: this.newExperimentForm.value.name,
+            description: this.newExperimentForm.value.description,
+            experimentKey: "",
             assignments: newExperimentAssignments  
         };
         if(!this.validateExperiment(newExperiment)) return;
@@ -56,6 +59,7 @@ export class CreateExperiment implements OnInit {
                         this.experimentService.experiments = experiments;
                         this.newExperimentForm = this.formBuilder.group({
                             name: new FormControl('', [Validators.required]),
+                            description: new FormControl(''),
                             controlAssignmentValue: new FormControl('', [Validators.required]),
                             assignments: this.formBuilder.array([])
                         });

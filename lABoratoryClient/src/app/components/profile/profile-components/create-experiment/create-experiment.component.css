@@ -8,6 +8,12 @@ mat-divider {
     margin-bottom: 20px;
 }
 
+mat-card {
+    width: 100%;
+    height: 90%;
+    border-radius: 0px;
+}
+
 .formButton {
     margin-left: 10px;
     margin-right: 10px;

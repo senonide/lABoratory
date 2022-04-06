@@ -1,12 +1,10 @@
 h2 {
     display: inline-block;
-    margin-top: 20px;
     margin-left: 20px;
-    margin-right: 20px;
 }
 
-mat-divider {
-    margin-bottom: 20px;
+p {
+    margin-left: 40px;
 }
 
 mat-list {
@@ -14,8 +12,9 @@ mat-list {
 }
 
 mat-card {
-    background-color: #f5f5f5;
-    border-radius: 20px;
+    width: 100%;
+    height: 90%;
+    border-radius: 0px;
 }
 
 .chart {
@@ -34,6 +33,7 @@ mat-card {
 
 .warning {
     display: inline-block;
+    margin-bottom: 0;
 }
 
 
@@ -43,22 +43,24 @@ mat-card {
     margin-right: 10px;
 }
 
-.header{
-    white-space: nowrap;
-    width: 100%;
-}
-
 .options {
     display: inline-block;
-    align-items: right;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 15px;
-    top: 80px; 
-    white-space: nowrap;
 }
 
-.expDivider {
-    border-top-width: 6px;
-    border-color: white;
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+ngx-charts-pie-chart {
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
+.keyButton {
+    color: rgb(92, 151, 92);
+    margin-bottom: 0px;
+    margin-right: 10px;
 }

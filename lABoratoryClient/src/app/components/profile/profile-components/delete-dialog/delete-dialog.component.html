@@ -1,0 +1,7 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div class="content" mat-dialog-content>{{data.content}}</div>
+<br>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-stroked-button (click)="deleteExperiment(this.profileService.selectedExperiment)" color="warn">Yes</button>
+</div>

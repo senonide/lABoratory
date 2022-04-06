@@ -3,37 +3,56 @@
 </h2>
 <mat-divider></mat-divider>
 <form [formGroup]="newExperimentForm" (submit)="createExperiment()" class="experimentForm">
-    <div class="column1">
-        <mat-form-field appearance="outline" class="formElement">
-            <mat-label>New experiment name</mat-label>
-            <input 
-            matInput 
-            type="text" 
-            formControlName="name"
-            required>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="formElement">
-            <mat-label>Control group activation percentage</mat-label>
-            <input 
-            matInput 
-            type="text" 
-            formControlName="controlAssignmentValue" 
-            required>
-        </mat-form-field>
-        <div class="buttonsContainer">
-            <button mat-flat-button type="submit" color="primary" class="formButton">Create new experiment</button>
-            <button mat-stroked-button type="button" (click)="addAssignments()" color="primary" class="formButton">Add new assignment</button>
-        </div>
+    <!--<div class="column1">
+        
     </div>
     <div class="column2">
-        <div class="newAssignments" formArrayName="assignments" *ngFor="let assignment of assignments.controls; let i = index">
-            <mat-form-field appearance="outline" class="assignmentFormElement right">
-                <mat-label>A{{i + 1}}, activation percentage</mat-label>
-                <input 
-                matInput 
-                type="text" 
-                [formControlName]="i">
-            </mat-form-field>
-        </div>
-    </div>
+        
+    </div>-->
+    <mat-grid-list cols="2" rowHeight="80vh">
+        <mat-grid-tile>
+            <mat-card [class.mat-elevation-z0]="true">
+                <mat-form-field appearance="outline" class="formElement">
+                    <mat-label>New experiment name</mat-label>
+                    <input 
+                    matInput 
+                    type="text" 
+                    formControlName="name"
+                    required>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="formElement">
+                    <mat-label>Experiment description</mat-label>
+                    <input 
+                    matInput 
+                    type="text" 
+                    formControlName="description">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="formElement">
+                    <mat-label>Control group activation percentage</mat-label>
+                    <input 
+                    matInput 
+                    type="text" 
+                    formControlName="controlAssignmentValue" 
+                    required>
+                </mat-form-field>
+                <div class="buttonsContainer">
+                    <button mat-flat-button type="submit" color="primary" class="formButton">Create new experiment</button>
+                    <button mat-stroked-button type="button" (click)="addAssignments()" color="primary" class="formButton">Add new assignment</button>
+                </div>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-card [class.mat-elevation-z0]="true">
+                <div class="newAssignments" formArrayName="assignments" *ngFor="let assignment of assignments.controls; let i = index">
+                    <mat-form-field appearance="outline" class="assignmentFormElement right">
+                        <mat-label>A{{i + 1}}, activation percentage</mat-label>
+                        <input 
+                        matInput 
+                        type="text" 
+                        [formControlName]="i">
+                    </mat-form-field>
+                </div>
+            </mat-card>
+        </mat-grid-tile>
+    </mat-grid-list>
 </form>

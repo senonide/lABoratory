@@ -4,6 +4,11 @@
     margin-bottom: 10px;
 }
 
+button {
+    margin-left: 10px;
+    text-align: start;
+}
+
 .info-text {
     text-align:center;
 }

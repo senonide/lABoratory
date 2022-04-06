@@ -1,9 +1,12 @@
 import { Component } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Color, ScaleType } from "@swimlane/ngx-charts";
 import { Experiment } from "src/app/models/experiment.model";
 import { ExperimentService } from "src/app/services/experiment.service";
 import { FormType, ProfileService } from "src/app/services/profile.service";
+import { DeleteDialog } from "../delete-dialog/delete-dialog.component";
+import { KeyDialog } from "../key-dialog/key-dialog.component";
 
 @Component({
     selector: 'experiment-details',
@@ -19,25 +22,25 @@ export class ExperimentDetails {
         name: 'Customer Usage', 
     };
 
-    constructor(public profileService: ProfileService, private experimentService: ExperimentService, private router: Router) {}
+    constructor(public profileService: ProfileService, private experimentService: ExperimentService, private router: Router, public dialog: MatDialog) {}
 
-    deleteExperiment(experiment: Experiment | null) {
-        if (experiment == null){
-            return
-        }
-        this.experimentService.deleteExperiment(experiment)?.subscribe({
-            next: () => {
-                this.experimentService.getExperiments()?.subscribe({
-                    next: (experiments) => {
-                        this.experimentService.experiments = experiments;
-                        this.profileService.formType = FormType.DEFAULT
-                    },
-                    error: () => {
-                        this.router.navigate(['/auth/login']);
-                    }
-                });
+    openKeyDialog(): void {
+        const dialogRef = this.dialog.open(KeyDialog, {
+            data: {
+                title: "Experiment key: ", 
+                content: this.profileService.selectedExperiment?.experimentKey
             },
-            error: () => {}
         });
     }
+
+    openDeleteDialog(): void {
+        const dialogRef = this.dialog.open(DeleteDialog, {
+            data: {
+                title: "Are you sure you want to delete '" + this.profileService.selectedExperiment?.name + "' ?", 
+                content: " - All previous assignments will be removed as well."
+            },
+        });
+    }
+
+    
 }

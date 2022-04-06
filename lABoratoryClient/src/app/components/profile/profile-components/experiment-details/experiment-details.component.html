@@ -1,42 +1,54 @@
-<div class="header">
-    <h2>
-        {{this.profileService.selectedExperiment?.name}}
-    </h2>
-    <div class="options">
-        <button mat-icon-button color="primary" aria-label="Edit" class="formButton deleteButton">
-            <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button (click)="this.profileService.isTryingToDelete = !this.profileService.isTryingToDelete" color="warn" aria-label="Delete" class="formButton deleteButton">
-            <mat-icon>delete</mat-icon>
-        </button>
-        <p *ngIf="this.profileService.isTryingToDelete" class="warning">
-            Are you sure you want to delete {{this.profileService.selectedExperiment?.name}}?
-        </p>
-        <button *ngIf="this.profileService.isTryingToDelete" mat-button (click)="deleteExperiment(this.profileService.selectedExperiment)" class="optionButton" color="warn">Yes</button>
-        <button *ngIf="this.profileService.isTryingToDelete" mat-button (click)="this.profileService.isTryingToDelete = false" class="optionButton" color="primary">No</button>
-    </div>
-</div>
+<mat-grid-list cols="2" rowHeight="60px">
+    <mat-grid-tile [colspan]="2">
+        <h2>
+            {{this.profileService.selectedExperiment?.name}}
+        </h2>
+        <span class="example-spacer"></span>
+        <div class="options">
+            <button class="keyButton" mat-stroked-button (click)="openKeyDialog()">Show experiment key</button>
+            <!--<button *ngIf="this.profileService.isTryingToDelete" mat-button (click)="" class="optionButton" color="warn">Yes</button>-->
+  
+            <button mat-icon-button color="primary" aria-label="Edit" class="formButton deleteButton">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="openDeleteDialog()" color="warn" aria-label="Delete" class="formButton deleteButton">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+    </mat-grid-tile>
+</mat-grid-list>
 <mat-divider></mat-divider>
-<div class="experimentAssigmentsContent">
-    <mat-card [class.mat-elevation-z0]="true">
-        <h2>Experiment assignments</h2>
-        <mat-divider class="expDivider"></mat-divider>
-        <mat-list>
-            <mat-list-item *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
-                {{assignment.assignmentName.toUpperCase()}} -  {{assignment.assignmentValue}}%
-            </mat-list-item>
-        </mat-list>
-    </mat-card>
-</div>
-<div class="chart">
-    <ngx-charts-pie-chart
-        [scheme]="colorScheme"
-        [results]="this.profileService.currentAssignments"
-        [gradient]="false"
-        [legend]="true"
-        [doughnut]="true"
-        [arcWidth]="0.40"
-        [animations]="true"
-        [tooltipDisabled]="false">
-    </ngx-charts-pie-chart>
-</div>
+<mat-grid-list cols="2" rowHeight="38vh">
+    <mat-grid-tile [rowspan]="2">
+        <mat-card [class.mat-elevation-z0]="true">
+            <div *ngIf="this.profileService.selectedExperiment?.description!=''">
+                <h2>Description</h2>
+                <p> - {{this.profileService.selectedExperiment?.description}}</p>
+                <br>
+                <br>
+            </div>
+            <h2>Experiment assignments</h2>
+            <mat-list>
+                <mat-list-item *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
+                    {{assignment.assignmentName.toUpperCase()}} -  {{assignment.assignmentValue}}%
+                </mat-list-item>
+            </mat-list>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <ngx-charts-pie-chart
+            [scheme]="colorScheme"
+            [results]="this.profileService.currentAssignments"
+            [gradient]="false"
+            [legend]="true"
+            [doughnut]="true"
+            [arcWidth]="0.40"
+            [animations]="true"
+            [tooltipDisabled]="false">
+        </ngx-charts-pie-chart>
+    </mat-grid-tile>
+    <mat-grid-tile >
+
+        
+    </mat-grid-tile>
+</mat-grid-list>
