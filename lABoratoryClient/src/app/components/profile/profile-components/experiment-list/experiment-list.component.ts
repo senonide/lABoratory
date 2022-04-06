@@ -32,12 +32,6 @@ export class ExperimentList implements OnInit {
     }
 
     selectExperiment(experiment: Experiment): void {
-        this.profileService.formType = FormType.EXPDET;
-        this.profileService.selectedExperiment = experiment;
-        var aux: any[] = [];
-        for (let assignment of experiment.assignments){
-            aux.push(ChartElement.getChartElementFromAssignment(assignment));
-        }
-        this.profileService.currentAssignments = aux;
+        this.profileService.selectExperiment(experiment)
     }
 }

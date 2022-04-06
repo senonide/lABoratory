@@ -53,3 +53,8 @@ mat-card {
 .buttonsContainer {
     width: 95%
 }
+
+mat-spinner {
+    display: inline-block;
+    height: 10px;
+}

@@ -3,13 +3,7 @@
 </h2>
 <mat-divider></mat-divider>
 <form [formGroup]="newExperimentForm" (submit)="createExperiment()" class="experimentForm">
-    <!--<div class="column1">
-        
-    </div>
-    <div class="column2">
-        
-    </div>-->
-    <mat-grid-list cols="2" rowHeight="80vh">
+    <mat-grid-list cols="2" rowHeight="40vh">
         <mat-grid-tile>
             <mat-card [class.mat-elevation-z0]="true">
                 <mat-form-field appearance="outline" class="formElement">
@@ -38,10 +32,11 @@
                 <div class="buttonsContainer">
                     <button mat-flat-button type="submit" color="primary" class="formButton">Create new experiment</button>
                     <button mat-stroked-button type="button" (click)="addAssignments()" color="primary" class="formButton">Add new assignment</button>
+                    
                 </div>
             </mat-card>
         </mat-grid-tile>
-        <mat-grid-tile>
+        <mat-grid-tile [rowspan]="2">
             <mat-card [class.mat-elevation-z0]="true">
                 <div class="newAssignments" formArrayName="assignments" *ngFor="let assignment of assignments.controls; let i = index">
                     <mat-form-field appearance="outline" class="assignmentFormElement right">
@@ -53,6 +48,9 @@
                     </mat-form-field>
                 </div>
             </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-spinner *ngIf="creating"></mat-spinner>
         </mat-grid-tile>
     </mat-grid-list>
 </form>

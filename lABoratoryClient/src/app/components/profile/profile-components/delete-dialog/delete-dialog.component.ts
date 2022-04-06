@@ -11,6 +11,7 @@ import { FormType, ProfileService } from "src/app/services/profile.service";
     styleUrls: ['./delete-dialog.component.css']
 })
 export class DeleteDialog {
+
     constructor(
         public profileService: ProfileService, 
         private experimentService: ExperimentService,
@@ -26,7 +27,6 @@ export class DeleteDialog {
         if (experiment == null){
             return
         }
-        this.dialogRef.close();
         this.experimentService.deleteExperiment(experiment)?.subscribe({
             next: () => {
                 this.experimentService.getExperiments()?.subscribe({
@@ -39,8 +39,10 @@ export class DeleteDialog {
                     }
                 });
             },
-            error: () => {}
+            error: () => {
+            }
         });
+        this.dialogRef.close();
     }
 }
 
