@@ -16,7 +16,7 @@ import { KeyDialog } from "../key-dialog/key-dialog.component";
 export class ExperimentDetails {
 
     colorScheme: Color = { 
-        domain: ['#FF3C38', '#54C6EB',  '#FFBC42', '#69DC9E', '#6F58C9'], 
+        domain: ['#54C6EB', '#FF3C38', '#FFBC42', '#69DC9E', '#6F58C9'], 
         group: ScaleType.Ordinal, 
         selectable: false, 
         name: 'Customer Usage', 
