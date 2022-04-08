@@ -24,6 +24,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -70,6 +71,7 @@ import { UpdateExperiment } from './components/profile/profile-components/update
     MatCardModule,
     MatGridListModule,
     MatDialogModule,
+    ClipboardModule,
     MatButtonModule,
     MatToolbarModule,
     MatExpansionModule,

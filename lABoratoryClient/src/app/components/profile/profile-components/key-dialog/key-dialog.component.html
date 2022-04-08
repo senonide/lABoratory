@@ -1,2 +1,14 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
-<div class="content" mat-dialog-content>{{data.content}}</div>
+<div class="content" mat-dialog-content class="key">
+    {{data.content}}
+</div>
+<div mat-dialog-actions>
+    <button mat-button color="primary" [cdkCopyToClipboard]="this.data.content" (click)="this.copied=true">
+        <mat-icon>filter_none</mat-icon> <span *ngIf="copied"> Copied</span><span *ngIf="!copied"> Copy</span>
+    </button>
+    <a [href]="this.url" target="_blank">
+    <button mat-button color="accent" >
+        <mat-icon>open_in_new</mat-icon> Get Assignment
+    </button>
+    </a>
+</div>

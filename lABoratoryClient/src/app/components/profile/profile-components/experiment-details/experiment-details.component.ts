@@ -26,6 +26,7 @@ export class ExperimentDetails {
 
     openKeyDialog(): void {
         const dialogRef = this.dialog.open(KeyDialog, {
+            //width: "70%",
             data: {
                 title: "Experiment key: ", 
                 content: this.profileService.selectedExperiment?.experimentKey
