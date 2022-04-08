@@ -101,7 +101,7 @@ func (r *dbCustomerRepository) SetAllAssignments(experimentId string, newAssigme
 			"assignmentdescription": newAssigment.AssignmentDescription,
 		},
 	}
-	_, err := collection.UpdateOne(ctx, filter, update)
+	_, err := collection.UpdateMany(ctx, filter, update)
 	if err != nil {
 		return err
 	}

@@ -5,6 +5,7 @@ import (
 	"lABoratory/lABoratoryAPI/models"
 	"lABoratory/lABoratoryAPI/persistence"
 	"lABoratory/lABoratoryAPI/utils"
+	"math"
 	"strings"
 )
 
@@ -72,6 +73,16 @@ func (as AssignmentService) createNewAssignment(experiment *models.Experiment) (
 // Function that returns the assignment whose absolute error is the largest depending on
 // the current percentages and the theoretical ones of the experiment
 func (as AssignmentService) getNewBalancedAssignment(experiment *models.Experiment) (*models.Customer, error) {
+	// If an assignment has 100%, return it
+	for _, assignment := range experiment.Assignments {
+		if int(math.Round(assignment.AssignmentValue)) == 100 {
+			return &models.Customer{
+				ExperimentId:          experiment.Id,
+				AssignmentName:        assignment.AssignmentName,
+				AssignmentDescription: assignment.AssignmentDescription,
+			}, nil
+		}
+	}
 
 	// Get from the database the existing assignments for the given experiment
 	existingAssignments, err := as.customerRepository.GetAll(experiment.Id)

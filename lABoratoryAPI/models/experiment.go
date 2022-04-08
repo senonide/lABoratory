@@ -23,6 +23,9 @@ func (exp Experiment) GetAssignmentByName(assignmentName string) (*Assignment, e
 }
 
 func (exp Experiment) GetRandomAssignment() Assignment {
-	index := rand.Intn(len(exp.Assignments) - 1)
+	index := 0
+	if len(exp.Assignments) > 1 {
+		index = rand.Intn(len(exp.Assignments) - 1)
+	}
 	return exp.Assignments[index]
 }

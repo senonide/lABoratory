@@ -72,7 +72,7 @@ func (s *ExperimentService) Update(experiment models.Experiment, owner *models.U
 	}
 	for _, assignment := range experiment.Assignments {
 		if int(math.Round(assignment.AssignmentValue)) == 100 {
-			s.assignmentService.SetAllAssignments(experiment, assignment)
+			go s.assignmentService.SetAllAssignments(experiment, assignment)
 			break
 		}
 	}
