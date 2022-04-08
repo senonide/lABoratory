@@ -6,7 +6,7 @@
         <span class="example-spacer"></span>
         <div class="options">
             <button class="keyButton" mat-stroked-button (click)="openKeyDialog()">Show experiment key</button>  
-            <button mat-icon-button color="primary" aria-label="Edit" class="formButton deleteButton">
+            <button mat-icon-button (click)="updateExperiment()" color="primary" aria-label="Edit" class="formButton deleteButton">
                 <mat-icon>edit</mat-icon>
             </button>
             <button mat-icon-button (click)="openDeleteDialog()" color="warn" aria-label="Delete" class="formButton deleteButton">
@@ -28,7 +28,7 @@
             <h2>Experiment assignments</h2>
             <mat-list>
                 <mat-list-item *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
-                    {{assignment.assignmentName.toUpperCase()}} -  {{assignment.assignmentValue}}%
+                    {{assignment.assignmentName.toUpperCase()}} {{assignment.assignmentDescription}}
                 </mat-list-item>
             </mat-list>
         </mat-card>

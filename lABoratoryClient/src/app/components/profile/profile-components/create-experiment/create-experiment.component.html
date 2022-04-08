@@ -2,9 +2,10 @@
     Create a new experiment
 </h2>
 <mat-divider></mat-divider>
+<br>
 <form [formGroup]="newExperimentForm" (submit)="createExperiment()" class="experimentForm">
-    <mat-grid-list cols="2" rowHeight="40vh">
-        <mat-grid-tile>
+    <mat-grid-list cols="5" rowHeight="39.5vh">
+        <mat-grid-tile [colspan]="2">
             <mat-card [class.mat-elevation-z0]="true">
                 <mat-form-field appearance="outline" class="formElement">
                     <mat-label>New experiment name</mat-label>
@@ -30,17 +31,30 @@
                     required>
                 </mat-form-field>
                 <div class="buttonsContainer">
-                    <button mat-flat-button type="submit" color="primary" class="formButton">Create new experiment</button>
                     <button mat-stroked-button type="button" (click)="addAssignments()" color="primary" class="formButton">Add new assignment</button>
-                    
+                    <button mat-stroked-button type="button" (click)="removeAssignment()" color="primary" class="formButton">Remove assignment</button>
+                    <button mat-flat-button type="submit" color="primary" class="formButton">Create new experiment</button>
                 </div>
             </mat-card>
         </mat-grid-tile>
-        <mat-grid-tile [rowspan]="2">
+        <mat-grid-tile [rowspan]="2" [colspan]="1">
             <mat-card [class.mat-elevation-z0]="true">
-                <div class="newAssignments" formArrayName="assignments" *ngFor="let assignment of assignments.controls; let i = index">
+                <div formArrayName="assignments" *ngFor="let assignment of assignments.controls; let i = index">
                     <mat-form-field appearance="outline" class="assignmentFormElement right">
                         <mat-label>A{{i + 1}}, activation percentage</mat-label>
+                        <input 
+                        matInput 
+                        type="text" 
+                        [formControlName]="i">
+                    </mat-form-field>
+                </div>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile [rowspan]="2" [colspan]="2">
+            <mat-card [class.mat-elevation-z0]="true">
+                <div formArrayName="assignmentsDescriptions" *ngFor="let description of assignmentsDescriptions.controls; let i = index">
+                    <mat-form-field appearance="outline" class="assignmentFormElement right">
+                        <mat-label>A{{i + 1}}, description</mat-label>
                         <input 
                         matInput 
                         type="text" 

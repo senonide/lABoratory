@@ -25,5 +25,6 @@ export class ProfileService {
 export enum FormType {
     DEFAULT,
     NEWEXP,
+    UPDATE,
     EXPDET
 }

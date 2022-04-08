@@ -42,5 +42,8 @@ export class ExperimentDetails {
         });
     }
 
-    
+    updateExperiment(): void {
+        this.profileService.formType = FormType.UPDATE;
+    }
+
 }

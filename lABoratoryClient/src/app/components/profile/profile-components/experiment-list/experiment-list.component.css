@@ -7,6 +7,7 @@
 button {
     margin-left: 10px;
     text-align: start;
+    max-width: 3fr;
 }
 
 .info-text {

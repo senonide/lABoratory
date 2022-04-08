@@ -1,10 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators, FormBuilder, FormArray } from "@angular/forms";
 import { Router } from "@angular/router";
-import { ChartElement } from "src/app/models/chart-element.model";
 import { Assignment, Experiment } from "src/app/models/experiment.model";
 import { ExperimentService } from "src/app/services/experiment.service";
-import { FormType, ProfileService } from "src/app/services/profile.service";
+import { ProfileService } from "src/app/services/profile.service";
 
 @Component({
     selector: 'create-experiment',
@@ -20,26 +19,23 @@ export class CreateExperiment implements OnInit {
     constructor(private experimentService: ExperimentService, public profileService: ProfileService, private router: Router, private formBuilder: FormBuilder) {}
 
     ngOnInit(): void {
-        this.newExperimentForm = this.formBuilder.group({
-            name: new FormControl('', [Validators.required]),
-            description: new FormControl(''),
-            controlAssignmentValue: new FormControl('', [Validators.required]),
-            assignments: this.formBuilder.array([])
-        });
+        this.createForm();
     }
 
     createExperiment() {
         var newExperimentAssignments: Assignment[] = [];
         newExperimentAssignments.push({
             assignmentName: "c",
-            assignmentValue: Number(this.newExperimentForm.value.controlAssignmentValue)
+            assignmentValue: Number(this.newExperimentForm.value.controlAssignmentValue),
+            assignmentDescription: "Control group"
         });
         var index: number = 1;
         for(let assignment of this.newExperimentForm.value.assignments) {
             if (assignment!=""){
                 newExperimentAssignments.push({
                     assignmentName: "a" + index,
-                    assignmentValue: Number(assignment)
+                    assignmentValue: Number(assignment),
+                    assignmentDescription: this.newExperimentForm.value.assignmentsDescriptions[index - 1]
                 });
                 index++;
             }
@@ -59,12 +55,7 @@ export class CreateExperiment implements OnInit {
                 this.experimentService.getExperiments()?.subscribe({
                     next: (experiments) => {
                         this.experimentService.experiments = experiments;
-                        this.newExperimentForm = this.formBuilder.group({
-                            name: new FormControl('', [Validators.required]),
-                            description: new FormControl(''),
-                            controlAssignmentValue: new FormControl('', [Validators.required]),
-                            assignments: this.formBuilder.array([])
-                        });
+                        this.createForm();
                         this.profileService.selectExperiment(this.experimentService.experiments[this.experimentService.experiments.length-1])
                         this.creating = false;
                     },
@@ -96,10 +87,32 @@ export class CreateExperiment implements OnInit {
         return this.newExperimentForm.get("assignments") as FormArray;
     }
 
+    get assignmentsDescriptions() {
+        return this.newExperimentForm.get("assignmentsDescriptions") as FormArray;
+    }
+
     addAssignments() {
         this.assignments.push(
+            this.formBuilder.control('', [Validators.required])
+        );
+        this.assignmentsDescriptions.push(
             this.formBuilder.control('')
         );
+    }
+
+    removeAssignment() {
+        this.assignments.removeAt(this.assignments.length - 1)
+        this.assignmentsDescriptions.removeAt(this.assignments.length - 1)
+    }
+
+    private createForm(): void {
+        this.newExperimentForm = this.formBuilder.group({
+            name: new FormControl('', [Validators.required]),
+            description: new FormControl(''),
+            controlAssignmentValue: new FormControl('', [Validators.required]),
+            assignments: this.formBuilder.array([]),
+            assignmentsDescriptions: this.formBuilder.array([])
+        });
     }
 
 }

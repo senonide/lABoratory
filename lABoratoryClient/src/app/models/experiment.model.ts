@@ -9,5 +9,6 @@ export interface Experiment {
 export interface Assignment {
     assignmentName: string;
     assignmentValue: number;
+    assignmentDescription: string;
 
 }
