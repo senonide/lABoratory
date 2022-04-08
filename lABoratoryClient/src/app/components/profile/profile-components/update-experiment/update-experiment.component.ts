@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ProfileService } from "src/app/services/profile.service";
+import { FormType, ProfileService } from "src/app/services/profile.service";
 
 @Component({
     selector: 'update-experiment',
@@ -11,6 +11,10 @@ export class UpdateExperiment implements OnInit {
     constructor(public profileService: ProfileService) {}
 
     ngOnInit(): void {
+    }
+
+    back(): void {
+        this.profileService.formType = FormType.EXPDET;
     }
     
 }
