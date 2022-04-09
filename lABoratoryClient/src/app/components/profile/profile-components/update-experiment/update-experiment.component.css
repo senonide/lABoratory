@@ -1,8 +1,40 @@
-h1 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80vh;
-    color: grey;
-    padding-left: 10px;
+h2 {
+    width: 90%;
+    display: inline-block;
+    text-align: center;
+}
+
+mat-card {
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+}
+
+.header {
+    width: 100%;
+}
+
+.backButton {
+    display: inline-block;
+    justify-content: left;
+}
+
+.formButton {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+.formElement {
+    display: block;
+    margin-left: 10px;
+    margin-right: 40px;
+    margin-bottom: 0px;
+    width: 95%;
+}
+
+.assignmentFormElement {
+    margin-left: 10px;
+    margin-bottom: 0px;
+    width: 90%;
 }

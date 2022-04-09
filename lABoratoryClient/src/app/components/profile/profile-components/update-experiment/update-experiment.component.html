@@ -1,4 +1,79 @@
-<button mat-icon-button (click)="back()" color="primary" aria-label="Back" class="formButton deleteButton">
-    <mat-icon>arrow_back</mat-icon>
-</button>
-<h1>Updating {{this.profileService.selectedExperiment?.name}}</h1>
+<!--
+-->
+<mat-grid-list cols="1" rowHeight="60px">
+    <mat-grid-tile>
+        <div class="header">
+            <button mat-icon-button (click)="back()" color="primary" aria-label="Back" class="backButton">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <h2>Updating {{this.profileService.selectedExperiment?.name}}</h2>
+        </div>
+    </mat-grid-tile>
+</mat-grid-list>
+<mat-divider></mat-divider>
+<br>
+<form [formGroup]="updateExperimentForm" (submit)="updateExperiment()" class="experimentForm">
+<mat-grid-list cols="5" rowHeight="39.5vh">
+    <mat-grid-tile colspan="2">
+        <mat-card [class.mat-elevation-z0]="true">
+            <mat-form-field appearance="outline" class="formElement">
+                <mat-label>Experiment name</mat-label>
+                <input 
+                matInput 
+                type="text" 
+                formControlName="name"
+                required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="formElement">
+                <mat-label>Experiment description</mat-label>
+                <input 
+                matInput 
+                type="text" 
+                formControlName="description">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="formElement">
+                <mat-label>Control group activation percentage</mat-label>
+                <input 
+                matInput 
+                type="text" 
+                formControlName="controlAssignmentValue" 
+                required>
+            </mat-form-field>
+            <div class="buttonsContainer">
+                <button mat-stroked-button type="button" (click)="addAssignments()" color="primary" class="formButton">Add new assignment</button>
+                <button mat-stroked-button type="button" (click)="removeAssignment()" color="primary" class="formButton">Remove assignment</button>
+                <button mat-flat-button type="submit" color="primary" class="formButton">Update experiment</button>
+            </div>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile rowspan="2">
+        <mat-card [class.mat-elevation-z0]="true">
+            <div formArrayName="assignments" *ngFor="let assignment of assignments.controls; let i = index">
+                <mat-form-field appearance="outline" class="assignmentFormElement">
+                    <mat-label>A{{i + 1}}, activation percentage</mat-label>
+                    <input 
+                    matInput 
+                    type="text" 
+                    [formControlName]="i">
+                </mat-form-field>
+            </div>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="2" rowspan="2">
+        <mat-card [class.mat-elevation-z0]="true">
+            <div formArrayName="assignmentsDescriptions" *ngFor="let description of assignmentsDescriptions.controls; let i = index">
+                <mat-form-field appearance="outline" class="assignmentFormElement">
+                    <mat-label>A{{i + 1}}, description</mat-label>
+                    <input 
+                    matInput 
+                    type="text" 
+                    [formControlName]="i">
+                </mat-form-field>
+            </div>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="2">
+        <mat-spinner *ngIf="updating"></mat-spinner>
+    </mat-grid-tile>
+</mat-grid-list>
+</form>

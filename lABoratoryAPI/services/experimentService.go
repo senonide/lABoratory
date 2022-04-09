@@ -63,10 +63,14 @@ func (s *ExperimentService) Update(experiment models.Experiment, owner *models.U
 	if !s.validateExperiment(experiment) {
 		return fmt.Errorf("bad request")
 	}
-	if !validateOwnership(&experiment, owner) {
+	experimentToUpdate, err := s.repository.GetOne(experiment.Id)
+	if err != nil {
+		return err
+	}
+	if !validateOwnership(experimentToUpdate, owner) {
 		return fmt.Errorf("ownership error")
 	}
-	err := s.repository.Update(experiment)
+	err = s.repository.Update(experiment)
 	if err != nil {
 		return err
 	}
