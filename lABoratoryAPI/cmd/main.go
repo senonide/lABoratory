@@ -42,6 +42,8 @@ func main() {
 
 	router.PUT("assignment/:key", assignmentHandler.SetAssignment)
 
+	router.GET("assignments/:id", assignmentHandler.GetAssignmentsOfExperiment)
+
 	router.GET("/user", authHandler.GetUser)
 	router.DELETE("/user", authHandler.DeleteUser)
 

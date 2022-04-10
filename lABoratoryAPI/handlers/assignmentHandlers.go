@@ -41,3 +41,12 @@ func (ah *AssignmentHandler) SetAssignment(c *gin.Context) {
 	}
 	c.IndentedJSON(http.StatusOK, assignmentName)
 }
+
+func (ah *AssignmentHandler) GetAssignmentsOfExperiment(c *gin.Context) {
+	assignments, err := ah.service.GetAssignmentsOfExperiment(c.Param("id"))
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, assignments)
+}

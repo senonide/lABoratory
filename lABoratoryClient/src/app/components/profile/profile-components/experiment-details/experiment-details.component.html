@@ -23,6 +23,7 @@
     </mat-grid-tile>
     <mat-grid-tile>
         <h1>Actual percentages of the experiment</h1>
+        <h3>Number of current customers: {{this.profileService.actualAssignmentsCount}}</h3>
     </mat-grid-tile>
 </mat-grid-list>
 <mat-grid-list cols="11" rowHeight="36vh">
@@ -74,8 +75,8 @@
             <mat-grid-list cols="2" rowHeight="30px">
                 <mat-grid-tile *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
                     <mat-card [class.mat-elevation-z0]="true">
-                        <h3 >
-                            - {{assignment.assignmentName.toUpperCase()}}, {{assignment.assignmentDescription}}
+                        <h3>
+                            {{assignment.assignmentName.toUpperCase()}} - {{assignment.assignmentValue}}% ({{assignment.assignmentDescription}})
                         </h3>
                     </mat-card>
                 </mat-grid-tile>                
