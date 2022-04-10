@@ -2,7 +2,6 @@ import { Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Color, ScaleType } from "@swimlane/ngx-charts";
-import { Experiment } from "src/app/models/experiment.model";
 import { ExperimentService } from "src/app/services/experiment.service";
 import { FormType, ProfileService } from "src/app/services/profile.service";
 import { DeleteDialog } from "../delete-dialog/delete-dialog.component";
@@ -15,8 +14,15 @@ import { KeyDialog } from "../key-dialog/key-dialog.component";
 })
 export class ExperimentDetails {
 
-    colorScheme: Color = { 
-        domain: ['#54C6EB', '#FF3C38', '#FFBC42', '#69DC9E', '#6F58C9'], 
+    colorScheme1: Color = { 
+        domain: ['#1666ba', '#368ce7', '#7ab3ef', '#bedaf7', '#deecfb'], 
+        group: ScaleType.Ordinal, 
+        selectable: false, 
+        name: 'Customer Usage', 
+    };
+
+    colorScheme2: Color = { 
+        domain: ['#991101', '#c33211', '#d75f5a', '#ff8a82', '#ffcfc2'], 
         group: ScaleType.Ordinal, 
         selectable: false, 
         name: 'Customer Usage', 

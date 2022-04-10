@@ -59,8 +59,27 @@ ngx-charts-pie-chart {
     margin-right: 10px;
 }
 
+mat-card {
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+}
+
 .keyButton {
     color: rgb(92, 151, 92);
     margin-bottom: 0px;
     margin-right: 10px;
+}
+
+.chartContainer {
+    height: 10%;
+    width: 10%;
+}
+
+h3 {
+    margin-left: 50px;
+}
+
+.nodata {
+    color: grey;
 }

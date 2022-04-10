@@ -6,9 +6,10 @@ import { Experiment } from "../models/experiment.model";
 @Injectable({providedIn: 'root'})
 export class ProfileService {
     selectedExperiment: Experiment | null = null;
-    currentAssignments: any[] = [];
+    theoreticalAssignments: any[] = [];
     formType: FormType = FormType.DEFAULT;
 
+    actualAssignments: any[] = []
 
     selectExperiment(experiment: Experiment): void {
         this.formType = FormType.EXPDET;
@@ -17,7 +18,7 @@ export class ProfileService {
         for (let assignment of experiment.assignments){
             aux.push(ChartElement.getChartElementFromAssignment(assignment));
         }
-        this.currentAssignments = aux;
+        this.theoreticalAssignments = aux;
     }
 
 }

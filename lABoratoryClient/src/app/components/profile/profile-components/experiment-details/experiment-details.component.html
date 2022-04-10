@@ -16,28 +16,21 @@
     </mat-grid-tile>
 </mat-grid-list>
 <mat-divider></mat-divider>
-<mat-grid-list cols="2" rowHeight="38vh">
-    <mat-grid-tile [rowspan]="2">
-        <mat-card [class.mat-elevation-z0]="true">
-            <div *ngIf="this.profileService.selectedExperiment?.description!=''">
-                <h2>Description</h2>
-                <p> - {{this.profileService.selectedExperiment?.description}}</p>
-                <br>
-                <br>
-            </div>
-            <h2>Experiment assignments</h2>
-            <mat-list>
-                <mat-list-item *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
-                    {{assignment.assignmentName.toUpperCase()}} {{assignment.assignmentDescription}}
-                </mat-list-item>
-            </mat-list>
-        </mat-card>
+<br>
+<mat-grid-list cols="2" rowHeight="60px">
+    <mat-grid-tile>
+        <h1>Theoretical percentages of the experiment</h1>
     </mat-grid-tile>
     <mat-grid-tile>
+        <h1>Actual percentages of the experiment</h1>
+    </mat-grid-tile>
+</mat-grid-list>
+<mat-grid-list cols="11" rowHeight="36vh">
+    <mat-grid-tile [colspan]="5">
         <ngx-charts-pie-chart
-            [scheme]="colorScheme"
-            [results]="this.profileService.currentAssignments"
-            [gradient]="false"
+            [scheme]="colorScheme1"
+            [results]="this.profileService.theoreticalAssignments"
+            [gradient]="true"
             [legend]="true"
             [doughnut]="true"
             [arcWidth]="0.40"
@@ -45,8 +38,48 @@
             [tooltipDisabled]="false">
         </ngx-charts-pie-chart>
     </mat-grid-tile>
-    <mat-grid-tile >
-
-        
+    <mat-grid-tile></mat-grid-tile>
+    <mat-grid-tile [colspan]="5">
+        <h1 class="nodata" *ngIf="this.profileService.actualAssignments.length<=0">No data yet</h1>
+        <ngx-charts-pie-chart *ngIf="this.profileService.actualAssignments.length>0"
+            [scheme]="colorScheme2"
+            [results]="this.profileService.actualAssignments"
+            [gradient]="true"
+            [legend]="true"
+            [doughnut]="true"
+            [arcWidth]="0.40"
+            [animations]="true"
+            [tooltipDisabled]="false">
+        </ngx-charts-pie-chart>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="5">
+        <mat-card [class.mat-elevation-z0]="true">
+            <div *ngIf="this.profileService.selectedExperiment?.description!=''">
+                <br>
+                <br>
+                <h2>Experiment description</h2>
+                <p> - {{this.profileService.selectedExperiment?.description}}</p>
+                <br>
+                <br>
+            </div>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile></mat-grid-tile>
+    <mat-grid-tile [colspan]="5">
+        <mat-card [class.mat-elevation-z0]="true">
+            <br>
+            <br>
+            <h2>Experiment assignments</h2>
+            <br>
+            <mat-grid-list cols="2" rowHeight="30px">
+                <mat-grid-tile *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
+                    <mat-card [class.mat-elevation-z0]="true">
+                        <h3 >
+                            - {{assignment.assignmentName.toUpperCase()}}, {{assignment.assignmentDescription}}
+                        </h3>
+                    </mat-card>
+                </mat-grid-tile>                
+            </mat-grid-list>
+        </mat-card>
     </mat-grid-tile>
 </mat-grid-list>
