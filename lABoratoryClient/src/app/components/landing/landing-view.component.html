@@ -1,21 +1,33 @@
 <main>
-  <mat-grid-list cols="4" rowHeight="19.92vh">
-    <mat-grid-tile colspan="2">
-      <h2 class="title">Plataform for create and use A/B testing experiments</h2>
+  <mat-grid-list cols="4" rowHeight="24.93vh">
+    <mat-grid-tile colspan="2" rowspan="1">
+      <div class="header">
+        <h2 class="title">Plataform for create and use A/B testing experiments</h2>
+        <button mat-flat-button class="buttonStarted">Get Started</button>
+      </div>
     </mat-grid-tile>
-    <mat-grid-tile colspan="2"></mat-grid-tile>
-    <mat-grid-tile colspan="4" rowspan="3">
+    <mat-grid-tile colspan="2" rowspan="1"></mat-grid-tile>
+ 
+    <mat-grid-tile colspan="4" rowspan="2">
       <div class="logo">
         <img src="assets/logo.png" height="200">
         <h1>lABoratory</h1>
       </div>
     </mat-grid-tile>
-    <mat-grid-tile colspan="4" rowspan="1" class="footer">
+    <mat-grid-tile colspan="3" rowspan="1">
+      <h2 class="description">
+        A/B testing (also known as split testing) are processes 
+        that consist of showing two different variants of the same page 
+        to different website users at the same time, in order to measure 
+        and compare which of these variants is the best for a certain purpose
+      </h2>
+    </mat-grid-tile>
+    <!--<mat-grid-tile colspan="4" rowspan="1" class="footer">
       <div style="width: 100%; height: 100%;">
         <mat-grid-list cols="4" rowHeight="100%">
           <mat-grid-tile colspan="3" rowspan="1">
             <h2 class="footerTitle">Create a new experiment right now!</h2>
-            <button mat-flat-button class="buttonStarted">Get Started</button>
+            
           </mat-grid-tile>
           <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
         </mat-grid-list>
@@ -23,5 +35,24 @@
       
      
     </mat-grid-tile>
+  
+  
+
+    <div class="header">
+        <h2 class="description">
+          A/B testing (also known as split testing) are processes 
+          that consist of showing two different variants of the same page 
+          to different website users at the same time, in order to measure 
+          and compare which of these variants is the best for a certain purpose
+        </h2>
+        <br>
+        <h2 class="description">
+          These tests serve to guarantee the best experience for the users, 
+          iterating and improving our product. Also, they are not only used for websites. 
+        </h2>
+      </div>
+  
+  
+  -->
   </mat-grid-list>
 </main>

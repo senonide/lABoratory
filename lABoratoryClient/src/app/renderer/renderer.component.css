@@ -1,7 +1,7 @@
 canvas {
     position: fixed;
-    background: linear-gradient(to bottom right,  #3d6fda 30%,#ff4081 100%);
-    left:0;
+    background: linear-gradient(to bottom left,  #3d6fda 35%,#ff4081 100%);
+    right: 0;
     top:0;
     z-index: 0;
     height: 100%;
@@ -13,5 +13,16 @@ canvas {
     z-index: 1;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.6);
+    /*background-color: rgba(0, 0, 0, 0.6);*/
+    background: linear-gradient(to bottom right,  rgba(0, 0, 0, 0.99) 10%,rgba(0, 0, 0, 0.03) 100%);
+}
+
+.rendererDiv2 {
+    position: fixed;
+    left:0;
+    top:0;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to top right,  rgba(0, 0, 0, 0.99) 10%,rgba(0, 0, 0, 0) 100%);
 }

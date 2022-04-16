@@ -49,9 +49,9 @@ export class RendererService implements OnDestroy{
         this.cubeMesh = new THREE.Object3D();
         this.particles = new THREE.Object3D();
 
-        this.cube.position.set(0, 20, 0);
-        this.cubeMesh.position.set(0, 20, 0);
-        this.particles.position.set(0, 20, 0);
+        this.cube.position.set(0, -20, 0);
+        this.cubeMesh.position.set(0, -20, 0);
+        this.particles.position.set(0, -20, 0);
 
         this.scene.add(this.cube);
         this.scene.add(this.cubeMesh);
@@ -59,7 +59,7 @@ export class RendererService implements OnDestroy{
 
         var particleShape = new THREE.BoxGeometry(6, 6, 6);
         var mainCubeGeometry = new THREE.IcosahedronGeometry(7);
-        var meshCubeGeometry = new THREE.IcosahedronGeometry(14);
+        var meshCubeGeometry = new THREE.IcosahedronGeometry(17);
 
         var material = new THREE.MeshStandardMaterial({
             color: 0xffffff,
