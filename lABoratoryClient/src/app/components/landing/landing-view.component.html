@@ -1,28 +1,27 @@
 <main>
-  <div class="pos">
-    <div class="centerLogo">
-      <span class="logoImage"><img src="assets/logo.png" height="200"></span>
-      <span class="logo">
+  <mat-grid-list cols="4" rowHeight="19.92vh">
+    <mat-grid-tile colspan="2">
+      <h2 class="title">Plataform for create and use A/B testing experiments</h2>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="2"></mat-grid-tile>
+    <mat-grid-tile colspan="4" rowspan="3">
+      <div class="logo">
+        <img src="assets/logo.png" height="200">
         <h1>lABoratory</h1>
-      </span>
-    </div>
-  </div>
-  <div  class="content">
-    <header>
-      <!--<h1>Welcome to lABoratory</h1>-->
-      <p class="title">Create and use A/B testing experiments right now!</p>
-    </header>
-  </div>
- <!--
-  <div class="content">
-    <p class="about">
-      Las pruebas A/B son un tipo de experimentos que se utilizan en el contexto del marketing digital y la analítica web para identificar cambios que maximizan un resultado determinado. Por ejemplo, clientes diferentes de una página de compras online pueden ver productos diferentes, anuncios en diferentes lugares, o precios diferentes para el mismo producto, basados en dicho experimento. Mediante la obtención de métricas vinculadas al experimento se puede determinar la optimalidad de cada opción y finalmente tomar una decisión en base a los resultados.
-    </p>
-  </div>
-  <div class="subcontent">
-
-  </div>
-  <footer class="footer">
-    
-  </footer>-->
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="4" rowspan="1" class="footer">
+      <div style="width: 100%; height: 100%;">
+        <mat-grid-list cols="4" rowHeight="100%">
+          <mat-grid-tile colspan="3" rowspan="1">
+            <h2 class="footerTitle">Create a new experiment right now!</h2>
+            <button mat-flat-button class="buttonStarted">Get Started</button>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1"></mat-grid-tile>
+        </mat-grid-list>
+      </div>
+      
+     
+    </mat-grid-tile>
+  </mat-grid-list>
 </main>
