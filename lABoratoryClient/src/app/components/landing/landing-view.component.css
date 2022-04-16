@@ -13,9 +13,18 @@ main {
 }
 
 .description {
+    text-align: center;
     font-size: 1.6rem;
-    margin-top: 20px;
-    margin-left: 40px;
+}
+
+.descriptionCard{
+    color: white;
+    border-radius: 0px;
+    padding: 30px;
+    align-items: center; 
+    text-align: center;
+    background-color: transparent;
+    margin-bottom: 60px;
 }
 
 .logo {
@@ -30,7 +39,6 @@ h1 {
 
 h2 {
     font-size: 2rem;
-    margin-left: 30px;
     margin-top: 30px;
 }
 
@@ -58,4 +66,5 @@ h2 {
 
 .title{
     margin-top: 70px;
+    margin-left: 30px;
 }
