@@ -7,11 +7,11 @@ import (
 	"os"
 )
 
-const ConfigFilePath = "../config/config.json"
+const configFilePath = "../config/config.json"
 
-var ConfigParams *Config = ReadConfig()
+var configParams *config = nil
 
-type Config struct {
+type config struct {
 	Port      int    `json:"port"`
 	JwtSecret string `json:"jwtSecret"`
 	DbName    string `json:"dbName"`
@@ -20,22 +20,19 @@ type Config struct {
 	DbHost    string `json:"dbHost"`
 }
 
-func ReadConfig() *Config {
+func GetConfig() config {
+	if configParams == nil {
+		jsonFile, err := os.Open(configFilePath)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		defer jsonFile.Close()
 
-	jsonFile, err := os.Open(ConfigFilePath)
-	if err != nil {
-		log.Fatal(err.Error())
+		byteValue, err := ioutil.ReadAll(jsonFile)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		json.Unmarshal(byteValue, &configParams)
 	}
-
-	defer jsonFile.Close()
-
-	byteValue, err := ioutil.ReadAll(jsonFile)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	var config *Config
-	json.Unmarshal(byteValue, &config)
-
-	return config
+	return *configParams
 }

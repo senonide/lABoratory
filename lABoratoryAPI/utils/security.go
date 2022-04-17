@@ -33,7 +33,7 @@ func (sp SecurityProvider) GetPasswordHash(password string) string {
 }
 
 func (sp SecurityProvider) GenJWT(subject string, expires bool) (string, error) {
-	hmacSecret := []byte(config.ConfigParams.JwtSecret)
+	hmacSecret := []byte(config.GetConfig().JwtSecret)
 	var claims *jwt.RegisteredClaims
 	if expires {
 		var exp *jwt.NumericDate = new(jwt.NumericDate)
@@ -53,7 +53,7 @@ func (sp SecurityProvider) GenJWT(subject string, expires bool) (string, error) 
 }
 
 func (sp SecurityProvider) GetToken(tokenString string) (*jwt.Token, error) {
-	hmacSecret := []byte(config.ConfigParams.JwtSecret)
+	hmacSecret := []byte(config.GetConfig().JwtSecret)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {

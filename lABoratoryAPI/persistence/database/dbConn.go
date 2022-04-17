@@ -11,7 +11,7 @@ import (
 )
 
 func GetDatabase() *mongo.Database {
-	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s", config.ConfigParams.DbUsr, config.ConfigParams.DbPw, config.ConfigParams.DbHost)
+	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s", config.GetConfig().DbUsr, config.GetConfig().DbPw, config.GetConfig().DbHost)
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err.Error())
@@ -21,5 +21,5 @@ func GetDatabase() *mongo.Database {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	return client.Database(config.ConfigParams.DbName)
+	return client.Database(config.GetConfig().DbName)
 }

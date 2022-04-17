@@ -53,7 +53,7 @@ func main() {
 	router.PUT("/experiments/:id", experimentHandler.UpdateExperiment)
 	router.DELETE("/experiments/:id", experimentHandler.DeleteExperiment)
 
-	url := "localhost:" + strconv.Itoa(config.ConfigParams.Port)
-	fmt.Println("Listening on port " + strconv.Itoa(config.ConfigParams.Port))
+	url := "localhost:" + strconv.Itoa(config.GetConfig().Port)
+	fmt.Println("Listening on port " + strconv.Itoa(config.GetConfig().Port))
 	router.Run(url)
 }
