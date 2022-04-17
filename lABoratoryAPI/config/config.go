@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -24,7 +25,10 @@ func GetConfig() config {
 	if configParams == nil {
 		jsonFile, err := os.Open(configFilePath)
 		if err != nil {
-			log.Fatal(err.Error())
+			fmt.Println("Error, configuration file not found")
+			fmt.Println("Loading default configuration...")
+			*configParams = loadDefaultConfig()
+			return *configParams
 		}
 		defer jsonFile.Close()
 
@@ -35,4 +39,8 @@ func GetConfig() config {
 		json.Unmarshal(byteValue, &configParams)
 	}
 	return *configParams
+}
+
+func loadDefaultConfig() config {
+	return config{Port: 8080, JwtSecret: "secret", DbName: "", DbUsr: "", DbPw: "", DbHost: ""}
 }
