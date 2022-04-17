@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"lABoratory/lABoratoryAPI/config"
 	"lABoratory/lABoratoryAPI/handlers"
 	"lABoratory/lABoratoryAPI/middleware"
 	"lABoratory/lABoratoryAPI/persistence/database"
 	"lABoratory/lABoratoryAPI/services"
 	"lABoratory/lABoratoryAPI/utils"
+	"log"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -54,6 +54,6 @@ func main() {
 	router.DELETE("/experiments/:id", experimentHandler.DeleteExperiment)
 
 	url := "localhost:" + strconv.Itoa(config.GetConfig().Port)
-	fmt.Println("Listening on port " + strconv.Itoa(config.GetConfig().Port))
+	log.Println("Listening on port " + strconv.Itoa(config.GetConfig().Port))
 	router.Run(url)
 }

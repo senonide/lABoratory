@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -25,9 +24,10 @@ func GetConfig() config {
 	if configParams == nil {
 		jsonFile, err := os.Open(configFilePath)
 		if err != nil {
-			fmt.Println("Error, configuration file not found")
-			fmt.Println("Loading default configuration...")
-			*configParams = loadDefaultConfig()
+			log.Println("Error, configuration file not found")
+			log.Println("Loading default configuration...")
+			defConfig := loadDefaultConfig()
+			configParams = &defConfig
 			return *configParams
 		}
 		defer jsonFile.Close()

@@ -11,6 +11,9 @@ import (
 )
 
 func GetDatabase() *mongo.Database {
+	if config.GetConfig().DbHost == "" {
+		log.Fatal("No database configured")
+	}
 	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s", config.GetConfig().DbUsr, config.GetConfig().DbPw, config.GetConfig().DbHost)
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
