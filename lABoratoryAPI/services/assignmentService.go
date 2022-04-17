@@ -59,7 +59,11 @@ func (as AssignmentService) GetAssignment(key string) (*models.Customer, error) 
 }
 
 func (as AssignmentService) createNewAssignment(experiment *models.Experiment) (*models.Customer, error) {
-	newAssignment, err := as.getNewBalancedAssignment(experiment)
+	existingAssignments, err := as.customerRepository.GetAll(experiment.Id)
+	if err != nil {
+		return nil, err
+	}
+	newAssignment, err := as.getNewBalancedAssignment(experiment, &existingAssignments)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +77,7 @@ func (as AssignmentService) createNewAssignment(experiment *models.Experiment) (
 
 // Function that returns the assignment whose absolute error is the largest depending on
 // the current percentages and the theoretical ones of the experiment
-func (as AssignmentService) getNewBalancedAssignment(experiment *models.Experiment) (*models.Customer, error) {
+func (as AssignmentService) getNewBalancedAssignment(experiment *models.Experiment, existingAssignments *[]models.Customer) (*models.Customer, error) {
 	// If an assignment has 100%, return it
 	for _, assignment := range experiment.Assignments {
 		if int(math.Round(assignment.AssignmentValue)) == 100 {
@@ -83,12 +87,6 @@ func (as AssignmentService) getNewBalancedAssignment(experiment *models.Experime
 				AssignmentDescription: assignment.AssignmentDescription,
 			}, nil
 		}
-	}
-
-	// Get from the database the existing assignments for the given experiment
-	existingAssignments, err := as.customerRepository.GetAll(experiment.Id)
-	if err != nil {
-		return nil, err
 	}
 
 	// Map that will store the number of customers for each assignment
@@ -103,16 +101,16 @@ func (as AssignmentService) getNewBalancedAssignment(experiment *models.Experime
 	}
 
 	// Count the number of existing customers for each assignment
-	for _, customer := range existingAssignments {
+	for _, customer := range *existingAssignments {
 		count[customer.AssignmentName]++
 	}
 
 	// Calculate the current percantage of the existing customers
 	for assignmentName, value := range count {
-		if len(existingAssignments) == 0 {
+		if len(*existingAssignments) == 0 {
 			currentPercentages[assignmentName] = 100.0 / float64(len(experiment.Assignments))
 		} else {
-			currentPercentages[assignmentName] = (float64(value) / float64(len(existingAssignments))) * 100
+			currentPercentages[assignmentName] = (float64(value) / float64(len(*existingAssignments))) * 100
 		}
 	}
 
