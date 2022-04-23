@@ -3,18 +3,33 @@ package apitypes
 import (
 	"lABoratory/lABoratoryAPI/internal/models"
 	"lABoratory/lABoratoryAPI/internal/utils"
+	"strconv"
 )
 
 type Experiment struct {
-	Id            string              `json:"id"`
-	Name          string              `json:"name" binding:"required"`
-	Description   string              `json:"description"`
-	ExperimentKey string              `json:"experimentKey"`
-	Assignments   []models.Assignment `json:"assignments" binding:"required"`
+	Id            string           `json:"id"`
+	Name          string           `json:"name" binding:"required"`
+	Description   string           `json:"description"`
+	ExperimentKey string           `json:"experimentKey"`
+	Assignments   []AssignmentType `json:"assignments" binding:"required"`
 }
 
 func GetExperimentApiType(exp models.Experiment) Experiment {
-	return Experiment{Id: exp.Id, Name: exp.Name, Description: exp.Description, ExperimentKey: getExperimentKey(exp), Assignments: exp.Assignments}
+	assignmentsType := []AssignmentType{}
+	for _, assignment := range exp.Assignments {
+		assignmentsType = append(assignmentsType, AssignmentType{
+			AssignmentName:        assignment.AssignmentName,
+			AssignmentValue:       assignment.AssignmentValue,
+			AssignmentDescription: assignment.AssignmentDescription,
+		})
+	}
+	return Experiment{
+		Id:            exp.Id,
+		Name:          exp.Name,
+		Description:   exp.Description,
+		ExperimentKey: getExperimentKey(exp),
+		Assignments:   assignmentsType,
+	}
 }
 
 func GetExperimentsApiType(experiments []models.Experiment) []Experiment {
@@ -26,7 +41,22 @@ func GetExperimentsApiType(experiments []models.Experiment) []Experiment {
 }
 
 func (experiment Experiment) GetExperimentModel() models.Experiment {
-	experimentModel := models.Experiment{Name: experiment.Name, Description: experiment.Description, Assignments: experiment.Assignments}
+	assignmentsModel := []models.Assignment{{
+		AssignmentName:        "c",
+		AssignmentValue:       experiment.Assignments[0].AssignmentValue,
+		AssignmentDescription: experiment.Assignments[0].AssignmentDescription,
+	}}
+	for i := 1; i < len(experiment.Assignments); i++ {
+		assignmentsModel = append(assignmentsModel, models.Assignment{
+			AssignmentName:        "a" + strconv.Itoa(i),
+			AssignmentValue:       experiment.Assignments[i].AssignmentValue,
+			AssignmentDescription: experiment.Assignments[i].AssignmentDescription,
+		})
+	}
+	experimentModel := models.Experiment{Name: experiment.Name, Description: experiment.Description, Assignments: assignmentsModel}
+	if experiment.Id != "" {
+		experimentModel.Id = experiment.Id
+	}
 	return experimentModel
 }
 

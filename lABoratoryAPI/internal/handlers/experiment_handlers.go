@@ -3,7 +3,6 @@ package handlers
 import (
 	"lABoratory/lABoratoryAPI/internal/handlers/apitypes"
 	"lABoratory/lABoratoryAPI/internal/handlers/responses"
-	"lABoratory/lABoratoryAPI/internal/models"
 	"lABoratory/lABoratoryAPI/internal/services"
 	"net/http"
 
@@ -58,7 +57,7 @@ func (eh *ExperimentHandler) GetExperimentById(c *gin.Context) {
 }
 
 func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
-	var data models.Experiment
+	var data apitypes.Experiment
 	err := c.BindJSON(&data)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
@@ -70,13 +69,14 @@ func (eh *ExperimentHandler) CreateExperiment(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	data.Owner = *owner
-	err = eh.experimentService.Create(data)
+	expModel := data.GetExperimentModel()
+	expModel.Owner = *owner
+	err = eh.experimentService.Create(expModel)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentApiType(data))
+	c.IndentedJSON(http.StatusOK, data)
 }
 
 func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
@@ -86,7 +86,7 @@ func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	var data models.Experiment
+	var data apitypes.Experiment
 	err = c.BindJSON(&data)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
@@ -94,12 +94,13 @@ func (eh *ExperimentHandler) UpdateExperiment(c *gin.Context) {
 	}
 	id := c.Param("id")
 	data.Id = id
-	err = eh.experimentService.Update(data, owner)
+	expModel := data.GetExperimentModel()
+	err = eh.experimentService.Update(expModel, owner)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, apitypes.GetExperimentApiType(data))
+	c.IndentedJSON(http.StatusOK, data)
 }
 
 func (eh *ExperimentHandler) DeleteExperiment(c *gin.Context) {

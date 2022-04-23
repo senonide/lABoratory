@@ -33,7 +33,7 @@ export class UpdateExperiment implements OnInit {
     }
 
     updateExperiment(): void {
-        var ExperimentAssignments: Assignment[] = [];
+        var ExperimentAssignments: any[] = [];
         ExperimentAssignments.push({
             assignmentName: "c",
             assignmentValue: Number(this.updateExperimentForm.value.controlAssignmentValue),

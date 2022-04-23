@@ -1,6 +1,6 @@
 canvas {
     position: fixed;
-    background: linear-gradient(to bottom left,  #3d6fda 40%,#ff4081 100%);
+    background: linear-gradient(to bottom left,  #3d6fda 60%,#ff4081 100%);
     right: 0;
     top:0;
     z-index: 0;
@@ -13,5 +13,5 @@ canvas {
     z-index: 1;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(to right,  rgba(0, 0, 0, 0.95) 30%,rgba(0, 0, 0, 0.4) 100%);
+    background: rgba(0, 0, 0, 0.6)
 }

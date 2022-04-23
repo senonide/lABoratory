@@ -6,6 +6,7 @@ import (
 	"lABoratory/lABoratoryAPI/internal/persistence"
 	"lABoratory/lABoratoryAPI/internal/utils"
 	"math"
+	"regexp"
 )
 
 type ExperimentService struct {
@@ -49,10 +50,14 @@ func (s *ExperimentService) GetOne(experimentId string, owner *models.User) (*mo
 }
 
 func (s *ExperimentService) Create(experiment models.Experiment) error {
-	if !s.validateExperiment(experiment) {
+	experiments, err := s.GetAll(&experiment.Owner)
+	if err != nil {
+		return err
+	}
+	if !s.validateExperiment(experiment, experiments) {
 		return fmt.Errorf("bad request")
 	}
-	err := s.repository.Create(experiment)
+	err = s.repository.Create(experiment)
 	if err != nil {
 		return err
 	}
@@ -60,7 +65,11 @@ func (s *ExperimentService) Create(experiment models.Experiment) error {
 }
 
 func (s *ExperimentService) Update(experiment models.Experiment, owner *models.User) error {
-	if !s.validateExperiment(experiment) {
+	experiments, err := s.GetAll(&experiment.Owner)
+	if err != nil {
+		return err
+	}
+	if !s.validateExperiment(experiment, experiments) {
 		return fmt.Errorf("bad request")
 	}
 	experimentToUpdate, err := s.repository.GetOne(experiment.Id)
@@ -103,17 +112,18 @@ func (s *ExperimentService) DeleteAll(owner *models.User) (bool, error) {
 	return wasDeleted, nil
 }
 
-func (s *ExperimentService) validateExperiment(experiment models.Experiment) bool {
-	experiments, err := s.GetAll(&experiment.Owner)
-	if err != nil {
-		return false
-	}
-	if experiment.Name != "" && !containsExperimentName(experiments, experiment.Name) {
+func (s *ExperimentService) validateExperiment(experiment models.Experiment, existingExperiments []models.Experiment) bool {
+	if experiment.Name != "" && !containsExperimentName(existingExperiments, experiment.Name) {
 		if isDuplicated(experiment.Assignments) {
 			return false
 		}
 		var acc float64 = 0.0
+		regex := regexp.MustCompile("^((a)([1-9]+))|(c)$")
 		for _, assig := range experiment.Assignments {
+			m := regex.FindAllStringSubmatch(assig.AssignmentName, 1)
+			if m == nil {
+				return false
+			}
 			if assig.AssignmentName == "" {
 				return false
 			}

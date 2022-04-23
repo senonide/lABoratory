@@ -23,9 +23,8 @@ export class CreateExperiment implements OnInit {
     }
 
     createExperiment() {
-        var newExperimentAssignments: Assignment[] = [];
+        var newExperimentAssignments: any[] = [];
         newExperimentAssignments.push({
-            assignmentName: "c",
             assignmentValue: Number(this.newExperimentForm.value.controlAssignmentValue),
             assignmentDescription: "Control group"
         });
@@ -33,7 +32,6 @@ export class CreateExperiment implements OnInit {
         for(let assignment of this.newExperimentForm.value.assignments) {
             if (assignment!=""){
                 newExperimentAssignments.push({
-                    assignmentName: "a" + index,
                     assignmentValue: Number(assignment),
                     assignmentDescription: this.newExperimentForm.value.assignmentsDescriptions[index - 1]
                 });

@@ -186,5 +186,37 @@ func (as AssignmentService) GetAssignmentsOfExperiment(experimentId string) ([]m
 }
 
 func (as AssignmentService) ResetAssignments(oldExp *models.Experiment, newExp *models.Experiment) error {
+	if len(oldExp.Assignments) > len(newExp.Assignments) {
+		for i := len(newExp.Assignments); i < len(oldExp.Assignments); i++ {
+			as.reassignToPopular(newExp, &oldExp.Assignments[i])
+		}
+	}
+	for _, assignment := range newExp.Assignments {
+		if assignment.AssignmentValue == 0.0 {
+			as.reassignToPopular(newExp, &assignment)
+		}
+	}
+	return nil
+}
+
+func (as AssignmentService) reassignToPopular(exp *models.Experiment, assignmentToReassign *models.Assignment) error {
+	popularAssignment := exp.Assignments[0]
+	for _, assignment := range exp.Assignments {
+		if assignment.AssignmentValue > popularAssignment.AssignmentValue {
+			popularAssignment = assignment
+		}
+	}
+	assignments, err := as.customerRepository.GetAll(exp.Id)
+	if err != nil {
+		return err
+	}
+	for _, customer := range assignments {
+		if customer.AssignmentName == assignmentToReassign.AssignmentName {
+			err := as.customerRepository.SetAssignment(customer.Id, popularAssignment)
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
