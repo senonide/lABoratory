@@ -1,12 +1,11 @@
 package main
 
 import (
-	"lABoratory/lABoratoryAPI/config"
-	"lABoratory/lABoratoryAPI/handlers"
-	"lABoratory/lABoratoryAPI/middleware"
-	"lABoratory/lABoratoryAPI/persistence/database"
-	"lABoratory/lABoratoryAPI/services"
-	"lABoratory/lABoratoryAPI/utils"
+	"lABoratory/lABoratoryAPI/internal/handlers"
+	"lABoratory/lABoratoryAPI/internal/middleware"
+	"lABoratory/lABoratoryAPI/internal/persistence/database"
+	"lABoratory/lABoratoryAPI/internal/services"
+	"lABoratory/lABoratoryAPI/internal/utils"
 	"log"
 	"strconv"
 
@@ -53,7 +52,7 @@ func main() {
 	router.PUT("/experiments/:id", experimentHandler.UpdateExperiment)
 	router.DELETE("/experiments/:id", experimentHandler.DeleteExperiment)
 
-	url := "localhost:" + strconv.Itoa(config.GetConfig().Port)
-	log.Println("Listening on port " + strconv.Itoa(config.GetConfig().Port))
+	url := "localhost:" + strconv.Itoa(utils.GetConfig().Port)
+	log.Println("Listening on port " + strconv.Itoa(utils.GetConfig().Port))
 	router.Run(url)
 }
