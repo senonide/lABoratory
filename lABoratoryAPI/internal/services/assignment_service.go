@@ -21,6 +21,7 @@ type AssignmentServiceI interface {
 	GetAssignment(key string) (*models.Customer, error)
 	DeleteAll(experimentId string) (bool, error)
 	GetAssignmentsOfExperiment(experimentId string) ([]models.Customer, error)
+	ResetAssignments(oldExp *models.Experiment, newExp *models.Experiment) error
 }
 
 func NewAssignmentService(er persistence.ExperimentRepository, cr persistence.CustomerRepository, sp utils.SecurityProviderI) AssignmentServiceI {
@@ -182,4 +183,8 @@ func (as AssignmentService) validateAssignment(key string, assignmentName string
 
 func (as AssignmentService) GetAssignmentsOfExperiment(experimentId string) ([]models.Customer, error) {
 	return as.customerRepository.GetAll(experimentId)
+}
+
+func (as AssignmentService) ResetAssignments(oldExp *models.Experiment, newExp *models.Experiment) error {
+	return nil
 }

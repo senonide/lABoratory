@@ -74,12 +74,7 @@ func (s *ExperimentService) Update(experiment models.Experiment, owner *models.U
 	if err != nil {
 		return err
 	}
-	for _, assignment := range experiment.Assignments {
-		if int(math.Round(assignment.AssignmentValue)) == 100 {
-			go s.assignmentService.SetAllAssignments(experiment, assignment)
-			break
-		}
-	}
+	go s.assignmentService.ResetAssignments(experimentToUpdate, &experiment)
 	return nil
 }
 
