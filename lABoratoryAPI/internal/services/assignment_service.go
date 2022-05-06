@@ -37,7 +37,10 @@ func (as AssignmentService) GetAssignment(experimentToken, assignmentKey string)
 		return nil, err
 	}
 	customer, err := as.customerRepository.GetOne(assignmentKey, experiment.Id)
-	if err != nil || customer == nil {
+	if err != nil {
+		return nil, err
+	}
+	if customer == nil {
 		return as.createNewAssignment(experiment, assignmentKey)
 	}
 	return customer, nil
