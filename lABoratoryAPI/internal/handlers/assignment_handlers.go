@@ -19,7 +19,9 @@ func NewAssignmentHandler(as services.AssignmentServiceI) *AssignmentHandler {
 }
 
 func (ah *AssignmentHandler) GetAssignment(c *gin.Context) {
-	assignment, err := ah.service.GetAssignment(c.Param("key"))
+	experimentToken := c.Param("experimenttoken")
+	assignmentKey := c.Param("assignmentkey")
+	assignment, err := ah.service.GetAssignment(experimentToken, assignmentKey)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
@@ -34,7 +36,7 @@ func (ah *AssignmentHandler) SetAssignment(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return
 	}
-	err = ah.service.SetAssignment(c.Param("key"), assignmentName)
+	err = ah.service.SetAssignment(c.Param("assignmentkey"), c.Param("experimenttoken"), assignmentName)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, responses.ResponseWithError{Message: "error", Error: err.Error()})
 		return

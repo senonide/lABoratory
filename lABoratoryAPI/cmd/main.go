@@ -35,11 +35,11 @@ func main() {
 	router.POST("/auth", authHandler.Authenticate)
 	router.POST("/signup", authHandler.Signup)
 
-	router.GET("/assignment/:key", assignmentHandler.GetAssignment)
+	router.GET("/assignment/:experimenttoken/:assignmentkey", assignmentHandler.GetAssignment)
 
 	router.Use(middleware.ValidateJWT)
 
-	router.PUT("assignment/:key", assignmentHandler.SetAssignment)
+	//router.PUT("assignment/:key", assignmentHandler.SetAssignment)
 
 	router.GET("assignments/:id", assignmentHandler.GetAssignmentsOfExperiment)
 

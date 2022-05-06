@@ -6,7 +6,6 @@ import (
 	"lABoratory/lABoratoryAPI/internal/persistence"
 	"lABoratory/lABoratoryAPI/internal/utils"
 	"math"
-	"strings"
 )
 
 type AssignmentService struct {
@@ -16,9 +15,9 @@ type AssignmentService struct {
 }
 
 type AssignmentServiceI interface {
-	SetAssignment(key string, newAssigment string) error
+	SetAssignment(key, experimentToken string, newAssigment string) error
 	SetAllAssignments(experiment models.Experiment, newAssigment models.Assignment) error
-	GetAssignment(key string) (*models.Customer, error)
+	GetAssignment(expId, assignmentKey string) (*models.Customer, error)
 	DeleteAll(experimentId string) (bool, error)
 	GetAssignmentsOfExperiment(experimentId string) ([]models.Customer, error)
 	ResetAssignments(oldExp *models.Experiment, newExp *models.Experiment) error
@@ -32,34 +31,19 @@ func NewAssignmentService(er persistence.ExperimentRepository, cr persistence.Cu
 	return as
 }
 
-func (as AssignmentService) GetAssignment(key string) (*models.Customer, error) {
-	if strings.Contains(key, "experimentKey_") {
-		token, err := as.securityProvider.GetToken(strings.Replace(key, "experimentKey_", "", 1))
-		if err != nil {
-			return nil, err
-		}
-		if !as.securityProvider.ValidateToken(token) {
-			return nil, fmt.Errorf("invalid experiment key")
-		}
-		claims, err := as.securityProvider.GetTokenClaims(token)
-		if err != nil {
-			return nil, err
-		}
-		experimentId, ok := claims["sub"].(string)
-		if !ok {
-			return nil, fmt.Errorf("error decoding token claims")
-		}
-		experiment, err := as.experimentRepository.GetOne(experimentId)
-		if err != nil {
-			return nil, err
-		}
-		return as.createNewAssignment(experiment)
-	} else {
-		return as.customerRepository.GetOne(key)
+func (as AssignmentService) GetAssignment(experimentToken, assignmentKey string) (*models.Customer, error) {
+	experiment, err := as.getExperimentFromToken(experimentToken)
+	if err != nil {
+		return nil, err
 	}
+	customer, err := as.customerRepository.GetOne(assignmentKey, experiment.Id)
+	if err != nil || customer == nil {
+		return as.createNewAssignment(experiment, assignmentKey)
+	}
+	return customer, nil
 }
 
-func (as AssignmentService) createNewAssignment(experiment *models.Experiment) (*models.Customer, error) {
+func (as AssignmentService) createNewAssignment(experiment *models.Experiment, assignmentKey string) (*models.Customer, error) {
 	existingAssignments, err := as.customerRepository.GetAll(experiment.Id)
 	if err != nil {
 		return nil, err
@@ -68,6 +52,7 @@ func (as AssignmentService) createNewAssignment(experiment *models.Experiment) (
 	if err != nil {
 		return nil, err
 	}
+	newAssignment.Key = assignmentKey
 	id, err := as.customerRepository.Create(*newAssignment)
 	if err != nil {
 		return nil, err
@@ -145,12 +130,16 @@ func (as AssignmentService) getNewBalancedAssignment(experiment *models.Experime
 	return nil, fmt.Errorf("error creating new assignment")
 }
 
-func (as AssignmentService) SetAssignment(key string, newAssigment string) error {
-	assignment, err := as.validateAssignment(key, newAssigment)
+func (as AssignmentService) SetAssignment(key, experimentToken string, newAssigment string) error {
+	experiment, err := as.getExperimentFromToken(experimentToken)
 	if err != nil {
 		return err
 	}
-	return as.customerRepository.SetAssignment(key, *assignment)
+	assignment, err := as.validateAssignment(key, experiment.Id, newAssigment)
+	if err != nil {
+		return err
+	}
+	return as.customerRepository.SetAssignment(key, experiment.Id, *assignment)
 }
 
 func (as AssignmentService) SetAllAssignments(experiment models.Experiment, newAssigment models.Assignment) error {
@@ -165,8 +154,8 @@ func (as AssignmentService) DeleteAll(experimentId string) (bool, error) {
 	return as.customerRepository.DeleteAll(experimentId)
 }
 
-func (as AssignmentService) validateAssignment(key string, assignmentName string) (*models.Assignment, error) {
-	customer, err := as.GetAssignment(key)
+func (as AssignmentService) validateAssignment(key, experimentId string, assignmentName string) (*models.Assignment, error) {
+	customer, err := as.customerRepository.GetOne(key, experimentId)
 	if err != nil {
 		return nil, err
 	}
@@ -212,11 +201,34 @@ func (as AssignmentService) reassignToPopular(exp *models.Experiment, assignment
 	}
 	for _, customer := range assignments {
 		if customer.AssignmentName == assignmentToReassign.AssignmentName {
-			err := as.customerRepository.SetAssignment(customer.Id, popularAssignment)
+			err := as.customerRepository.SetAssignment(customer.Id, exp.Id, popularAssignment)
 			if err != nil {
 				return err
 			}
 		}
 	}
 	return nil
+}
+
+func (as AssignmentService) getExperimentFromToken(jwt string) (*models.Experiment, error) {
+	token, err := as.securityProvider.GetToken(jwt)
+	if err != nil {
+		return nil, err
+	}
+	if !as.securityProvider.ValidateToken(token) {
+		return nil, fmt.Errorf("invalid experiment key")
+	}
+	claims, err := as.securityProvider.GetTokenClaims(token)
+	if err != nil {
+		return nil, err
+	}
+	experimentId, ok := claims["sub"].(string)
+	if !ok {
+		return nil, fmt.Errorf("error decoding token claims")
+	}
+	experiment, err := as.experimentRepository.GetOne(experimentId)
+	if err != nil {
+		return nil, err
+	}
+	return experiment, nil
 }

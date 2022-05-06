@@ -22,7 +22,7 @@
         <h1>Theoretical percentages of the experiment</h1>
     </mat-grid-tile>
     <mat-grid-tile>
-        <h1>Actual percentages</h1>
+        <h1>Experiment balance</h1>
         <h3>Number of current customers: {{this.profileService.actualAssignmentsCount}}</h3>
     </mat-grid-tile>
 </mat-grid-list>
@@ -36,7 +36,7 @@
             [doughnut]="true"
             [arcWidth]="0.40"
             [animations]="true"
-            [tooltipDisabled]="false">
+            [tooltipDisabled]="true">
         </ngx-charts-pie-chart>
     </mat-grid-tile>
     <mat-grid-tile></mat-grid-tile>

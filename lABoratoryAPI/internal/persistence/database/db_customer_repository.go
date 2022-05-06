@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -43,12 +42,11 @@ func (r *dbCustomerRepository) GetAll(experimentId string) ([]models.Customer, e
 	return customers, nil
 }
 
-func (r *dbCustomerRepository) GetOne(customerId string) (*models.Customer, error) {
+func (r *dbCustomerRepository) GetOne(customerKey, experimentId string) (*models.Customer, error) {
 	ctx := context.Background()
 	collection := r.database.Collection(CustomersCollName)
 	var customer *models.Customer
-	oid, _ := primitive.ObjectIDFromHex(customerId)
-	filter := bson.M{"_id": oid}
+	filter := bson.M{"key": customerKey, "experimentid": experimentId}
 	cur := collection.FindOne(ctx, filter)
 	if cur.Err() != nil {
 		return nil, nil
@@ -73,11 +71,10 @@ func (r *dbCustomerRepository) Create(customer models.Customer) (string, error) 
 	return id, nil
 }
 
-func (r *dbCustomerRepository) SetAssignment(idCustomer string, newAssigment models.Assignment) error {
+func (r *dbCustomerRepository) SetAssignment(customerKey, experimentId string, newAssigment models.Assignment) error {
 	ctx := context.Background()
 	collection := r.database.Collection(CustomersCollName)
-	oid, _ := primitive.ObjectIDFromHex(idCustomer)
-	filter := bson.M{"_id": oid}
+	filter := bson.M{"key": customerKey, "experimentid": experimentId}
 	update := bson.M{
 		"$set": bson.M{
 			"assignmentname":        newAssigment.AssignmentName,

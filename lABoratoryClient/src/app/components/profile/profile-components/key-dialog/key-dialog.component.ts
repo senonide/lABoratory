@@ -17,7 +17,7 @@ export class KeyDialog {
     constructor(
         public dialogRef: MatDialogRef<KeyDialog>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData) {
-            this.url = Config.apiUrl + "/assignment/" + data.content
+            this.url = Config.apiUrl + "/assignment/" + data.content + "/test"
         }
 
         

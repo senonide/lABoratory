@@ -66,5 +66,5 @@ func getExperimentKey(experiment models.Experiment) string {
 	if err != nil {
 		return ""
 	}
-	return "experimentKey_" + key
+	return key
 }
