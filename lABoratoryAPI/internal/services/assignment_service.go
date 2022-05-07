@@ -56,6 +56,7 @@ func (as AssignmentService) createNewAssignment(experiment *models.Experiment, a
 		return nil, err
 	}
 	newAssignment.Key = assignmentKey
+	newAssignment.Override = false
 	id, err := as.customerRepository.Create(*newAssignment)
 	if err != nil {
 		return nil, err
@@ -203,7 +204,7 @@ func (as AssignmentService) reassignToPopular(exp *models.Experiment, assignment
 		return err
 	}
 	for _, customer := range assignments {
-		if customer.AssignmentName == assignmentToReassign.AssignmentName {
+		if customer.AssignmentName == assignmentToReassign.AssignmentName && !customer.Override {
 			err := as.customerRepository.SetAssignment(customer.Id, exp.Id, popularAssignment)
 			if err != nil {
 				return err
