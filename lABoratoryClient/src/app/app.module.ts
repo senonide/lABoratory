@@ -39,6 +39,7 @@ import { ExperimentDetails } from './components/profile/profile-components/exper
 import { KeyDialog } from './components/profile/profile-components/key-dialog/key-dialog.component';
 import { DeleteDialog } from './components/profile/profile-components/delete-dialog/delete-dialog.component';
 import { UpdateExperiment } from './components/profile/profile-components/update-experiment/update-experiment.component';
+import { AssignmentDialog } from './components/profile/profile-components/assignments-dialog/assignment-dialog.component';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { UpdateExperiment } from './components/profile/profile-components/update
     ExperimentDetails,
     LandingView,
     KeyDialog,
+    AssignmentDialog,
     DeleteDialog
   ],
   imports: [

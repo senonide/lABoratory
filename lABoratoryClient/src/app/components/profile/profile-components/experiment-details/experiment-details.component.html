@@ -5,6 +5,7 @@
         </h2>
         <span class="example-spacer"></span>
         <div class="options">
+            <button mat-stroked-button (click)="openAssignmentsDialog()" color="primary" class="activateButton">Activate one assignent only</button>
             <button class="keyButton" mat-stroked-button (click)="openKeyDialog()">Show experiment key</button>  
             <button mat-icon-button (click)="updateExperiment()" color="primary" aria-label="Edit" class="formButton deleteButton">
                 <mat-icon>edit</mat-icon>
@@ -72,7 +73,7 @@
             <br>
             <h2>Experiment assignments</h2>
             <br>
-            <mat-grid-list cols="2" rowHeight="30px">
+            <mat-grid-list cols="2" rowHeight="40px">
                 <mat-grid-tile *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
                     <mat-card [class.mat-elevation-z0]="true">
                         <h3>

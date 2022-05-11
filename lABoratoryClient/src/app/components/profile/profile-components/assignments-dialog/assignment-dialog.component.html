@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div class="content" mat-dialog-content class="key">
+    <button class="assignmentButton" mat-mini-fab color="primary" *ngFor="let assignment of data.experiment.assignments" (click)="activateOneAssignment(data.experiment, assignment)">
+        {{assignment.assignmentName.toUpperCase()}}
+    </button>
+</div>

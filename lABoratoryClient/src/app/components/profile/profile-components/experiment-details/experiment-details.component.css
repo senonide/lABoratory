@@ -78,8 +78,14 @@ mat-card {
 
 h3 {
     margin-left: 50px;
+    display: inline-block;
 }
 
 .nodata {
     color: grey;
+}
+
+.activateButton {
+    display: inline-block;
+    margin-right: 10px;
 }

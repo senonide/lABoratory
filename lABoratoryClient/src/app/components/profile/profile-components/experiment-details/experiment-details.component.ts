@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Color, ScaleType } from "@swimlane/ngx-charts";
 import { ExperimentService } from "src/app/services/experiment.service";
 import { FormType, ProfileService } from "src/app/services/profile.service";
+import { AssignmentDialog } from "../assignments-dialog/assignment-dialog.component";
 import { DeleteDialog } from "../delete-dialog/delete-dialog.component";
 import { KeyDialog } from "../key-dialog/key-dialog.component";
 
@@ -35,7 +36,20 @@ export class ExperimentDetails {
             //width: "70%",
             data: {
                 title: "Experiment key: ", 
+                experimentService: this.experimentService,
+                router: this.router,
+                profileService: this.profileService,
                 content: this.profileService.selectedExperiment?.experimentKey
+            },
+        });
+    }
+
+    openAssignmentsDialog(): void {
+        const dialogRef = this.dialog.open(AssignmentDialog, {
+            //width: "70%",
+            data: {
+                title: "Choose one assignment to activate: ", 
+                experiment: this.profileService.selectedExperiment!,
             },
         });
     }
