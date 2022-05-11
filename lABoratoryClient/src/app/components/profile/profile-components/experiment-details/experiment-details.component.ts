@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Color, ScaleType } from "@swimlane/ngx-charts";
+import { Experiment } from "src/app/models/experiment.model";
 import { ExperimentService } from "src/app/services/experiment.service";
 import { FormType, ProfileService } from "src/app/services/profile.service";
 import { AssignmentDialog } from "../assignments-dialog/assignment-dialog.component";
@@ -61,6 +62,36 @@ export class ExperimentDetails {
                 content: " - All previous assignments will be removed as well."
             },
         });
+    }
+
+    disableExperiment(experiment: Experiment): void {
+        for(let a of experiment.assignments) {
+            if(a.assignmentName == "c"){
+                a.assignmentValue = 100.0;
+            } else {
+                a.assignmentValue = 0.0;
+            }
+        }
+        var response = this.experimentService.updateExperiment(experiment)
+        if(response==null){
+            return
+        } else {
+            response.subscribe({
+                next: () => {
+                    this.experimentService.getExperiments()?.subscribe({
+                        next: (experiments) => {
+                            this.experimentService.experiments = experiments;
+                        },
+                        error: () => {
+                            this.router.navigate(['/auth/login']);
+                        }
+                    });
+                    this.profileService.selectExperiment(experiment);
+                },
+                error: () => {
+                }
+            });
+        }
     }
 
     updateExperiment(): void {
