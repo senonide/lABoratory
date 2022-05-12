@@ -49,7 +49,7 @@ export class CreateExperiment implements OnInit {
         this.creating = true;
         this.experimentService.createExperiment(newExperiment)?.subscribe({
             next: () => {
-                this.newExperimentForm.reset();
+                //this.newExperimentForm.reset();
                 this.experimentService.getExperiments()?.subscribe({
                     next: (experiments) => {
                         this.experimentService.experiments = experiments;
