@@ -7,6 +7,7 @@
         <div class="options">
             <button class="keyButton" mat-stroked-button (click)="openKeyDialog()">Show experiment key</button> 
             <button mat-stroked-button (click)="openAssignmentsDialog()" color="primary" class="activateButton">Activate one assignent only</button>
+            <button mat-stroked-button (click)="overrideCustomer()" color="accent" class="activateButton">Override customer</button>
             <button mat-stroked-button (click)="disableExperiment(this.profileService.selectedExperiment!)" color="warn" class="activateButton">Disable experiment</button>
             <button mat-icon-button (click)="updateExperiment()" color="primary" aria-label="Edit" class="formButton deleteButton">
                 <mat-icon>edit</mat-icon>

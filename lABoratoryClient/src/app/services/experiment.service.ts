@@ -91,4 +91,19 @@ export class ExperimentService {
         return this.http.get<Customer[]>(Config.apiUrl + '/assignments/' + experimentId, httpOptions);
     }
 
+    overrideCustomer(experimentToken: string, customerKey: string, assignmentName: string) {
+        var auxJwt: string | null = localStorage.getItem('jwt');
+        if (auxJwt!= null){
+            this.jwt = auxJwt;
+        } else {
+            return null;
+        }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Authorization':  this.jwt,
+            })
+        };
+        return this.http.post<String>(Config.apiUrl + '/assignment/' + experimentToken + "/" + customerKey, "\"" + assignmentName + "\"", httpOptions);
+    }
+
 }

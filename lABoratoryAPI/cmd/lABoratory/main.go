@@ -39,7 +39,7 @@ func main() {
 
 	router.Use(middleware.ValidateJWT)
 
-	//router.PUT("assignment/:key", assignmentHandler.SetAssignment)
+	router.POST("assignment/:experimenttoken/:assignmentkey", assignmentHandler.SetAssignment)
 
 	router.GET("assignments/:id", assignmentHandler.GetAssignmentsOfExperiment)
 

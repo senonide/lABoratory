@@ -71,15 +71,26 @@ func (r *dbCustomerRepository) Create(customer models.Customer) (string, error) 
 	return id, nil
 }
 
-func (r *dbCustomerRepository) SetAssignment(customerKey, experimentId string, newAssigment models.Assignment) error {
+func (r *dbCustomerRepository) SetAssignment(customerKey, experimentId string, newAssigment models.Assignment, override bool) error {
 	ctx := context.Background()
 	collection := r.database.Collection(CustomersCollName)
 	filter := bson.M{"key": customerKey, "experimentid": experimentId}
-	update := bson.M{
-		"$set": bson.M{
-			"assignmentname":        newAssigment.AssignmentName,
-			"assignmentdescription": newAssigment.AssignmentDescription,
-		},
+	var update bson.M
+	if override {
+		update = bson.M{
+			"$set": bson.M{
+				"assignmentname":        newAssigment.AssignmentName,
+				"assignmentdescription": newAssigment.AssignmentDescription,
+				"override":              true,
+			},
+		}
+	} else {
+		update = bson.M{
+			"$set": bson.M{
+				"assignmentname":        newAssigment.AssignmentName,
+				"assignmentdescription": newAssigment.AssignmentDescription,
+			},
+		}
 	}
 	_, err := collection.UpdateOne(ctx, filter, update)
 	if err != nil {

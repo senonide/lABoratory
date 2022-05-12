@@ -8,6 +8,7 @@ import { FormType, ProfileService } from "src/app/services/profile.service";
 import { AssignmentDialog } from "../assignments-dialog/assignment-dialog.component";
 import { DeleteDialog } from "../delete-dialog/delete-dialog.component";
 import { KeyDialog } from "../key-dialog/key-dialog.component";
+import { OverrideDialog } from "../override-dialog/override-dialog.component";
 
 @Component({
     selector: 'experiment-details',
@@ -92,6 +93,15 @@ export class ExperimentDetails {
                 }
             });
         }
+    }
+
+    overrideCustomer(): void {
+        const dialogRef = this.dialog.open(OverrideDialog, {
+            data: {
+                title: "Override a customer's assignment: ", 
+                experiment: this.profileService.selectedExperiment!,
+            },
+        });
     }
 
     updateExperiment(): void {

@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div class="content" mat-dialog-content class="key">
+    <form [formGroup]="overrideForm">
+        <mat-form-field appearance="outline" class="formElement">
+            <mat-label>Customer's key</mat-label>
+            <input 
+            matInput 
+            type="text" 
+            formControlName="key"
+            required>
+        </mat-form-field>
+    </form>
+    <br>
+    <br>
+    <h2>Select the new assignment: </h2>
+    <button class="assignmentButton" mat-mini-fab color="primary" *ngFor="let assignment of data.experiment.assignments" (click)="overrideCustomer(data.experiment, assignment)">
+        {{assignment.assignmentName.toUpperCase()}}
+    </button>
+</div>

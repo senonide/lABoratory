@@ -143,7 +143,27 @@ func (as AssignmentService) SetAssignment(key, experimentToken string, newAssigm
 	if err != nil {
 		return err
 	}
-	return as.customerRepository.SetAssignment(key, experiment.Id, *assignment)
+	customer, err := as.customerRepository.GetOne(key, experiment.Id)
+	if err != nil {
+		return err
+	}
+	if customer != nil {
+		return as.customerRepository.SetAssignment(key, experiment.Id, *assignment, true)
+	} else {
+		customer = &models.Customer{
+			Id:                    "",
+			Key:                   key,
+			Override:              true,
+			ExperimentId:          experiment.Id,
+			AssignmentName:        assignment.AssignmentName,
+			AssignmentDescription: assignment.AssignmentDescription,
+		}
+		_, err := as.customerRepository.Create(*customer)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 }
 
 func (as AssignmentService) SetAllAssignments(experiment models.Experiment, newAssigment models.Assignment) error {
@@ -163,9 +183,17 @@ func (as AssignmentService) validateAssignment(key, experimentId string, assignm
 	if err != nil {
 		return nil, err
 	}
-	experiment, err := as.experimentRepository.GetOne(customer.ExperimentId)
-	if err != nil {
-		return nil, err
+	var experiment *models.Experiment
+	if customer != nil {
+		experiment, err = as.experimentRepository.GetOne(customer.ExperimentId)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		experiment, err = as.experimentRepository.GetOne(experimentId)
+		if err != nil {
+			return nil, err
+		}
 	}
 	assignment, err := experiment.GetAssignmentByName(assignmentName)
 	if err != nil {
@@ -205,7 +233,7 @@ func (as AssignmentService) reassignToPopular(exp *models.Experiment, assignment
 	}
 	for _, customer := range assignments {
 		if customer.AssignmentName == assignmentToReassign.AssignmentName && !customer.Override {
-			err := as.customerRepository.SetAssignment(customer.Key, exp.Id, popularAssignment)
+			err := as.customerRepository.SetAssignment(customer.Key, exp.Id, popularAssignment, false)
 			if err != nil {
 				return err
 			}
