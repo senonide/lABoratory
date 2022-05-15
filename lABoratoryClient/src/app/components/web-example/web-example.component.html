@@ -1,0 +1,32 @@
+<mat-toolbar [class.mat-elevation-z5]="true" color="primary">
+  <span>e-Commerce</span>
+  <span class="spacer"></span>
+</mat-toolbar>
+<br>
+<form [formGroup]="usernameForm" class="form">
+    <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input 
+        matInput 
+        type="text" 
+        formControlName="username"
+        required>
+    </mat-form-field>
+  </form>
+  <button mat-flat-button class="button-inline" color="primary">Buy it now!</button>
+<mat-grid-list cols="2" rowHeight="40vh">
+    <mat-grid-tile rowspan="2"><img src="assets/product.jpg"></mat-grid-tile>
+    <mat-grid-tile>
+        <mat-card [class.mat-elevation-z0]="true" class="frame">
+            <h1>Smartphone Pro 5G</h1>
+            <h3>8Gb RAM, 128Gb Memory Storage, 5G, 6.1 Inches</h3>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <mat-card [class.mat-elevation-z0]="true" class="frame fill">
+            <h2>Price: {{price}} $</h2>
+            <button mat-flat-button class="buy">Buy it now!</button>
+        </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+  

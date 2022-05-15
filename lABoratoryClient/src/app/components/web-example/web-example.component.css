@@ -1,0 +1,25 @@
+.frame {
+    width: 100%;
+}
+
+.fill {
+    height: 100%;
+}
+
+.buy {
+    background-color: rgb(241, 213, 53);
+    border-radius: 30px;
+    width: 250px;
+}
+
+.form {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.button-inline {
+    display: inline-block;
+    margin-left: 30px;
+    border-radius: 30px;
+    width: 150px;
+}

@@ -41,6 +41,7 @@ import { DeleteDialog } from './components/profile/profile-components/delete-dia
 import { UpdateExperiment } from './components/profile/profile-components/update-experiment/update-experiment.component';
 import { AssignmentDialog } from './components/profile/profile-components/assignments-dialog/assignment-dialog.component';
 import { OverrideDialog } from './components/profile/profile-components/override-dialog/override-dialog.component';
+import { WebExample } from './components/web-example/web-example.component';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { OverrideDialog } from './components/profile/profile-components/override
     KeyDialog,
     AssignmentDialog,
     OverrideDialog,
-    DeleteDialog
+    DeleteDialog,
+    WebExample
   ],
   imports: [
     FormsModule,

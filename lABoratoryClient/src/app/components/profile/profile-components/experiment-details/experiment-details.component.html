@@ -79,7 +79,7 @@
                 <mat-grid-tile *ngFor="let assignment of this.profileService.selectedExperiment?.assignments">
                     <mat-card [class.mat-elevation-z0]="true">
                         <h3>
-                            {{assignment.assignmentName.toUpperCase()}} - {{assignment.assignmentValue}}% ({{assignment.assignmentDescription}})
+                            {{assignment.assignmentName.toUpperCase()}} - {{assignment.assignmentValue}}% {{assignment.assignmentDescription}}
                         </h3>
                     </mat-card>
                 </mat-grid-tile>                
