@@ -1,5 +1,15 @@
-<h1 mat-dialog-title>{{data.title}}</h1>
+<h1 mat-dialog-title>{{data.title}}:</h1>
 <div class="content" mat-dialog-content class="key">
+    <mat-grid-list cols="3" *ngIf="this.overrides.length>0" rowHeight="30px">
+        <mat-grid-tile *ngFor="let customer of this.overrides">
+            <p>{{customer.key}}</p>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <p *ngIf="this.overrides.length==0">There is not overrides yet!</p>
+    <br>
+    <mat-divider></mat-divider>
+    <br>
+    <h1>Override a customer's assignment: </h1>
     <form [formGroup]="overrideForm">
         <mat-form-field appearance="outline" class="formElement">
             <mat-label>Customer's key</mat-label>
@@ -13,6 +23,9 @@
     <br>
     <br>
     <h2>Select the new assignment: </h2>
+    <button class="assignmentButton" mat-mini-fab color="warn" (click)="this.deleteOverride(data.experiment.id, this.overrideForm.value.key)">
+        <mat-icon>delete</mat-icon>
+    </button>
     <button class="assignmentButton" mat-mini-fab color="primary" *ngFor="let assignment of data.experiment.assignments" (click)="overrideCustomer(data.experiment, assignment)">
         {{assignment.assignmentName.toUpperCase()}}
     </button>

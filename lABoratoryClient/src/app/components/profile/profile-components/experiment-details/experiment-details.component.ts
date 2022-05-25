@@ -98,7 +98,7 @@ export class ExperimentDetails {
     overrideCustomer(): void {
         const dialogRef = this.dialog.open(OverrideDialog, {
             data: {
-                title: "Override a customer's assignment: ", 
+                title: "Overrides", 
                 experiment: this.profileService.selectedExperiment!,
             },
         });

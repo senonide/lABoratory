@@ -126,3 +126,17 @@ func (r *dbCustomerRepository) DeleteAll(experimentId string) (bool, error) {
 	}
 	return true, nil
 }
+
+func (r *dbCustomerRepository) DeleteAssignment(experimentId string, assignmentKey string) (bool, error) {
+	ctx := context.Background()
+	collection := r.database.Collection(CustomersCollName)
+	filter := bson.M{
+		"experimentid": experimentId,
+		"key":          assignmentKey,
+	}
+	_, err := collection.DeleteMany(ctx, filter)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}

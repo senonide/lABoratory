@@ -91,6 +91,21 @@ export class ExperimentService {
         return this.http.get<Customer[]>(Config.apiUrl + '/assignments/' + experimentId, httpOptions);
     }
 
+    getOverrideAssignments(experimentId: string) {
+        var auxJwt: string | null = localStorage.getItem('jwt');
+        if (auxJwt!= null){
+            this.jwt = auxJwt;
+        } else {
+            return null;
+        }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Authorization':  this.jwt,
+            })
+        };
+        return this.http.get<Customer[]>(Config.apiUrl + '/assignments/overrides/' + experimentId, httpOptions);
+    }
+
     overrideCustomer(experimentToken: string, customerKey: string, assignmentName: string) {
         var auxJwt: string | null = localStorage.getItem('jwt');
         if (auxJwt!= null){
@@ -104,6 +119,21 @@ export class ExperimentService {
             })
         };
         return this.http.post<String>(Config.apiUrl + '/assignment/' + experimentToken + "/" + customerKey, "\"" + assignmentName + "\"", httpOptions);
+    }
+
+    deleteOverride(experimentId: string, assignmentKey: string) {
+        var auxJwt: string | null = localStorage.getItem('jwt');
+        if (auxJwt!= null){
+            this.jwt = auxJwt;
+        } else {
+            return null;
+        }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Authorization':  this.jwt,
+            })
+        };
+        return this.http.delete(Config.apiUrl + "/assignment/" + experimentId + "/" + assignmentKey, httpOptions);
     }
 
 }

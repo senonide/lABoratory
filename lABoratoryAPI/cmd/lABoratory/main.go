@@ -41,6 +41,9 @@ func main() {
 
 	router.POST("assignment/:experimenttoken/:assignmentkey", assignmentHandler.SetAssignment)
 
+	router.GET("/assignments/overrides/:experimenttoken", assignmentHandler.GetOverrides)
+	router.DELETE("assignment/:experimenttoken/:assignmentkey", assignmentHandler.DeleteAssignment)
+
 	router.GET("assignments/:id", assignmentHandler.GetAssignmentsOfExperiment)
 
 	router.GET("/user", authHandler.GetUser)

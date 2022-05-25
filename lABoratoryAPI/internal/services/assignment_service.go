@@ -19,6 +19,7 @@ type AssignmentServiceI interface {
 	SetAllAssignments(experiment models.Experiment, newAssigment models.Assignment) error
 	GetAssignment(expId, assignmentKey string) (*models.Customer, error)
 	DeleteAll(experimentId string) (bool, error)
+	DeleteAssignment(experimentId string, assignmentKey string) (bool, error)
 	GetAssignmentsOfExperiment(experimentId string) ([]models.Customer, error)
 	ResetAssignments(oldExp *models.Experiment, newExp *models.Experiment) error
 }
@@ -176,6 +177,10 @@ func (as AssignmentService) SetAllAssignments(experiment models.Experiment, newA
 
 func (as AssignmentService) DeleteAll(experimentId string) (bool, error) {
 	return as.customerRepository.DeleteAll(experimentId)
+}
+
+func (as AssignmentService) DeleteAssignment(experimentId string, assignmentKey string) (bool, error) {
+	return as.customerRepository.DeleteAssignment(experimentId, assignmentKey)
 }
 
 func (as AssignmentService) validateAssignment(key, experimentId string, assignmentName string) (*models.Assignment, error) {

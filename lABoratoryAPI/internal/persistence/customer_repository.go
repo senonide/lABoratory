@@ -9,4 +9,5 @@ type CustomerRepository interface {
 	SetAssignment(customerKey, experimentId string, newAssigment models.Assignment, override bool) error
 	SetAllAssignments(experimentId string, newAssigment models.Assignment) error
 	DeleteAll(experimentId string) (bool, error)
+	DeleteAssignment(experimentId string, assignmentKey string) (bool, error)
 }
