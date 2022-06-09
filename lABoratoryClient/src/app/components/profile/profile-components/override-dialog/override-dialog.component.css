@@ -1,3 +1,9 @@
+.item {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    border-bottom: 0px;
+}
+
 .assignmentButton {
     margin-left: 10px;
     margin-right: 10px;

@@ -74,6 +74,7 @@
     </mat-grid-tile>
     <mat-grid-tile colspan="2">
         <mat-spinner *ngIf="updating"></mat-spinner>
+        <h3 *ngIf="!updating">*The update of the values will be done in a background task</h3>
     </mat-grid-tile>
 </mat-grid-list>
 </form>
