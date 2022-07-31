@@ -2,7 +2,7 @@
 Platform for create and use A/B testing experiments.
 
 ## Description of the project and objective to be achieved
-A/B testing is a way of experimenting that is used in the context of digital marketing and web analytics to identify changes that maximize a given result. For example, different customers of an online shopping page may see different products, ads in different places, or different prices for the same product, based on that experiment. By obtaining metrics linked to the experiment, it is possible to determine the optimality of each option and finally make a decision based on the results.
+A/B testing is a way of experimenting that is used in the context of digital marketing and web analytics to identify changes that maximize a specific result. For example, different customers of an online shopping page may see different products, ads in different places, or different prices for the same product, based on that experiment. By obtaining metrics linked to the experiment, it is possible to determine the optimality of each option and finally make a decision based on the results.
 
 The users will be able to create and configure an experiment through a web page, with a specific name (unique key), as well as a set of activations, which will normally be: "C" (control group) and some activations like "A1" (active experiment 1), but which can be be more (A2, A3, etc.). Also, you can assign certain percentages to activations, being the total of 100% (for example, 50% to the control group, 25% to activation A1 and 25% to activation A2). It will also have the functionality to completely disable the experiment (100% assignment to C) or to completely launch any of the activations (100% to A1, A2 or the desired activation).
 
